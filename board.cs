@@ -84,3 +84,7 @@ namespace Chessboard
     }
 }
 
+int PopCount(UInt64 bitBoard)
+{
+    //takes in a bit board and returns the hamming distance
+}
