@@ -50,7 +50,13 @@ public class position
     UInt64 BlackRooks;
     UInt64 BlackPawns;
     
-    String bitsToFEN()
+    bool WhitesMove; //true if its whites turn, false if its blacks move
+
+    int HalfMoveNumber;//number of half moves since last capture/pawn advance. important for 50 move rule
+    int FullMoveNumber;//number of full moves since last capture/pawn advance. needed fro 50 move rule. 
+    //increments AFTER black moves 
+    
+    string bitsToFEN()
     {
         //convert bitboards to FEN notation. going to have to figure out what FEN is though
         if(WhiteKing==0 || BlackKing==0)
@@ -58,16 +64,20 @@ public class position
             //no kings in the postion, illegal FEN
             return "";
         }
+        return "";
     }
     
-}
-
-class Test
-{
-
-    static public void Main(String[] args)
+    position FENToBits(string FEN)
     {
-        Console.WriteLine("lookie here");
-
+        //someones gotta code it
+        position copy=new position();
+        return copy;
     }
+
+    public void test()
+    {
+        Console.WriteLine("postion!!!");
+    }
+
 }
+
