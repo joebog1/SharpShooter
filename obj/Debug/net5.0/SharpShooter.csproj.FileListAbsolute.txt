@@ -1,0 +1,16 @@
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.exe
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.deps.json
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.runtimeconfig.json
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.runtimeconfig.dev.json
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.dll
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\ref\SharpShooter.dll
+C:\Users\joebo\Documents\GitHub\SharpShooter\bin\Debug\net5.0\SharpShooter.pdb
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.csprojAssemblyReference.cache
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.AssemblyInfoInputs.cache
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.AssemblyInfo.cs
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.csproj.CoreCompileInputs.cache
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.dll
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\ref\SharpShooter.dll
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.pdb
+C:\Users\joebo\Documents\GitHub\SharpShooter\obj\Debug\net5.0\SharpShooter.genruntimeconfig.cache

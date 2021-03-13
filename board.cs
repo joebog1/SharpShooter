@@ -81,20 +81,20 @@ namespace Chessboard
         {
             Console.WriteLine("postion!!!");
         }
-    }
-}
-
-int PopCount(UInt64 bitBoard)
-{
-    //takes in a bit board and returns the hamming distance
-    int count=0;
-    while (bitBoard>0)
-    {
-        if(bitBoard%2==1)
+        static int PopCount(UInt64 bitBoard)
         {
-            count++;
+            //takes in a bit board and returns the hamming distance
+            int count = 0;
+            while (bitBoard > 0)
+            {
+                if (bitBoard % 2 == 1)
+                {
+                    count++;
+                }
+                bitBoard >>= 1;
+            }
+            return count;
         }
-        bitBoard=bitBoard>>1;
+
     }
-    return count;
 }
