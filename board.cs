@@ -23,9 +23,10 @@ Arbitrarily i define the a1 square as the 1st digit from the left and h8 as the 
 going row wise this would be 1-8 on the 1st row, and 9 would be a2 and thus 
 9-16 would be a2-h2 etc.
 
-Thus a position is just the culmination of these bitboards.
+Thus a position is just the union of these bitboards.
 */
 using System;
+
 namespace Chessboard
 {
     
@@ -80,11 +81,20 @@ namespace Chessboard
         {
             Console.WriteLine("postion!!!");
         }
-
     }
 }
 
 int PopCount(UInt64 bitBoard)
 {
     //takes in a bit board and returns the hamming distance
+    int count=0;
+    while (bitBoard>0)
+    {
+        if(bitBoard%2==1)
+        {
+            count++;
+        }
+        bitBoard=bitBoard>>1;
+    }
+    return count;
 }
