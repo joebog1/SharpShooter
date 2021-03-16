@@ -38,20 +38,20 @@ namespace Chessboard
         or even go the whole way and have an enum for each piece and have 
         2 bitboards one for white and one for black. idk
         */
-        UInt64 WhiteKing;
-        UInt64 WhiteQueens;
-        UInt64 WhiteKnights;
-        UInt64 WhiteBishops;
-        UInt64 WhiteRooks;
-        UInt64 WhitePawns;
-        
+        public UInt64 WhiteKing;
+        public UInt64 WhiteQueens;
+        public UInt64 WhiteKnights;
+        public UInt64 WhiteBishops;
+        public UInt64 WhiteRooks;
+        public UInt64 WhitePawns;
 
-        UInt64 BlackKing;
-        UInt64 BlackQueens;
-        UInt64 BlackKnights;
-        UInt64 BlackBishops;
-        UInt64 BlackRooks;
-        UInt64 BlackPawns;
+
+        public UInt64 BlackKing;
+        public UInt64 BlackQueens;
+        public UInt64 BlackKnights;
+        public UInt64 BlackBishops;
+        public UInt64 BlackRooks;
+        public UInt64 BlackPawns;
         
         bool WhitesMove; //true if its whites turn, false if its blacks move
 
