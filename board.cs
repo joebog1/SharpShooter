@@ -19,7 +19,7 @@ BlackBishops
 BlackRooks
 BlackPawns
 
-Arbitrarily i define the a1 square as the 1st digit from the left and h8 as the 64th digit, 
+Arbitrarily I define the a1 square as the 1st digit from the left and h8 as the 64th digit, 
 going row wise this would be 1-8 on the 1st row, and 9 would be a2 and thus 
 9-16 would be a2-h2 etc.
 
@@ -75,6 +75,18 @@ namespace Chessboard
             //someones gotta code it
             position copy=new position();
             return copy;
+        }
+
+        public Boolean validBitBoard()
+        {
+            //overlapping pieces CANT HAPPEN. thus we do the logical and between them to see if the result >0
+            //multiple kings are a no no as well as well as no kings, there must be exactly 1 white king and 1 black king
+            UInt64 theBoards[12] = {WhiteKing,WhiteBishops,WhiteKnights, WhiteQueens, WhiteRooks, WhitePawns, BlackKing , BlackBishops , BlackKnights , BlackPawns ,BlackQueens ,BlackRooks }
+            UInt64 overlap = 0;
+            for(int i=0;i<11;i++)
+            {
+
+            }
         }
 
         public void test()
