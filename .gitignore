@@ -1,6 +1,8 @@
-bin
-hello.cs
-hello.exe
-board.exe
-.vs
-obj
+**/bin
+**/obj
+.vs/
+.vscode/
+*.user
+*.suo
+*.cache
+*.log
