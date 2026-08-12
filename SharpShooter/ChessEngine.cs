@@ -3,65 +3,130 @@ using System.Globalization;
 
 namespace SharpShooter
 {
-  using Square = (int Rank, int File);
+  using Square = (int File, int Rank);
 
   public class ChessEngine
   {
-    public ChessEngine() { }
+    public ChessEngine(string fen) { SetPositionByFen(fen); }
 
-    string myBoardState;
+    string myFen;
 
-    Square? myWhiteKingSquare;
-    Square? myBlackKingSquare;
+    string[]mySplitFen => myFen.Split(' ')[0].Split('/');
+
+    // I want all of the string splits after the first one.
+    string[] myExtraFenInformation => myFen.Split(' ').Skip(1).ToArray();
+
+    Piece[,] myBoard = new Piece[8,8];
+
+    // Can be null if the position is invalid. assume it isn't otherwise.
+    Colour? myTurn;
 
     public void SetPositionByFen(string fen)
     {
-      myBoardState = fen;
-      var splitFen = fen.Split(' ')[0].Split('/');
+      myFen = fen;
       // Now we have an array of strings. There should be 8 of them as there are 8 rows of a chessboard.
-      Debug.Assert(splitFen.Length == 8);
+      Debug.Assert(mySplitFen.Length == 8);
+
+      if (myExtraFenInformation[0][0] == 'w') myTurn = Colour.White;
+      else if (myExtraFenInformation[0][0] == 'b') myTurn = Colour.Black;
+      else { Debug.Assert(false, "it should either by whites turn or blacks turn!"); }
+      
       // :NOTE: consider mimicing 'real' chess coordinates by using 1-8 for rank and a-g for file.
-      int rank = 0;
+      int rank = 8;
       int file = 0;
-      foreach (var rankFen in splitFen)
+      foreach (var rankFen in mySplitFen)
       {
+        rank--;
         foreach (char character in rankFen)
         {
           if (char.IsDigit(character))
           {
+            // It is empty spaces.
             int emptySpaces = character - '0';
             file += emptySpaces;
           }
           else 
           {
-            if (character == 'K')
-            {
-              myWhiteKingSquare = (Rank: rank, File: file);
-            }
-            else if (character == 'k')
-            {
-              myBlackKingSquare = (Rank: rank, File: file);
-            }
+            // A peice is here!
+            myBoard[rank, file] = new Piece(character);
             file++;
           }
         }
-        rank++;
         // Reset which file we are on.
         file = 0;
       }
+      // rank should always be 0 after checking every row.
+      Debug.Assert(rank == 0);
+    }
+
+    private Square? FindKing(Colour colour)
+    {
+      // This method assumes the board is valid (because then a king will exist).
+      // Debug.Assert(IsValidPosition()); is what I would like to assert, but that is recursive!
+      for (int rank = 0; rank < 8; rank++)
+        for (int file = 0; file < 8; file++)
+        {
+          var piece = myBoard[rank, file];
+          if (piece != null && piece.Colour() == colour && piece.Type() == Type.King)
+            return (Rank: rank, File: file);
+        }
+      return null;
+    }
+
+    // Returns true if the current player's Colour is in check. False otherwise
+    // :NOTE: it's impossible for the other player to be in check on your Colour.
+    // The game ends before that.
+    public bool IsInCheck()
+    {
+      Debug.Assert(IsValidPosition());
+      // Early exit for garbage case.
+      if(!IsValidPosition()) return false;
+
+      if(myTurn! == Colour.White)
+      {
+        // Check if any black pieces are attacking the king.
+
+      }
+      else
+      {
+        Debug.Assert(myTurn! == Colour.Black);
+        // Check if any white pieces are attacking the king.
+      }
+      return false;
+    }
+
+    public Piece? PieceAtPosition(Square location)
+    {
+      // :NOTE: This returns a reference, is that ok?
+      return myBoard[location.File, location.Rank];
     }
 
     public bool IsValidPosition()
     {
       // A board is valid if it has one white king and one black king.
-      bool hasKings = myWhiteKingSquare.HasValue && myBlackKingSquare.HasValue;
+
+      Square? whiteKing = FindKing(Colour.White);
+      Square? blackKing = FindKing(Colour.Black);
+
+      bool hasKings = whiteKing.HasValue && blackKing.HasValue;
 
       if (!hasKings) return false;
 
-      bool kingsTouch = Math.Abs(myWhiteKingSquare!.Value.Rank - myBlackKingSquare!.Value.Rank) <= 1 &&
-                        Math.Abs(myWhiteKingSquare!.Value.File - myBlackKingSquare!.Value.File) <= 1;
+      bool duplicateOrMissingKings = myFen.Count('k') == 1 && myFen.Count('K') == 1;
+      
+      if(!duplicateOrMissingKings) return false;
 
-      return !kingsTouch;
+      bool kingsTouch = Math.Abs(whiteKing!.Value.Rank - blackKing!.Value.Rank) <= 1 &&
+                        Math.Abs(whiteKing!.Value.File - blackKing!.Value.File) <= 1;
+      
+      if (kingsTouch) return false;
+
+      bool illegalPawns = mySplitFen[0].Contains('p') || mySplitFen[0].Contains('P') ||
+                          mySplitFen[7].Contains('p') || mySplitFen[7].Contains('P');
+
+      if (illegalPawns) return false;
+      return true;
     }
+
   }
 }

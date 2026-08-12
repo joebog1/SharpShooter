@@ -1,4 +1,5 @@
 ﻿using SharpShooter;
+using System.Drawing;
 
 namespace Tests
 {
@@ -8,9 +9,7 @@ namespace Tests
     public void EmptyBoard_ChecksValidity_IsInvalid()
     {
       // Arrange an empty board is invalid because kings are required to exist.
-      var engine = new ChessEngine();
-      string emptyBoardFen = "8/8/8/8/8/8/8/8 w - - 0 1";
-      engine.SetPositionByFen(emptyBoardFen);
+      var engine = new ChessEngine("8/8/8/8/8/8/8/8 w - - 0 1");
 
       // Act by checking if the position we are in is valid.
       bool isValid = engine.IsValidPosition();
@@ -21,17 +20,50 @@ namespace Tests
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", true, "Two kings far apart is valid")]
     [InlineData("3Kk3/8/8/8/8/8/8/8 w - - 0 1", false, "Kings adjacent on same row is invalid")]
+    [InlineData("3K3/8/8/8/3k4/8/8/3K4 w - - 0 1", false, "needs to be exactly 1 of each king")]
+    [InlineData("3K3/8/8/8/8/8/8/8 w - - 0 1", false, "needs to be exactly 1 of each king")]
     [InlineData("4K3/3k4/8/8/8/8/8/8 w - - 0 1", false, "Kings touching diagonally is invalid")]
     [InlineData("8/8/8/8/8/8/3k4/3K4 w - - 0 1", false, "Kings adjacent on same column is invalid")]
     [InlineData("4k3/8/8/8/8/8/8/3PK3 w - - 0 1", false, "Pawns can't exist on the first rank")]
+    [InlineData("4k3/8/8/8/8/8/8/3pK3 w - - 0 1", false, "Pawns can't exist on the first rank")]
+    [InlineData("4Pk3/8/8/8/8/8/8/3K3 w - - 0 1", false, "Pawns can't exist on the first rank")]
+    [InlineData("4pk3/8/8/8/8/8/8/3K3 w - - 0 1", false, "Pawns can't exist on the first rank")]
     public void KingProximity_ChecksValidity_ReturnsExpected(string fen, bool expected, string _)
     {
-      var engine = new ChessEngine();
-      engine.SetPositionByFen(fen);
+      var engine = new ChessEngine(fen);
 
       bool isValid = engine.IsValidPosition();
 
       Assert.Equal(expected, isValid);
+    }
+
+    [Fact]
+    public void PositionHasRooks_CheckIfRightRooksExistInRightPoistion_TheyDo()
+    {
+      // Arrange a chess engine
+      var engine = new ChessEngine("4k3/8/8/8/8/8/8/r3K3 w - - 0 1");
+
+      // Assert the black rook exists in position a1 (0,0)
+      var piece = engine.PieceAtPosition((Rank: 0, File: 0));
+
+      var expectedPiece = new Piece(Colour.Black, SharpShooter.Type.Rook);
+
+      Assert.Equal(expectedPiece, piece);
+    }
+
+
+    [Theory]
+    [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", false, "white is not in check")]
+    [InlineData("4k3/8/8/8/8/8/8/4K3 b - - 0 1", false, "black is not in check")]
+    [InlineData("R3k3/8/8/8/8/8/8/4K3 b - - 0 1", true, "black is in check")]
+    [InlineData("4k3/8/8/8/8/8/8/r3K3 w - - 0 1", true, "white is in check")]
+    public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
+    {
+      var engine = new ChessEngine(fen);
+
+      bool isInCheck = engine.IsInCheck();
+
+      Assert.Equal(expected, isInCheck);
     }
   }
 }
