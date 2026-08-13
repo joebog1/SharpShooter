@@ -40,9 +40,12 @@ namespace Tests
 
     public static IEnumerable<object[]> PieceTestData => new[]
     {
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 0, Colour.White, SharpShooter.Type.King },
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 7, Colour.Black, SharpShooter.Type.King },
-      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 7, Colour.White, SharpShooter.Type.Rook },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 0, Colour.White, SharpShooter.Type.King },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 7, Colour.Black, SharpShooter.Type.King },
+      new object[] { "3Rk3/8/8/8/8/8/8/4K3 b - - 0 1", 3, 7, Colour.White, SharpShooter.Type.Rook },
+      new object[] { "k7/8/8/8/8/8/8/4K3 w - - 0 1", 0, 7, Colour.Black, SharpShooter.Type.King },
+      new object[] { "7k/8/8/8/8/8/8/4K3 w - - 0 1", 7, 7, Colour.Black, SharpShooter.Type.King },
+      new object[] { "7k/8/8/8/8/8/8/7K w - - 0 1", 7, 0, Colour.White, SharpShooter.Type.King },
     };
 
     [Theory]
@@ -74,6 +77,9 @@ namespace Tests
     [InlineData("4k3/3B5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
     [InlineData("5b2/4K3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
     [InlineData("3B5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
+    // Bishop diagonal checks from afar.
+    [InlineData("b7/8/8/8/2k5/8/8/7K w - - 0 1", true, "white is in check from a bishop")]
+
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);
