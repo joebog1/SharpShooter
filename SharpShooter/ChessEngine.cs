@@ -32,10 +32,12 @@ namespace SharpShooter
       else { Debug.Assert(false, "it should either by whites turn or blacks turn!"); }
       
       // :NOTE: consider mimicing 'real' chess coordinates by using 1-8 for rank and a-g for file.
-      int rank = 0;
+      // Fen starts from the 8th rank down to 1st rank.
+      int rank = 8;
       int file = 0;
       foreach (var rankFen in mySplitFen)
       {
+        rank--;
         foreach (char character in rankFen)
         {
           if (char.IsDigit(character))
@@ -53,10 +55,9 @@ namespace SharpShooter
         }
         // Reset which file we are on.
         file = 0;
-        rank++;
       }
-      // rank should always be 8 after checking every row.
-      Debug.Assert(rank == 8);
+      // rank should always be 0 after checking every row.
+      Debug.Assert(rank == 0);
     }
 
     private Square? FindKing(Colour colour)
