@@ -17,6 +17,7 @@ namespace Tests
       // Assert that the position is invalid.
       Assert.False(isValid);
     }
+
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", true, "Two kings far apart is valid")]
     [InlineData("3Kk3/8/8/8/8/8/8/8 w - - 0 1", false, "Kings adjacent on same row is invalid")]
@@ -35,6 +36,26 @@ namespace Tests
       bool isValid = engine.IsValidPosition();
 
       Assert.Equal(expected, isValid);
+    }
+
+    public static IEnumerable<object[]> PieceTestData => new[]
+    {
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 0, 4, Colour.White, SharpShooter.Type.King },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 7, 4, Colour.Black, SharpShooter.Type.King },
+      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 0, 3, Colour.Black, SharpShooter.Type.Rook },
+    };
+
+    [Theory]
+    [MemberData(nameof(PieceTestData))]
+    public void PieceAtPosition_ChecksPosition_IsExpectedPiece(string fen, int file, int rank, Colour expectedColour, SharpShooter.Type expectedType)
+    {
+      // Arrange the board.
+      var engine = new ChessEngine(fen);
+      // Get the piece at the expected position.
+      var actualPiece = engine.PieceAtPosition((File: file, Rank: rank));
+      // Assert it is the expected piece.
+      var expectedPiece = new Piece(expectedColour, expectedType);
+      Assert.Equal(expectedPiece, actualPiece);
     }
 
     [Fact]
