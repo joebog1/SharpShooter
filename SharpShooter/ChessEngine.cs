@@ -85,30 +85,27 @@ namespace SharpShooter
       // Early exit for garbage case.
       if(!IsValidPosition()) return false;
 
-      Square kingWhoCouldBeInCheck = FindKing(myTurn!.Value).Value;
+      Square kingWhoCouldBeInCheck = FindKing(myTurn!.Value)!.Value;
 
       // Check if there are any rooks of the opposite colour on the same rank and file.
       Colour otherColour = myTurn!.Value == Colour.White ? Colour.Black : Colour.White;
-      // Naively go through every rank along the same file and check for the opposite colour rook.
-      for (int rank = 0; rank < 8; rank++)
-      {
-        if (myBoard[kingWhoCouldBeInCheck.File, rank] is Piece rook && rook.Type() == Type.Rook)
-        {
-          if (rook.Colour() == otherColour)
-          {
-            return true;
-          }
-        }
-      }
-      // Do the same but with file.
+
+      var rookToLookFor = new Piece(otherColour, Type.Rook);
+
+      // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
       for (int file = 0; file < 8; file++)
       {
-        if (myBoard[kingWhoCouldBeInCheck.File, file] is Piece rook && rook.Type() == Type.Rook)
+        if(PieceAtPosition((file, kingWhoCouldBeInCheck.Rank)) == rookToLookFor)
         {
-          if (rook.Colour() == otherColour)
-          {
-            return true;
-          }
+          return true;
+        }
+      }
+      // Now check every rank along a file to find rooks
+      for (int rank = 0; rank < 8; rank++)
+      {
+        if(PieceAtPosition((kingWhoCouldBeInCheck.File, rank)) == rookToLookFor)
+        {
+          return true;
         }
       }
       return false;

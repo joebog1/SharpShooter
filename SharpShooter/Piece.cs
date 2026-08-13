@@ -72,5 +72,8 @@ namespace SharpShooter
       obj is Piece other && other.myColour == myColour && other.myType == myType;
 
     public override int GetHashCode() => HashCode.Combine(myColour, myType);
+
+    public static bool operator ==(Piece? a, Piece? b) => Equals(a, b);
+    public static bool operator !=(Piece? a, Piece? b) => !Equals(a, b);
   }
 }

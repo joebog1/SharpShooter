@@ -62,8 +62,8 @@ namespace Tests
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", false, "white is not in check")]
     [InlineData("4k3/8/8/8/8/8/8/4K3 b - - 0 1", false, "black is not in check")]
-    [InlineData("R3k3/8/8/8/8/8/8/4K3 b - - 0 1", true, "black is in check")]
-    [InlineData("4k3/8/8/8/8/8/8/r3K3 w - - 0 1", true, "white is in check")]
+    [InlineData("R3k3/8/8/8/8/8/8/K7 w - - 0 1", true, "white is in check")]
+    [InlineData("4k3/4R3/8/8/8/8/8/K7 w - - 0 1", true, "white is in check")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);
