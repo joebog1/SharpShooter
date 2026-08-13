@@ -35,7 +35,8 @@ namespace SharpShooter
     public static Colour CharacterToColour(char character)
     {
       bool isUpper = char.ToUpper(character) == character;
-      if (isUpper) return Colour.Black; else return Colour.White;
+      // Upper case characters are white peices, lowercase characters are black peices.
+      if (isUpper) return Colour.White; else return Colour.Black;
     }
 
   }
