@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace SharpShooter
 {
-  using Square = (int File, int Rank);
+    using Square = (int File, int Rank);
 
   public class ChessEngine
   {
@@ -32,11 +32,10 @@ namespace SharpShooter
       else { Debug.Assert(false, "it should either by whites turn or blacks turn!"); }
       
       // :NOTE: consider mimicing 'real' chess coordinates by using 1-8 for rank and a-g for file.
-      int rank = 8;
+      int rank = 0;
       int file = 0;
       foreach (var rankFen in mySplitFen)
       {
-        rank--;
         foreach (char character in rankFen)
         {
           if (char.IsDigit(character))
@@ -48,15 +47,16 @@ namespace SharpShooter
           else 
           {
             // A peice is here!
-            myBoard[rank, file] = new Piece(character);
+            myBoard[file, rank] = new Piece(character);
             file++;
           }
         }
         // Reset which file we are on.
         file = 0;
+        rank++;
       }
-      // rank should always be 0 after checking every row.
-      Debug.Assert(rank == 0);
+      // rank should always be 8 after checking every row.
+      Debug.Assert(rank == 8);
     }
 
     private Square? FindKing(Colour colour)
@@ -66,9 +66,9 @@ namespace SharpShooter
       for (int rank = 0; rank < 8; rank++)
         for (int file = 0; file < 8; file++)
         {
-          var piece = myBoard[rank, file];
+          var piece = myBoard[file, rank];
           if (piece != null && piece.Colour() == colour && piece.Type() == Type.King)
-            return (Rank: rank, File: file);
+            return (File: file, Rank: rank);
         }
       return null;
     }
@@ -92,7 +92,7 @@ namespace SharpShooter
       // Naively go through every rank along the same file and check for the opposite colour rook.
       for (int rank = 0; rank < 8; rank++)
       {
-        if (myBoard[rank, kingWhoCouldBeInCheck.File] is Piece rook && rook.Type() == Type.Rook)
+        if (myBoard[kingWhoCouldBeInCheck.File, rank] is Piece rook && rook.Type() == Type.Rook)
         {
           if (rook.Colour() == otherColour)
           {
@@ -103,7 +103,7 @@ namespace SharpShooter
       // Do the same but with file.
       for (int file = 0; file < 8; file++)
       {
-        if (myBoard[kingWhoCouldBeInCheck.Rank, kingWhoCouldBeInCheck.File] is Piece rook && rook.Type() == Type.Rook)
+        if (myBoard[kingWhoCouldBeInCheck.File, file] is Piece rook && rook.Type() == Type.Rook)
         {
           if (rook.Colour() == otherColour)
           {
