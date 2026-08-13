@@ -42,7 +42,7 @@ namespace Tests
     {
       new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 0, Colour.White, SharpShooter.Type.King },
       new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 7, Colour.Black, SharpShooter.Type.King },
-      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 0, Colour.Black, SharpShooter.Type.Rook },
+      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 7, Colour.White, SharpShooter.Type.Rook },
     };
 
     [Theory]
@@ -62,8 +62,18 @@ namespace Tests
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", false, "white is not in check")]
     [InlineData("4k3/8/8/8/8/8/8/4K3 b - - 0 1", false, "black is not in check")]
-    [InlineData("R3k3/8/8/8/8/8/8/K7 w - - 0 1", true, "white is in check")]
-    [InlineData("4k3/4R3/8/8/8/8/8/K7 w - - 0 1", true, "white is in check")]
+    // Rook check tests
+    [InlineData("r3K3/8/8/8/8/8/8/k7 w - - 0 1", true, "white is in check")]
+    [InlineData("4k3/4R3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a rook")]
+    [InlineData("4k3/8/4R3/8/8/8/8/K7 b - - 0 1", true, "black is in check from a rook")]
+    [InlineData("4k3/8/8/8/8/8/K7/4R3 b - - 0 1", true, "black is in check from a rook")]
+    [InlineData("4k3/5R3/8/8/8/8/8/K7 w - - 0 1", false, "white is not in check")]
+    [InlineData("4K3/4b3/8/8/8/8/8/k7 w - - 0 1", false, "white is not in check")]
+    // Bishop diagnonal close tests.
+    [InlineData("4K3/5b3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
+    [InlineData("4k3/3B5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
+    [InlineData("5b2/4K3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
+    [InlineData("3B5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);

@@ -109,6 +109,55 @@ namespace SharpShooter
           return true;
         }
       }
+
+      var bishopToLookFor = new Piece(otherColour, Type.Bishop);
+      // Bishops are more akward, but it's the same rough principle, just with diagonals.
+      // Find the upward slope starting square.
+
+      // Up and to the right check. :TODO: i=0 is redudndant because that is the king, i=1 is more efficent.
+      int i = 0;
+      while(kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank + i < 8)
+      {
+        if (PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank + i)) == bishopToLookFor)
+        {
+          return true;
+        }
+        i++;
+      }
+      i = 0;
+      // Up and to the left check.
+      while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank + i < 8)
+      {
+        if (PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank + i)) == bishopToLookFor)
+        {
+          return true;
+        }
+        i++;
+
+      }
+      i = 0;
+      // Down and to the right check
+      while (kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank - i >= 0)
+      {
+        if (PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank - i)) == bishopToLookFor)
+        {
+          return true;
+        }
+        i++;
+
+      }
+
+      i = 0;
+      // Down and to the left check
+      while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank - i >= 0)
+      {
+        if (PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank - i)) == bishopToLookFor)
+        {
+          return true;
+        }
+        i++;
+      }
+
       return false;
     }
 
