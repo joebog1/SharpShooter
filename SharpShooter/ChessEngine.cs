@@ -47,8 +47,8 @@ namespace SharpShooter
           else 
           {
             // A peice is here!
-            myBoard[file, rank] = new Piece(character);
             file++;
+            myBoard[file, rank] = new Piece(character);
           }
         }
         // Reset which file we are on.
