@@ -78,19 +78,38 @@ namespace SharpShooter
     // The game ends before that.
     public bool IsInCheck()
     {
+      // :TODO: This is going to explode when IsValidPosition calls IsInCheck to handle illegal
+      // positions involving both kings in check. This funciton assumes a valid state as it only
+      // checks the king who's turn it is.
       Debug.Assert(IsValidPosition());
       // Early exit for garbage case.
       if(!IsValidPosition()) return false;
 
-      if(myTurn! == Colour.White)
-      {
-        // Check if any black pieces are attacking the king.
+      Square kingWhoCouldBeInCheck = FindKing(myTurn!.Value).Value;
 
-      }
-      else
+      // Check if there are any rooks of the opposite colour on the same rank and file.
+      Colour otherColour = myTurn!.Value == Colour.White ? Colour.Black : Colour.White;
+      // Naively go through every rank along the same file and check for the opposite colour rook.
+      for (int rank = 0; rank < 8; rank++)
       {
-        Debug.Assert(myTurn! == Colour.Black);
-        // Check if any white pieces are attacking the king.
+        if (myBoard[rank, kingWhoCouldBeInCheck.File] is Piece rook && rook.Type() == Type.Rook)
+        {
+          if (rook.Colour() == otherColour)
+          {
+            return true;
+          }
+        }
+      }
+      // Do the same but with file.
+      for (int file = 0; file < 8; file++)
+      {
+        if (myBoard[kingWhoCouldBeInCheck.Rank, kingWhoCouldBeInCheck.File] is Piece rook && rook.Type() == Type.Rook)
+        {
+          if (rook.Colour() == otherColour)
+          {
+            return true;
+          }
+        }
       }
       return false;
     }
