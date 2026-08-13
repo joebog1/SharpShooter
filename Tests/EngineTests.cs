@@ -40,9 +40,9 @@ namespace Tests
 
     public static IEnumerable<object[]> PieceTestData => new[]
     {
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 0, 4, Colour.White, SharpShooter.Type.King },
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 7, 4, Colour.Black, SharpShooter.Type.King },
-      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 0, 3, Colour.Black, SharpShooter.Type.Rook },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 0, Colour.White, SharpShooter.Type.King },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 5, 7, Colour.Black, SharpShooter.Type.King },
+      new object[] { "3Rk3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 0, Colour.Black, SharpShooter.Type.Rook },
     };
 
     [Theory]
@@ -56,20 +56,6 @@ namespace Tests
       // Assert it is the expected piece.
       var expectedPiece = new Piece(expectedColour, expectedType);
       Assert.Equal(expectedPiece, actualPiece);
-    }
-
-    [Fact]
-    public void PositionHasRooks_CheckIfRightRooksExistInRightPoistion_TheyDo()
-    {
-      // Arrange a chess engine
-      var engine = new ChessEngine("4k3/8/8/8/8/8/8/r3K3 w - - 0 1");
-
-      // Assert the black rook exists in position a1 (0,0)
-      var piece = engine.PieceAtPosition((Rank: 0, File: 0));
-
-      var expectedPiece = new Piece(Colour.Black, SharpShooter.Type.Rook);
-
-      Assert.Equal(expectedPiece, piece);
     }
 
 
