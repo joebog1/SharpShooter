@@ -78,6 +78,12 @@ namespace Tests
     [InlineData("4k3/8/8/8/8/8/K7/4R3 b - - 0 1", true, "black is in check from a rook")]
     [InlineData("4k3/5R3/8/8/8/8/8/K7 w - - 0 1", false, "white is not in check")]
     [InlineData("4K3/4b3/8/8/8/8/8/k7 w - - 0 1", false, "white is not in check")]
+    // Rook blocked due to obstruction tests.
+    [InlineData("8/8/8/8/8/8/8/3RK2k b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/3k4/8/3K4/3R4 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/8/8/8/k1KR4 b - - 20 11", false, "black is not in check")]
+    [InlineData("3R4/3K4/8/8/8/8/8/3k4 b - - 20 11", false, "black is not in check")]
+
     // Bishop diagnonal close tests.
     [InlineData("4K3/5b3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
     [InlineData("4k3/3B5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
@@ -88,6 +94,11 @@ namespace Tests
     [InlineData("7B/1K6/8/8/8/8/8/k7 b - - 0 1", true, "black is in check from a bishop")]
     [InlineData("k7/8/8/8/2K5/8/8/7B b - - 0 1", true, "black is in check from a bishop")]
     [InlineData("7k/8/8/8/2K5/8/8/B7 b - - 0 1", true, "black is in check from a bishop")]
+    // Bishop blocked due to obstruction tests
+    [InlineData("8/8/8/8/3k4/8/5K2/6B1 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/3k4/8/1R3K2/B7 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/B7/1N6/8/3k4/8/1R3K2/8 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/6B1/1N3P2/8/3k4/8/1R3K2/8 b - - 20 11", false, "black is not in check")]
 
     // Queen gets given all bishop and rook checks (expect checks about not being in check.
     [InlineData("4K3/5q3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a queen")]
@@ -103,6 +114,14 @@ namespace Tests
     [InlineData("4k3/4Q3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
     [InlineData("4k3/8/4Q3/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
     [InlineData("4k3/8/8/8/8/8/K7/4Q3 b - - 0 1", true, "black is in check from a queen")]
+    // Queen blocked due to obstruction tests
+    [InlineData("8/8/8/8/3k4/8/5N2/1K4Q1 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/3k4/8/3N4/1K1Q4 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/3k4/8/1N6/QK6 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/QN1k4/8/8/1K6 b - - 20 11", false, "black is not in check")]
+    [InlineData("Q7/1N6/8/8/3k4/8/8/1K6 b - - 20 11", false, "black is not in check")]
+    [InlineData("3Q4/3N4/8/8/3k4/8/8/1K6 b - - 20 11", false, "black is not in check")]
+    [InlineData("8/8/8/8/3k1NQ1/8/8/1K6 b - - 20 11", false, "black is not in check")]
 
     // Knight checks the king in the L shape.
     [InlineData("8/1k6/8/4n3/8/3K4/8/8 w - - 0 1", true, "white is in check from a knight")]
