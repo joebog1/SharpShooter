@@ -91,12 +91,15 @@ namespace SharpShooter
       // Check if there are any rooks of the opposite colour on the same rank and file.
       Colour otherColour = myTurn!.Value == Colour.White ? Colour.Black : Colour.White;
 
+      var queenToLookFor = new Piece(otherColour, Type.Queen);
+
       var rookToLookFor = new Piece(otherColour, Type.Rook);
 
       // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
       for (int file = 0; file < 8; file++)
       {
-        if(PieceAtPosition((file, kingWhoCouldBeInCheck.Rank)) == rookToLookFor)
+        var peiceAtPosition = PieceAtPosition((file, kingWhoCouldBeInCheck.Rank));
+        if (peiceAtPosition == rookToLookFor || peiceAtPosition == queenToLookFor)
         {
           return true;
         }
@@ -104,7 +107,8 @@ namespace SharpShooter
       // Now check every rank along a file to find rooks
       for (int rank = 0; rank < 8; rank++)
       {
-        if(PieceAtPosition((kingWhoCouldBeInCheck.File, rank)) == rookToLookFor)
+        var peiceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File, rank));
+        if (peiceAtPosition == rookToLookFor || peiceAtPosition == queenToLookFor)
         {
           return true;
         }
@@ -118,7 +122,8 @@ namespace SharpShooter
       int i = 0;
       while(kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank + i < 8)
       {
-        if (PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank + i)) == bishopToLookFor)
+        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank + i));
+        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
         {
           return true;
         }
@@ -128,7 +133,8 @@ namespace SharpShooter
       // Up and to the left check.
       while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank + i < 8)
       {
-        if (PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank + i)) == bishopToLookFor)
+        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank + i));
+        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
         {
           return true;
         }
@@ -139,7 +145,8 @@ namespace SharpShooter
       // Down and to the right check
       while (kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank - i >= 0)
       {
-        if (PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank - i)) == bishopToLookFor)
+        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank - i));
+        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
         {
           return true;
         }
@@ -151,7 +158,8 @@ namespace SharpShooter
       // Down and to the left check
       while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank - i >= 0)
       {
-        if (PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank - i)) == bishopToLookFor)
+        var peiceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank - i));
+        if (peiceAtPosition == bishopToLookFor || peiceAtPosition == queenToLookFor)
         {
           return true;
         }

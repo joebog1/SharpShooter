@@ -89,6 +89,20 @@ namespace Tests
     [InlineData("k7/8/8/8/2K5/8/8/7B b - - 0 1", true, "black is in check from a bishop")]
     [InlineData("7k/8/8/8/2K5/8/8/B7 b - - 0 1", true, "black is in check from a bishop")]
 
+    // Queen gets given all bishop and rook checks (expect checks about not being in check.
+    [InlineData("4K3/5q3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a queen")]
+    [InlineData("4k3/3Q5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("5q2/4K3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a queen")]
+    [InlineData("3Q5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    // Queen diagonal checks from afar.
+    [InlineData("q7/8/8/8/2k5/8/8/7K w - - 0 1", true, "white is in check from a queen")]
+    [InlineData("7Q/1K6/8/8/8/8/8/k7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("k7/8/8/8/2K5/8/8/7Q b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("7k/8/8/8/2K5/8/8/Q7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("q3K3/8/8/8/8/8/8/k7 w - - 0 1", true, "white is in check")]
+    [InlineData("4k3/4Q3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("4k3/8/4Q3/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("4k3/8/8/8/8/8/K7/4Q3 b - - 0 1", true, "black is in check from a queen")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);
