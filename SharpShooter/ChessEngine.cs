@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SharpShooter
 {
@@ -85,7 +86,6 @@ namespace SharpShooter
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
     private bool CheckInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor, StopReasonCheckInADirection StopReason)
     {
-      Debug.Assert(PeiceToLookFor.Type() == Type.Rook || PeiceToLookFor.Type() == Type.Bishop || PeiceToLookFor.Type() == Type.Queen);
       // i starts at one because i = 0 would reveal the king.
       for (int i = 1; i < 8; i++)
       {
@@ -105,6 +105,7 @@ namespace SharpShooter
             return false; // There is another peice in the way.
           }
         }
+        if (StopReason == StopReasonCheckInADirection.CheckOnce) return false;
       }
       return false;
     }
@@ -162,19 +163,7 @@ namespace SharpShooter
 
       foreach ( var possibleOffset in possibleOffsets )
       {
-        // Skip the check if it is off the board.
-        var positionToCheck = new Square(kingWhoCouldBeInCheck.File + possibleOffset.Item1,
-                                         kingWhoCouldBeInCheck.Rank + possibleOffset.Item2);
-        if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
-            positionToCheck.File < 0 || positionToCheck.File >= 8)
-        {
-          continue;
-        }
-        var pieceAtPosition = PieceAtPosition(positionToCheck);
-        if(pieceAtPosition == knightToLookFor)
-        {
-          return true;
-        }
+        if (CheckInADirection(kingWhoCouldBeInCheck, possibleOffset.Item1, possibleOffset.Item2, knightToLookFor, StopReasonCheckInADirection.CheckOnce)) return true;
       }
 
       // Pawn checks
