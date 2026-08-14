@@ -75,6 +75,26 @@ namespace SharpShooter
       return null;
     }
 
+    /// Looks in a specific direction for a peice. Expects either a Rook,Bishop or Queen peice to be provided.
+    /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
+    private bool CheckInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
+    {
+      Debug.Assert(PeiceToLookFor.Type() == Type.Rook || PeiceToLookFor.Type() == Type.Bishop || PeiceToLookFor.Type() == Type.Queen);
+
+      for (int i = 0; i < 8; i++)
+      {
+        var positionToCheck = new Square(KingsSqaure.File + (i * deltaFile), KingsSqaure.Rank + (i * deltaRank));
+        if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
+            positionToCheck.File < 0 || positionToCheck.File >= 8)
+        {
+          break;
+        }
+        var pieceAtPostiion = PieceAtPosition(positionToCheck);
+        if (pieceAtPostiion == PeiceToLookFor) return true;
+      }
+      return false;
+    }
+
     // Returns true if the current player's Colour is in check. False otherwise
     // :NOTE: it's impossible for the other player to be in check on your Colour.
     // The game ends before that.
@@ -92,80 +112,31 @@ namespace SharpShooter
       // Check if there are any rooks of the opposite colour on the same rank and file.
       Colour otherColour = myTurn!.Value == Colour.White ? Colour.Black : Colour.White;
 
+      // Queen checks
       var queenToLookFor = new Piece(otherColour, Type.Queen);
-
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 0, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 0, 1, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 0, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 0, -1, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 1, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, -1, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, -1, queenToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 1, queenToLookFor)) return true;
+      // Rook checks.
       var rookToLookFor = new Piece(otherColour, Type.Rook);
 
       // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
-      for (int file = 0; file < 8; file++)
-      {
-        var peiceAtPosition = PieceAtPosition((file, kingWhoCouldBeInCheck.Rank));
-        if (peiceAtPosition == rookToLookFor || peiceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-      }
-      // Now check every rank along a file to find rooks
-      for (int rank = 0; rank < 8; rank++)
-      {
-        var peiceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File, rank));
-        if (peiceAtPosition == rookToLookFor || peiceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-      }
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 0, rookToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 0, 1, rookToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 0, rookToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 0, -1, rookToLookFor)) return true;
 
+      // Bishop checks.
       var bishopToLookFor = new Piece(otherColour, Type.Bishop);
-      // Bishops are more akward, but it's the same rough principle, just with diagonals.
-      // Find the upward slope starting square.
-
-      // Up and to the right check. :TODO: i=0 is redudndant because that is the king, i=1 is more efficent.
-      int i = 0;
-      while(kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank + i < 8)
-      {
-        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank + i));
-        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-        i++;
-      }
-      i = 0;
-      // Up and to the left check.
-      while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank + i < 8)
-      {
-        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank + i));
-        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-        i++;
-
-      }
-      i = 0;
-      // Down and to the right check
-      while (kingWhoCouldBeInCheck.File + i < 8 && kingWhoCouldBeInCheck.Rank - i >= 0)
-      {
-        var pieceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File + i, kingWhoCouldBeInCheck.Rank - i));
-        if (pieceAtPosition == bishopToLookFor || pieceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-        i++;
-
-      }
-
-      i = 0;
-      // Down and to the left check
-      while (kingWhoCouldBeInCheck.File - i >= 0 && kingWhoCouldBeInCheck.Rank - i >= 0)
-      {
-        var peiceAtPosition = PieceAtPosition((kingWhoCouldBeInCheck.File - i, kingWhoCouldBeInCheck.Rank - i));
-        if (peiceAtPosition == bishopToLookFor || peiceAtPosition == queenToLookFor)
-        {
-          return true;
-        }
-        i++;
-      }
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 1, bishopToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, 1, -1, bishopToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, -1, bishopToLookFor)) return true;
+      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 1, bishopToLookFor)) return true;
 
       // Knight checks
       // There are 8 possible cases ((+1,+2),(+2,+1),(+2,-1),(+1,-2),(-1,-2),(-2,-1),(-2,+1) and (-1,+2)).
