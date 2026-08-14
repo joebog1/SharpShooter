@@ -113,6 +113,17 @@ namespace Tests
     [InlineData("8/8/6K1/4n3/8/8/8/k7 w - - 0 1", true, "white is in check from a knight")]
     [InlineData("8/8/8/4n3/6K1/8/8/k7 w - - 0 1", true, "white is in check from a knight")]
     [InlineData("8/8/8/4n3/8/5K2/8/k7 w - - 0 1", true, "white is in check from a knight")]
+
+    // Black Pawn check tests.
+    [InlineData("8/8/5p2/4K3/8/8/8/k7 w - - 0 1", true, "white is in check from a pawn")]
+    [InlineData("8/8/3p4/4K3/8/8/8/k7 w - - 0 1", true, "white is in check from a pawn")]
+    [InlineData("8/8/8/4K3/3p4/8/8/k7 w - - 0 1", false, "white is not in check")]
+    [InlineData("8/8/8/4K3/5p2/8/8/k7 w - - 0 1", false, "white is not in check")]
+    // White pawn check tests.
+    [InlineData("8/8/8/4k3/5P2/8/4K3/8 b - - 0 1", true, "black is in check from a pawn")]
+    [InlineData("8/8/8/4k3/3P4/8/4K3/8 b - - 0 1", true, "black is in check from a pawn")]
+    [InlineData("8/8/3P4/4k3/8/8/4K3/8 b - - 0 1", false, "black is not in check")]
+    [InlineData("8/8/5P2/4k3/8/8/4K3/8 b - - 0 1", false, "black is not in check")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);
