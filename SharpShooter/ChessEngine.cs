@@ -169,31 +169,17 @@ namespace SharpShooter
       // Pawn checks
       // There are only two places to check, but it depends on the colour of the king.
       var pawnToLookFor = new Piece(otherColour, Type.Pawn);
-      (int, int)[] offsetsToCheck;
       if (myTurn!.Value == Colour.White)
       {
         // Check (+1,+1) and (-1,+1);
-        offsetsToCheck = new (int, int)[] { (+1, +1), (-1, +1) };
+        if (CheckInADirection(kingWhoCouldBeInCheck, 1, 1, pawnToLookFor, StopReasonCheckInADirection.CheckOnce)) return true;
+        if (CheckInADirection(kingWhoCouldBeInCheck, -1, 1, pawnToLookFor, StopReasonCheckInADirection.CheckOnce)) return true;
       }
       else
       {
         // Black king, check (+1,-1) and (-1,-1);
-        offsetsToCheck = new (int, int)[] { (+1, -1), (-1, -1) };
-      }
-      foreach (var offsetToCheck in offsetsToCheck)
-      {
-        var positionToCheck = new Square(kingWhoCouldBeInCheck.File + offsetToCheck.Item1,
-                                          kingWhoCouldBeInCheck.Rank + offsetToCheck.Item2);
-        if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
-            positionToCheck.File < 0 || positionToCheck.File >= 8)
-        {
-          continue;
-        }
-        var pieceAtPosition = PieceAtPosition(positionToCheck);
-        if (pieceAtPosition == pawnToLookFor)
-        {
-          return true;
-        }
+        if (CheckInADirection(kingWhoCouldBeInCheck, 1, -1, pawnToLookFor, StopReasonCheckInADirection.CheckOnce)) return true;
+        if (CheckInADirection(kingWhoCouldBeInCheck, -1, -1, pawnToLookFor, StopReasonCheckInADirection.CheckOnce)) return true;
       }
 
       return false;
