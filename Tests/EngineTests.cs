@@ -46,6 +46,12 @@ namespace Tests
       new object[] { "k7/8/8/8/8/8/8/4K3 w - - 0 1", 0, 7, Colour.Black, SharpShooter.Type.King },
       new object[] { "7k/8/8/8/8/8/8/4K3 w - - 0 1", 7, 7, Colour.Black, SharpShooter.Type.King },
       new object[] { "7k/8/8/8/8/8/8/7K w - - 0 1", 7, 0, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/8/8/8/8/8/7K/8 w - - 0 1", 7, 1, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/8/8/8/8/7K/8/8 w - - 0 1", 7, 2, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/8/8/8/7K/8/8/8 w - - 0 1", 7, 3, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/8/8/7K/8/8/8/8 w - - 0 1", 7, 4, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/8/7K/8/8/8/8/8 w - - 0 1", 7, 5, Colour.White, SharpShooter.Type.King },
+      new object[] { "7k/7K/8/8/8/8/8/8 w - - 0 1", 7, 6, Colour.White, SharpShooter.Type.King },
     };
 
     [Theory]
