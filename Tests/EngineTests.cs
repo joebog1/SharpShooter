@@ -17,6 +17,26 @@ namespace Tests
       // Assert that the position is invalid.
       Assert.False(isValid);
     }
+    [Theory]
+    [InlineData("8/8/8/4k3/8/2K5/8/5P2 w - - 0 1")]
+    [InlineData("8/8/8/4k3/8/2K5/8/5P2 b - - 0 1")]
+    [InlineData("3P4/8/8/4k3/8/2K5/8/8 w - - 0 1")]
+    [InlineData("3P4/8/8/4k3/8/2K5/8/8 b - - 0 1")]
+    [InlineData("3p4/8/8/4k3/8/2K5/8/8 w - - 0 1")]
+    [InlineData("3p4/8/8/4k3/8/2K5/8/8 b - - 0 1")]
+    [InlineData("8/8/8/4k3/8/2K5/8/p7 w - - 0 1")]
+    [InlineData("8/8/8/4k3/8/2K5/8/p7 b - - 0 1")]
+    public void PawnsOnFirstRank_ChecksValidity_IsInvalid(string fen)
+    {
+      // Arrange an empty board is invalid because kings are required to exist.
+      var engine = new ChessEngine("8/8/8/8/8/8/8/8 w - - 0 1");
+
+      // Act by checking if the position we are in is valid.
+      bool isValid = engine.IsValidPosition();
+
+      // Assert that the position is invalid.
+      Assert.False(isValid);
+    }
 
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", true, "Two kings far apart is valid")]
