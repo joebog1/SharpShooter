@@ -85,6 +85,9 @@ namespace Tests
     [InlineData("3B5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
     // Bishop diagonal checks from afar.
     [InlineData("b7/8/8/8/2k5/8/8/7K w - - 0 1", true, "white is in check from a bishop")]
+    [InlineData("7B/1K6/8/8/8/8/8/k7 b - - 0 1", true, "black is in check from a bishop")]
+    [InlineData("k7/8/8/8/2K5/8/8/7B b - - 0 1", true, "black is in check from a bishop")]
+    [InlineData("7k/8/8/8/2K5/8/8/B7 b - - 0 1", true, "black is in check from a bishop")]
 
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
