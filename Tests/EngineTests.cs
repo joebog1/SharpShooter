@@ -124,6 +124,9 @@ namespace Tests
     [InlineData("8/8/8/4k3/3P4/8/4K3/8 b - - 0 1", true, "black is in check from a pawn")]
     [InlineData("8/8/3P4/4k3/8/8/4K3/8 b - - 0 1", false, "black is not in check")]
     [InlineData("8/8/5P2/4k3/8/8/4K3/8 b - - 0 1", false, "black is not in check")]
+    // Ensure checks don't go out of bounds tests.
+    [InlineData("8/8/5P2/4K3/8/8/8/7k w - - 7 5", false, "white is not in check")]
+    [InlineData("K7/8/5P2/8/8/8/8/7k b - - 20 11", false, "black is not in check")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
       var engine = new ChessEngine(fen);
