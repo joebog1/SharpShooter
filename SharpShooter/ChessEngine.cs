@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Numerics;
 
 namespace SharpShooter
 {
@@ -164,6 +165,29 @@ namespace SharpShooter
           return true;
         }
         i++;
+      }
+
+      // Knight checks
+      // There are 8 possible cases ((+1,+2),(+2,+1),(+2,-1),(+1,-2),(-1,-2),(-2,-1),(-2,+1) and (-1,+2)).
+      // We simply check if this square exists, if it does is there a knight of the opposite colour on it.
+      var knightToLookFor = new Piece(otherColour, Type.Knight);
+      var possibleOffsets = new (int, int)[] { (+1, +2), (+2, +1), (+2, -1), (+1, -2), (-1, -2), (-2, -1), (-2, +1), (-1, +2) };
+
+      foreach ( var possibleOffset in possibleOffsets )
+      {
+        // Skip the check if it is off the board.
+        var positionToCheck = new Square(kingWhoCouldBeInCheck.File + possibleOffset.Item1,
+                                         kingWhoCouldBeInCheck.Rank + possibleOffset.Item2);
+        if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
+            positionToCheck.File < 0 || positionToCheck.File >= 8)
+        {
+          continue;
+        }
+        var pieceAtPosition = PieceAtPosition(positionToCheck);
+        if(pieceAtPosition == knightToLookFor)
+        {
+          return true;
+        }
       }
 
       return false;
