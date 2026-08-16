@@ -87,6 +87,16 @@ namespace Tests
       Assert.Equal(expectedPiece, actualPiece);
     }
 
+    [Theory]
+    [InlineData("8/8/2k5/8/8/8/8/4K2R w Q - 0 1")]
+    public void IllegalCastlingRights_IsValidPosition_IsInvalid(string fen)
+    {
+      var engine = new ChessEngine(fen);
+
+      bool actual = engine.IsValidPosition();
+
+      Assert.False(actual);
+    }
 
     [Theory]
     [InlineData("4k3/8/8/8/8/8/8/4K3 w - - 0 1", false, "white is not in check")]
