@@ -88,7 +88,8 @@ namespace Tests
     }
 
     [Theory]
-    [InlineData("8/8/2k5/8/8/8/8/4K2R w Q - 0 1")]
+    [InlineData("8/8/2k5/8/8/8/8/4K3 w Q - 0 1")]
+    [InlineData("8/8/2k5/8/8/8/8/4K3 w K - 0 1")]
     public void IllegalCastlingRights_IsValidPosition_IsInvalid(string fen)
     {
       var engine = new ChessEngine(fen);
@@ -96,6 +97,17 @@ namespace Tests
       bool actual = engine.IsValidPosition();
 
       Assert.False(actual);
+    }
+
+    [Theory]
+    [InlineData("4k2r/8/8/8/8/8/8/4K2R w kK - 0 1")]
+    public void LegalCastlingRights_IsValidPosition_IsValid(string fen)
+    {
+      var engine = new ChessEngine(fen);
+
+      bool actual = engine.IsValidPosition();
+
+      Assert.True(actual);
     }
 
     [Theory]
