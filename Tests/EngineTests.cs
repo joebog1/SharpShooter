@@ -88,6 +88,45 @@ namespace Tests
       Assert.Equal(expectedPiece, actualPiece);
     }
 
+    [Fact]
+    public void SetupDefaultBoard_ChecksAllPiecePositions_AreExpectedPieces()
+    {
+      // This test ensures the default FEN has all pieces where I expect them to be.
+      // I keep mixing up the rows and columns of the piece colours so this ensures
+      // that gets caught if I ever do it again.
+      var engine = new ChessEngine("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+      Action<Piece, Square> assertPiece = (expected, square) =>
+        Assert.Equal(expected, engine.PieceAtPosition(square));
+
+      // Black back rank.
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Rook), (File: 0, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Knight), (File: 1, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Bishop), (File: 2, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Queen), (File: 3, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.King), (File: 4, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Bishop), (File: 5, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Knight), (File: 6, Rank: 7));
+      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Rook), (File: 7, Rank: 7));
+
+      // Black pawns.
+      for (int f = 0; f < 8; f++)
+        assertPiece(new Piece(Colour.Black, SharpShooter.Type.Pawn), (File: f, Rank: 6));
+
+      // White pawns.
+      for (int f = 0; f < 8; f++)
+        assertPiece(new Piece(Colour.White, SharpShooter.Type.Pawn), (File: f, Rank: 1));
+
+      // White back rank.
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Rook), (File: 0, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Knight), (File: 1, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Bishop), (File: 2, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Queen), (File: 3, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.King), (File: 4, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Bishop), (File: 5, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Knight), (File: 6, Rank: 0));
+      assertPiece(new Piece(Colour.White, SharpShooter.Type.Rook), (File: 7, Rank: 0));
+    }
+
     [Theory]
     [InlineData("8/8/2k5/8/8/8/8/4K3 w Q - 0 1")]
     [InlineData("8/8/2k5/8/8/8/8/4K3 w K - 0 1")]
