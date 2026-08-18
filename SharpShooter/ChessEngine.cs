@@ -1,22 +1,47 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 
 namespace SharpShooter
 {
-    using Square = (int File, int Rank);
+   using Square = (int File, int Rank);
+
+  [Flags]
+  public enum CastlingRights
+  {
+    None = 0,
+    WhiteKingside = 1,
+    WhiteQueenside = 2,
+    BlackKingside = 4,
+    BlackQueenside = 8,
+  }
 
   public class ChessEngine
   {
     public ChessEngine(string fen) { SetPositionByFen(fen); }
 
-    string myFen;
+    string myRawFen;
 
-    string[]mySplitFen => myFen.Split(' ')[0].Split('/');
+    string[]mySplitFen => myRawFen.Split(' ')[0].Split('/');
 
-    // I want all of the string splits after the first one.
-    string[] myExtraFenInformation => myFen.Split(' ').Skip(1).ToArray();
+    // Just the positional infomration of the fen string. lower case letters are black pieces,
+    // upper case are white pieces. Read from the 8th rank downwards left to right.
+    string myPositionFen => myRawFen.Split(' ')[0];
+
+    // All of the fen information past the position string. This includes (in order):
+    // Current Turn: 'w', whites turn or 'b', blacks turn.
+    // Castling rights: KQkq reads Black Kingside, Black Qeenside, white kingside, white queenside.
+    // En-passant square: the square that can legally be taken by another pawn.
+    // Halfmove clock : A nonnegative integer representing the halfmove clock. This number is the count of
+    // halfmoves(or ply) since the last pawn advance or capturing move.This value is used for the fifty move draw rule.
+    // Fullmove Number: This will have the value "1" for the first move of a game for both White and Black.It is incremented by one immediately after each move by Black.
+    // :NOTE: en-passant square sometimes isn't shown in FEN if no opponents pawn can actually take it.
+    // The offical fen spec always lists it, even when no such pawn exists to take advantage of it.
+    string[] myExtraFenInformation => myRawFen.Split(' ').Skip(1).ToArray();
+
+    CastlingRights myCastlingRights => CastlingRightsFromExtraFenSnippet(myExtraFenInformation[1]);
 
     Piece[,] myBoard = new Piece[8,8];
 
@@ -25,7 +50,7 @@ namespace SharpShooter
 
     public void SetPositionByFen(string fen)
     {
-      myFen = fen;
+      myRawFen = fen;
       // Now we have an array of strings. There should be 8 of them as there are 8 rows of a chessboard.
       Debug.Assert(mySplitFen.Length == 8);
 
@@ -205,7 +230,7 @@ namespace SharpShooter
 
       if (!hasKings) return false;
 
-      bool duplicateOrMissingKings = myFen.Count('k') == 1 && myFen.Count('K') == 1;
+      bool duplicateOrMissingKings = myPositionFen.Count('k') == 1 && myPositionFen.Count('K') == 1;
       
       if(!duplicateOrMissingKings) return false;
 
@@ -214,6 +239,61 @@ namespace SharpShooter
       
       if (kingsTouch) return false;
 
+      // If the board state claims that castling is available, then the kings must be on the
+      // right squares as well as a rook must be present on the correct square for the respected side of castling.
+      if(myCastlingRights.HasFlag(CastlingRights.BlackKingside))
+      {
+        // There must be a king on e8 and a rook on h8.
+        Square expectedKingSquare = new Square(4, 7);
+        Piece expectedKing = new Piece(Colour.Black, Type.King);
+        Square expectedRookSqaure = new Square(7, 7);
+        Piece expectedRook = new Piece(Colour.Black, Type.Rook);
+        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
+            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
+        {
+          return false;
+        }
+      }
+      if(myCastlingRights.HasFlag(CastlingRights.WhiteKingside))
+      {
+        // There must be a king on e1 and a rook on h1.
+        Square expectedKingSquare = new Square(4, 0);
+        Piece expectedKing = new Piece(Colour.White, Type.King);
+        Square expectedRookSqaure = new Square(7, 0);
+        Piece expectedRook = new Piece(Colour.White, Type.Rook);
+        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
+            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
+        {
+          return false;
+        }
+      }
+      if(myCastlingRights.HasFlag(CastlingRights.BlackQueenside))
+      {
+        // There must be a king on e8 and a rook on h8.
+        Square expectedKingSquare = new Square(4, 7);
+        Piece expectedKing = new Piece(Colour.Black, Type.King);
+        Square expectedRookSqaure = new Square(7, 0);
+        Piece expectedRook = new Piece(Colour.Black, Type.Rook);
+        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
+            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
+        {
+          return false;
+        }
+      }
+      if(myCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
+      {
+        // There must be a king on e8 and a rook on h8.
+        Square expectedKingSquare = new Square(4, 7);
+        Piece expectedKing = new Piece(Colour.White, Type.King);
+        Square expectedRookSqaure = new Square(7, 0);
+        Piece expectedRook = new Piece(Colour.White, Type.Rook);
+        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
+            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
+        {
+          return false;
+        }
+      }
+
       bool illegalPawns = mySplitFen[0].Contains('p') || mySplitFen[0].Contains('P') ||
                           mySplitFen[7].Contains('p') || mySplitFen[7].Contains('P');
 
@@ -221,5 +301,15 @@ namespace SharpShooter
       return true;
     }
 
+    // Returns who has castling rights by reading the CastlingString
+    private CastlingRights CastlingRightsFromExtraFenSnippet(string CastlingString)
+    {
+      CastlingRights castlingRights = CastlingRights.None;
+      if (CastlingString.Contains('k')) castlingRights |= CastlingRights.BlackKingside;
+      if (CastlingString.Contains('K')) castlingRights |= CastlingRights.WhiteKingside;
+      if (CastlingString.Contains('q')) castlingRights |= CastlingRights.BlackQueenside;
+      if (CastlingString.Contains('Q')) castlingRights |= CastlingRights.WhiteQueenside;
+      return castlingRights;
+    }
   }
 }
