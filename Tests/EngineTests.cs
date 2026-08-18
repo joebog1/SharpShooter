@@ -29,7 +29,7 @@ namespace Tests
     public void PawnsOnFirstRank_ChecksValidity_IsInvalid(string fen)
     {
       // Arrange an empty board is invalid because kings are required to exist.
-      var engine = new ChessEngine("8/8/8/8/8/8/8/8 w - - 0 1");
+      var engine = new ChessEngine(fen);
 
       // Act by checking if the position we are in is valid.
       bool isValid = engine.IsValidPosition();
