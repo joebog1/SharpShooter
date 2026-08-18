@@ -6,7 +6,6 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace SharpShooter
 {
-   using Square = (int File, int Rank);
 
   [Flags]
   public enum CastlingRights
@@ -96,7 +95,7 @@ namespace SharpShooter
         {
           var piece = myBoard[file, rank];
           if (piece != null && piece.Colour() == colour && piece.Type() == Type.King)
-            return (File: file, Rank: rank);
+            return new Square(file, rank);
         }
       return null;
     }
@@ -241,57 +240,25 @@ namespace SharpShooter
 
       // If the board state claims that castling is available, then the kings must be on the
       // right squares as well as a rook must be present on the correct square for the respected side of castling.
-      if(myCastlingRights.HasFlag(CastlingRights.BlackKingside))
+      if (myCastlingRights.HasFlag(CastlingRights.BlackKingside))
       {
-        // There must be a king on e8 and a rook on h8.
-        Square expectedKingSquare = new Square(4, 7);
-        Piece expectedKing = new Piece(Colour.Black, Type.King);
-        Square expectedRookSqaure = new Square(7, 7);
-        Piece expectedRook = new Piece(Colour.Black, Type.Rook);
-        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
-            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
-        {
-          return false;
-        }
+        if (myBoard[4, 7] != new Piece(Colour.Black, Type.King) ||
+            myBoard[7, 7] != new Piece(Colour.Black, Type.Rook)) return false;
       }
-      if(myCastlingRights.HasFlag(CastlingRights.WhiteKingside))
+      if (myCastlingRights.HasFlag(CastlingRights.WhiteKingside))
       {
-        // There must be a king on e1 and a rook on h1.
-        Square expectedKingSquare = new Square(4, 0);
-        Piece expectedKing = new Piece(Colour.White, Type.King);
-        Square expectedRookSqaure = new Square(7, 0);
-        Piece expectedRook = new Piece(Colour.White, Type.Rook);
-        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
-            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
-        {
-          return false;
-        }
+        if (myBoard[4, 0] != new Piece(Colour.White, Type.King) ||
+            myBoard[7, 0] != new Piece(Colour.White, Type.Rook)) return false;
       }
       if(myCastlingRights.HasFlag(CastlingRights.BlackQueenside))
       {
-        // There must be a king on e8 and a rook on h8.
-        Square expectedKingSquare = new Square(4, 7);
-        Piece expectedKing = new Piece(Colour.Black, Type.King);
-        Square expectedRookSqaure = new Square(7, 0);
-        Piece expectedRook = new Piece(Colour.Black, Type.Rook);
-        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
-            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
-        {
-          return false;
-        }
+        if (myBoard[4, 7] != new Piece(Colour.Black, Type.King) ||
+            myBoard[0, 7] != new Piece(Colour.Black, Type.Rook)) return false;
       }
       if(myCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
       {
-        // There must be a king on e8 and a rook on h8.
-        Square expectedKingSquare = new Square(4, 7);
-        Piece expectedKing = new Piece(Colour.White, Type.King);
-        Square expectedRookSqaure = new Square(7, 0);
-        Piece expectedRook = new Piece(Colour.White, Type.Rook);
-        if (myBoard[expectedKingSquare.File, expectedKingSquare.Rank] != expectedKing ||
-            myBoard[expectedRookSqaure.File, expectedRookSqaure.Rank] != expectedRook)
-        {
-          return false;
-        }
+        if (myBoard[4, 0] != new Piece(Colour.White, Type.King) ||
+            myBoard[0, 0] != new Piece(Colour.White, Type.Rook)) return false;
       }
 
       bool illegalPawns = mySplitFen[0].Contains('p') || mySplitFen[0].Contains('P') ||

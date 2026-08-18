@@ -1,4 +1,5 @@
 ﻿using SharpShooter;
+
 using System.Drawing;
 
 namespace Tests
@@ -101,6 +102,7 @@ namespace Tests
 
     [Theory]
     [InlineData("4k2r/8/8/8/8/8/8/4K2R w kK - 0 1")]
+    [InlineData("r3k3/8/8/8/8/8/8/R3K3 w qQ - 0 1")]
     public void LegalCastlingRights_IsValidPosition_IsValid(string fen)
     {
       var engine = new ChessEngine(fen);
