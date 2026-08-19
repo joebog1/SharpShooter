@@ -80,9 +80,9 @@ namespace Tests
     public void PieceAtPosition_ChecksPosition_IsExpectedPiece(string fen, int file, int rank, Colour expectedColour, SharpShooter.Type expectedType)
     {
       // Arrange the board.
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
       // Get the piece at the expected position.
-      var actualPiece = engine.PieceAtPosition((File: file, Rank: rank));
+      var actualPiece = board.PieceAtPosition((File: file, Rank: rank));
       // Assert it is the expected piece.
       var expectedPiece = new Piece(expectedColour, expectedType);
       Assert.Equal(expectedPiece, actualPiece);
@@ -94,9 +94,9 @@ namespace Tests
       // This test ensures the default FEN has all pieces where I expect them to be.
       // I keep mixing up the rows and columns of the piece colours so this ensures
       // that gets caught if I ever do it again.
-      var engine = new ChessEngine("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+      var board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
       Action<Piece, Square> assertPiece = (expected, square) =>
-        Assert.Equal(expected, engine.PieceAtPosition(square));
+        Assert.Equal(expected, board.PieceAtPosition(square));
 
       // Black back rank.
       assertPiece(new Piece(Colour.Black, SharpShooter.Type.Rook), (File: 0, Rank: 7));
