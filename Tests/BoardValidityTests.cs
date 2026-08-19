@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Tests
 {
-  public class EngineTests
+  public class BoardValidityTests
   {
     [Fact]
     public void EmptyBoard_ChecksValidity_IsInvalid()
