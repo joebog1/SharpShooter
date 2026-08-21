@@ -11,13 +11,12 @@ namespace SharpShooter
   {
     public ChessEngine(string fen) { SetPositionFromFen(fen); }
 
-    CastlingRights myCastlingRights;
-
-    Board Board() { return myBoard; }
-    private Board myBoard;
-
     // Can be null if the position is invalid. assume it isn't otherwise.
     public Colour? MyTurn { get; private set; }
+    CastlingRights myCastlingRights;
+
+    private Board myBoard;
+    Board Board() { return myBoard; }
 
     public void SetPositionFromFen(string fen)
     {
@@ -157,6 +156,42 @@ namespace SharpShooter
       return false;
     }
 
+    public List<Move> GenerateLegalMoves()
+    {
+      var moves = new List<Move> {};
+      foreach(var (piece,position) in myBoard.Pieces())
+      {
+        if (piece.Type() == Type.King)
+        {
+          // :TODO: collission detection?
+          moves.Add((position,(position.File + 1, position.Rank))); // Up
+          moves.Add((position,(position.File - 1, position.Rank))); // Down
+          moves.Add((position,(position.File, position.Rank - 1))); // Left
+          moves.Add((position,(position.File, position.Rank + 1))); // Right
+          moves.Add((position,(position.File + 1, position.Rank + 1))); // Up-Right
+          moves.Add((position,(position.File + 1, position.Rank - 1))); // Up-Left
+          moves.Add((position,(position.File - 1, position.Rank + 1))); // Down-Right
+          moves.Add((position,(position.File - 1, position.Rank - 1))); // Down-Left
+        }
+        if(piece.Type() == Type.Pawn)
+        {
+          // :TODO: Pawns are directional based on colour!
+          if(piece.Colour() == Colour.Black)
+          {
+            moves.Add((position, (position.File, position.Rank - 1)));
+          }
+          else
+          {
+            Debug.Assert(piece.Colour() == Colour.White);
+            moves.Add((position, (position.File, position.Rank + 1)));
+          }
+        }
+      }
+      return moves;
+    }
+
+
+
     /// Looks in a specific direction for a peice. Expects either a Rook,Bishop or Queen peice to be provided.
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
     private bool CheckInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
@@ -183,6 +218,7 @@ namespace SharpShooter
       }
       return false;
     }
+
     /// Looks in a specific location for a peice. Expects either a pawn or a knight peice to be provided.
     private bool CheckDiscrete(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
     {

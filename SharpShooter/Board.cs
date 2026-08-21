@@ -41,7 +41,6 @@ namespace SharpShooter
       // :NOTE: O(n) piece look up is not ideal... #1
       foreach (var (piece, position) in myPieces)
       {
-        // :MYTODO: hope this isn't another reference check!
         if (position == location)
         {
           return piece;
