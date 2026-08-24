@@ -64,7 +64,7 @@ namespace Tests
     {
       // Tests that two pawns with each other in their way can't move.
       VerifyMoves(
-        "8/8/8/8/4P3/4p3/8/8 b - - 0 1",
+        "8/8/8/8/4p3/4P3/8/8 b - - 0 1",
         new List<Move>{});
     }
 
