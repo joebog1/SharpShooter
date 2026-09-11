@@ -102,29 +102,29 @@ namespace SharpShooter
 
       // Queen checks
       var queenToLookFor = new Piece(otherColour, Type.Queen);
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 0, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 0, 1, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 0, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 0, -1, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 1, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, -1, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, -1, queenToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, 1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 0, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, -1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, -1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, queenToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 1, queenToLookFor)) return true;
       // Rook checks.
       var rookToLookFor = new Piece(otherColour, Type.Rook);
 
       // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 0, rookToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 0, 1, rookToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 0, rookToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 0, -1, rookToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, rookToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, 1, rookToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 0, rookToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, -1, rookToLookFor)) return true;
 
       // Bishop checks.
       var bishopToLookFor = new Piece(otherColour, Type.Bishop);
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, 1, bishopToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, 1, -1, bishopToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, -1, bishopToLookFor)) return true;
-      if (CheckInADirection(kingWhoCouldBeInCheck, -1, 1, bishopToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 1, bishopToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, -1, bishopToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, bishopToLookFor)) return true;
+      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 1, bishopToLookFor)) return true;
 
       // Knight checks
       // There are 8 possible cases ((+1,+2),(+2,+1),(+2,-1),(+1,-2),(-1,-2),(-2,-1),(-2,+1) and (-1,+2)).
@@ -134,7 +134,7 @@ namespace SharpShooter
 
       foreach (var possibleOffset in possibleOffsets)
       {
-        if (CheckDiscrete(kingWhoCouldBeInCheck, possibleOffset.Item1, possibleOffset.Item2, knightToLookFor)) return true;
+        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, possibleOffset.Item1, possibleOffset.Item2, knightToLookFor)) return true;
       }
 
       // Pawn checks
@@ -143,14 +143,14 @@ namespace SharpShooter
       if (MyTurn!.Value == Colour.White)
       {
         // Check (+1,+1) and (-1,+1);
-        if (CheckDiscrete(kingWhoCouldBeInCheck, 1, 1, pawnToLookFor)) return true;
-        if (CheckDiscrete(kingWhoCouldBeInCheck, -1, 1, pawnToLookFor)) return true;
+        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, 1, 1, pawnToLookFor)) return true;
+        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, -1, 1, pawnToLookFor)) return true;
       }
       else
       {
         // Black king, check (+1,-1) and (-1,-1);
-        if (CheckDiscrete(kingWhoCouldBeInCheck, 1, -1, pawnToLookFor)) return true;
-        if (CheckDiscrete(kingWhoCouldBeInCheck, -1, -1, pawnToLookFor)) return true;
+        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, 1, -1, pawnToLookFor)) return true;
+        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, -1, -1, pawnToLookFor)) return true;
       }
 
       return false;
@@ -196,7 +196,7 @@ namespace SharpShooter
 
     /// Looks in a specific direction for a peice. Expects either a Rook,Bishop or Queen peice to be provided.
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
-    private bool CheckInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
+    private bool CheckForPieceInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
     {
       // i starts at one because i = 0 would reveal the king.
       for (int i = 1; i < 8; i++)
@@ -222,7 +222,7 @@ namespace SharpShooter
     }
 
     /// Looks in a specific location for a peice. Expects either a pawn or a knight peice to be provided.
-    private bool CheckDiscrete(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
+    private bool CheckForPieceDiscrete(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
     {
       var positionToCheck = new Square(KingsSqaure.File + deltaFile, KingsSqaure.Rank + deltaRank);
       if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
