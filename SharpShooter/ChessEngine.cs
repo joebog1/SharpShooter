@@ -161,38 +161,53 @@ namespace SharpShooter
     public List<Move> GenerateLegalMoves()
     {
       var moves = new List<Move> {};
-      foreach(var (piece,position) in myBoard.Pieces())
+      foreach(var (piece,sqaure) in myBoard.Pieces())
       {
-        if (piece.Type() == Type.King)
-        {
-          // :TODO: collission detection?
-          moves.Add((position,(position.File + 1, position.Rank))); // Up
-          moves.Add((position,(position.File - 1, position.Rank))); // Down
-          moves.Add((position,(position.File, position.Rank - 1))); // Left
-          moves.Add((position,(position.File, position.Rank + 1))); // Right
-          moves.Add((position,(position.File + 1, position.Rank + 1))); // Up-Right
-          moves.Add((position,(position.File + 1, position.Rank - 1))); // Up-Left
-          moves.Add((position,(position.File - 1, position.Rank + 1))); // Down-Right
-          moves.Add((position,(position.File - 1, position.Rank - 1))); // Down-Left
-        }
-        if(piece.Type() == Type.Pawn)
-        {
-          if(piece.Colour() == Colour.Black)
-          {
-            if (myBoard.PieceAtPosition((position.File, position.Rank - 1)) != null) continue;
-            moves.Add((position, (position.File, position.Rank - 1)));
-          }
-          else
-          {
-            Debug.Assert(piece.Colour() == Colour.White);
-            if (myBoard.PieceAtPosition((position.File, position.Rank + 1)) != null) continue;
-            moves.Add((position, (position.File, position.Rank + 1)));
-          }
-        }
+        moves.AddRange(GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
       }
       return moves;
     }
+    public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square Square)
+    {
+      var moves = new List<Move> { };
 
+      if (piece.Type() == Type.King)
+      {
+        // :TODO: collission detection?
+        moves.Add((Square, (Square.File + 1, Square.Rank))); // Up
+        moves.Add((Square, (Square.File - 1, Square.Rank))); // Down
+        moves.Add((Square, (Square.File, Square.Rank - 1))); // Left
+        moves.Add((Square, (Square.File, Square.Rank + 1))); // Right
+        moves.Add((Square, (Square.File + 1, Square.Rank + 1))); // Up-Right
+        moves.Add((Square, (Square.File + 1, Square.Rank - 1))); // Up-Left
+        moves.Add((Square, (Square.File - 1, Square.Rank + 1))); // Down-Right
+        moves.Add((Square, (Square.File - 1, Square.Rank - 1))); // Down-Left
+      }
+      else if (piece.Type() == Type.Pawn)
+      {
+        if (piece.Colour() == Colour.Black)
+        {
+          if (myBoard.PieceAtPosition((Square.File, Square.Rank - 1)) == null)
+          {
+            moves.Add((Square, (Square.File, Square.Rank - 1)));
+          }
+        }
+        else
+        {
+          Debug.Assert(piece.Colour() == Colour.White);
+          if (myBoard.PieceAtPosition((Square.File, Square.Rank + 1)) == null)
+          {
+            moves.Add((Square, (Square.File, Square.Rank + 1)));
+          }
+        }
+      }
+      else if (piece.Type() == Type.Bishop)
+      {
+        // Check all 4 bishop directions. Include captures.
+      }
+      
+      return moves;
+    }
 
 
     /// Looks in a specific direction for a peice. Expects either a Rook,Bishop or Queen peice to be provided.
