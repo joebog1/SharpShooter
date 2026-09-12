@@ -194,6 +194,23 @@ namespace SharpShooter
           {
             moves.Add((square, (square.File, square.Rank - 1)));
           }
+          // Check -1,-1 and 1,-1 for captures
+          var leftCapture = new Square(square.File - 1, square.Rank - 1);
+          if (leftCapture.File >= 0 && leftCapture.File < 8 && leftCapture.Rank >= 0 && leftCapture.Rank < 8)
+          {
+            if (myBoard.PieceAtPosition(leftCapture)?.Colour() == Colour.White)
+            {
+              moves.Add((square, leftCapture));
+            }
+          }
+          var rightCapture = new Square(square.File + 1, square.Rank - 1);
+          if (rightCapture.File >= 0 && rightCapture.File < 8 && rightCapture.Rank >= 0 && rightCapture.Rank < 8)
+          {
+            if (myBoard.PieceAtPosition(rightCapture)?.Colour() == Colour.White)
+            {
+              moves.Add((square, rightCapture));
+            }
+          }
         }
         else
         {
@@ -201,6 +218,23 @@ namespace SharpShooter
           if (myBoard.PieceAtPosition((square.File, square.Rank + 1)) == null)
           {
             moves.Add((square, (square.File, square.Rank + 1)));
+          }
+          // Check 1,1 and -1,1 for captures
+          var leftCapture = new Square(square.File - 1, square.Rank + 1);
+          if (leftCapture.File >= 0 && leftCapture.File < 8 && leftCapture.Rank >= 0 && leftCapture.Rank < 8)
+          {
+            if (myBoard.PieceAtPosition(leftCapture)?.Colour() == Colour.Black)
+            {
+              moves.Add((square, leftCapture));
+            }
+          }
+          var rightCapture = new Square(square.File + 1, square.Rank + 1);
+          if (rightCapture.File >= 0 && rightCapture.File < 8 && rightCapture.Rank >= 0 && rightCapture.Rank < 8)
+          {
+            if (myBoard.PieceAtPosition(rightCapture)?.Colour() == Colour.Black)
+            {
+              moves.Add((square, rightCapture));
+            }
           }
         }
       }
