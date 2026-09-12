@@ -1,6 +1,7 @@
 ﻿using SharpShooter;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Tests
 {
@@ -68,11 +69,36 @@ namespace Tests
         new List<Move>{});
     }
 
+
+    public static IEnumerable<object[]> BishopTestData => new List<object[]>
+    {
+      new object[] { "8/8/8/8/8/5p2/8/7B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)), ((7, 0), (5, 2)) } }, // Capture the pawn
+      new object[] { "8/8/8/8/8/5P2/8/7B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)) } },
+      new object[] { "8/8/8/8/8/5p2/8/7b w - - 0 1", 'b', 7, 0, new List<Move> { ((7, 0), (6, 1)) } }
+    };
+
+    [Theory]
+    [MemberData(nameof(BishopTestData))]
+    public void BishopWithPawnInTheWay_GenerateMovesForPieceAtPosition(string fen, char pieceChar, int squareX, int squareY, List<Move> expectedMoves)
+    {
+      var piece = new Piece(pieceChar);
+      var square = new Square(squareX, squareY);
+      VerifyMovesFor(fen, piece, square, expectedMoves);
+    }
+
     private static void VerifyMoves(string fen, List<Move> expectedMoves)
     {
       // Tests that a position generates all expected legal moves.
       var engine = new ChessEngine(fen);
       var actualMoves = engine.GenerateLegalMoves();
+      Assert.Equal(expectedMoves.Count, actualMoves.Count);
+      Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
+    }
+    private static void VerifyMovesFor(string fen, Piece piece, Square square, List<Move> expectedMoves)
+    {
+      // Tests that a position generates all expected legal moves.
+      var engine = new ChessEngine(fen);
+      var actualMoves = engine.GenerateLegalMovesForPieceAtSqaure(piece, square);
       Assert.Equal(expectedMoves.Count, actualMoves.Count);
       Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
     }
