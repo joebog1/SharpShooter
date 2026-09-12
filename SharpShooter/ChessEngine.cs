@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
@@ -18,6 +19,7 @@ namespace SharpShooter
     private Board myBoard;
     Board Board() { return myBoard; }
 
+    [MemberNotNull(nameof(myBoard))]
     public void SetPositionFromFen(string fen)
     {
       Fen parsedFen = FenParser.Parse(fen);
