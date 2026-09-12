@@ -204,13 +204,14 @@ namespace SharpShooter
       else if (piece.Type() == Type.Bishop)
       {
         // Check all 4 bishop directions. Include captures.
+        moves.AddRange(MovesAlongRay(square, -1, 1, piece.Colour()));
+        // :TODO: add the other directions bishops use.
       }
       
       return moves;
     }
 
-
-    /// Looks in a specific direction for a peice. Expects either a Rook,Bishop or Queen peice to be provided.
+    /// Looks in a specific direction until a piece is in the way or the edge of the board is found . Expects either a Rook,Bishop or Queen peice to be provided.
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
     private bool CheckForPieceInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
     {
@@ -235,6 +236,44 @@ namespace SharpShooter
         }
       }
       return false;
+    }
+
+
+    /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
+    private List<Move> MovesAlongRay(Square InitalSqaure, int deltaFile, int deltaRank, Colour pieceColour)
+    {
+      List<Move> moves = new List<Move>();
+      // i starts at one because i = 0 would reveal the king.
+      for (int i = 1; i < 8; i++)
+      {
+        var candidateSquare = new Square(InitalSqaure.File + (i * deltaFile), InitalSqaure.Rank + (i * deltaRank));
+        if (candidateSquare.Rank < 0 || candidateSquare.Rank >= 8 ||
+            candidateSquare.File < 0 || candidateSquare.File >= 8)
+        {
+          break;
+        }
+        Piece? pieceAtPosition = myBoard.PieceAtPosition(candidateSquare);
+        if (pieceAtPosition != null)
+        {
+          // There is some other kind of peice in the way, can we capture it?
+          if(pieceAtPosition.Colour() == pieceColour)
+          {
+            // We cannot capture it and we can't keep looking past this piece.
+            return moves;
+          }
+          else
+          {
+            // We can capture this piece but go no further.
+            moves.Add((InitalSqaure,candidateSquare));
+            return moves;
+          }
+        }
+        else
+        {
+          moves.Add((InitalSqaure,candidateSquare));
+        }
+      }
+      return moves;
     }
 
     /// Looks in a specific location for a peice. Expects either a pawn or a knight peice to be provided.
