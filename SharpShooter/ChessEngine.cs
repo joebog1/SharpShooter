@@ -163,7 +163,10 @@ namespace SharpShooter
       var moves = new List<Move> {};
       foreach(var (piece,sqaure) in myBoard.Pieces())
       {
-        moves.AddRange(GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
+        if (piece.Colour() == MyTurn)
+        {
+          moves.AddRange(GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
+        }
       }
       return moves;
     }

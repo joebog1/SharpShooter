@@ -7,15 +7,14 @@ namespace Tests
 {
   public class MoveTests
   {
-    [Fact]
-    public void TwoKingsMidboard_AllKingMoves_AreGenerated()
+    public static IEnumerable<object[]> TwoKingsTestData => new List<object[]>
     {
-      // Two kings not at boarders, should have 16 possible moves
-      VerifyMoves(
+      // White king.
+      new object[]
+      {
         "8/8/5k2/8/8/3K4/8/8 w - - 0 1",
         new List<Move>
         {
-          // White king
           ((3, 2), (3, 3)),  // Up
           ((3, 2), (3, 1)),  // Down
           ((3, 2), (4, 2)),  // Left
@@ -24,7 +23,14 @@ namespace Tests
           ((3, 2), (4, 1)),  // Down-Right
           ((3, 2), (2, 3)),  // Up-Left
           ((3, 2), (2, 1)),  // Down-Left
-          // Black king
+        }
+      },
+      // Black king.
+      new object[]
+      {
+        "8/8/5k2/8/8/3K4/8/8 b - - 0 1",
+        new List<Move>
+        {
           ((5, 5), (5, 6)), // Up
           ((5, 5), (5, 4)), // Down
           ((5, 5), (4, 5)), // Left
@@ -33,7 +39,16 @@ namespace Tests
           ((5, 5), (6, 4)), // Down-Right
           ((5, 5), (6, 4)), // Up-Left
           ((5, 5), (4, 4)), // Down-Left
-        });
+        }
+      }
+    };
+
+    [Theory]
+    [MemberData(nameof(TwoKingsTestData))]
+    public void TwoKingsMidboard_AllKingMoves_AreGenerated(string fen, List<Move> expectedMoves)
+    {
+      // Kings not at boarders, should have 8 possible moves for the player whose turn it is.
+      VerifyMoves(fen, expectedMoves);
     }
 
     [Fact]
@@ -102,6 +117,12 @@ namespace Tests
       var square = new Square(squareX, squareY);
       VerifyMovesFor(fen, piece, square, expectedMoves);
     }
+
+    //[Fact]
+    //public void KnightsWithLikePieces_GeneratesMoves_CantTakeLikePieces()
+    //{
+    //  // Tests that a knight can't jump onto a square of a like piece.
+    //}
 
     private static void VerifyMoves(string fen, List<Move> expectedMoves)
     {
