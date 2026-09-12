@@ -167,37 +167,37 @@ namespace SharpShooter
       }
       return moves;
     }
-    public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square Square)
+    public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square square)
     {
       var moves = new List<Move> { };
 
       if (piece.Type() == Type.King)
       {
         // :TODO: collission detection?
-        moves.Add((Square, (Square.File + 1, Square.Rank))); // Up
-        moves.Add((Square, (Square.File - 1, Square.Rank))); // Down
-        moves.Add((Square, (Square.File, Square.Rank - 1))); // Left
-        moves.Add((Square, (Square.File, Square.Rank + 1))); // Right
-        moves.Add((Square, (Square.File + 1, Square.Rank + 1))); // Up-Right
-        moves.Add((Square, (Square.File + 1, Square.Rank - 1))); // Up-Left
-        moves.Add((Square, (Square.File - 1, Square.Rank + 1))); // Down-Right
-        moves.Add((Square, (Square.File - 1, Square.Rank - 1))); // Down-Left
+        moves.Add((square, (square.File + 1, square.Rank))); // Up
+        moves.Add((square, (square.File - 1, square.Rank))); // Down
+        moves.Add((square, (square.File, square.Rank - 1))); // Left
+        moves.Add((square, (square.File, square.Rank + 1))); // Right
+        moves.Add((square, (square.File + 1, square.Rank + 1))); // Up-Right
+        moves.Add((square, (square.File + 1, square.Rank - 1))); // Up-Left
+        moves.Add((square, (square.File - 1, square.Rank + 1))); // Down-Right
+        moves.Add((square, (square.File - 1, square.Rank - 1))); // Down-Left
       }
       else if (piece.Type() == Type.Pawn)
       {
         if (piece.Colour() == Colour.Black)
         {
-          if (myBoard.PieceAtPosition((Square.File, Square.Rank - 1)) == null)
+          if (myBoard.PieceAtPosition((square.File, square.Rank - 1)) == null)
           {
-            moves.Add((Square, (Square.File, Square.Rank - 1)));
+            moves.Add((square, (square.File, square.Rank - 1)));
           }
         }
         else
         {
           Debug.Assert(piece.Colour() == Colour.White);
-          if (myBoard.PieceAtPosition((Square.File, Square.Rank + 1)) == null)
+          if (myBoard.PieceAtPosition((square.File, square.Rank + 1)) == null)
           {
-            moves.Add((Square, (Square.File, Square.Rank + 1)));
+            moves.Add((square, (square.File, square.Rank + 1)));
           }
         }
       }
