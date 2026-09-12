@@ -1,0 +1,2 @@
+Position: The entire state of the board at a given position, includes implicit infomration like castling rights, is in check etc.
+Square: A location on the board somewhere, written file by row (0,3) is e4. This was done to mimic the algebraic notation where the file is mentioned before the rank.
