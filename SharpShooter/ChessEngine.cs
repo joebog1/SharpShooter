@@ -177,7 +177,6 @@ namespace SharpShooter
         }
         if(piece.Type() == Type.Pawn)
         {
-          // :TODO: Pawns are directional based on colour!
           if(piece.Colour() == Colour.Black)
           {
             if (myBoard.PieceAtPosition((position.File, position.Rank - 1)) != null) continue;
