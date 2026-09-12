@@ -205,6 +205,9 @@ namespace SharpShooter
       {
         // Check all 4 bishop directions. Include captures.
         moves.AddRange(MovesAlongRay(square, -1, 1, piece.Colour()));
+        moves.AddRange(MovesAlongRay(square, 1, -1, piece.Colour()));
+        moves.AddRange(MovesAlongRay(square, -1, -1, piece.Colour()));
+        moves.AddRange(MovesAlongRay(square, 1, 1, piece.Colour()));
         // :TODO: add the other directions bishops use.
       }
       
