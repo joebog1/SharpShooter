@@ -214,31 +214,28 @@ namespace SharpShooter
       return moves;
     }
 
-    /// Looks in a specific direction until a piece is in the way or the edge of the board is found . Expects either a Rook,Bishop or Queen peice to be provided.
+    /// Looks in a specific direction until a piece is in the way or the edge of the board is found.
+    /// returns true if the expected Piece is found along that direction, false otherwise.
+    /// Expects either a Rook,Bishop or Queen peice to be provided.
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
-    private bool CheckForPieceInADirection(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
+    private bool CheckForPieceInADirection(Square kingsSqaure, int deltaFile, int deltaRank, Piece peiceToLookFor)
     {
-      // i starts at one because i = 0 would reveal the king.
-      for (int i = 1; i < 8; i++)
+      // :TODO: This logic seems needlessly complex. Consider reworks to fix this. #3
+      // Colour of the king is actually the opposite colour of peiceToLookFor.
+      Colour kingsColour = peiceToLookFor.Colour() == Colour.White ? Colour.Black : Colour.White;
+      var moves = MovesAlongRay(kingsSqaure, deltaFile, deltaRank, kingsColour);
+      if (moves.Count == 0) return false;
+      // The last square in that direction is either the edge of the board or a piece.
+      var lastSquare = moves.Last().AfterSquare;
+      var pieceAtEndOfRay = myBoard.PieceAtPosition(lastSquare);
+      if (pieceAtEndOfRay == null)
       {
-        var positionToCheck = new Square(KingsSqaure.File + (i * deltaFile), KingsSqaure.Rank + (i * deltaRank));
-        if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
-            positionToCheck.File < 0 || positionToCheck.File >= 8)
-        {
-          break;
-        }
-        Piece? pieceAtPosition = myBoard.PieceAtPosition(positionToCheck);
-        if (pieceAtPosition != null)
-        {
-          // There is some other kind of peice in the way
-          if (pieceAtPosition == PeiceToLookFor) return true;
-          else
-          {
-            return false; // There is another peice in the way.
-          }
-        }
+        return false; // The peice we were looking found could not be found because the edge of the board was found.
       }
-      return false;
+      else
+      {
+        return pieceAtEndOfRay == peiceToLookFor;
+      }
     }
 
 
