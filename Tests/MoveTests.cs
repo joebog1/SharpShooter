@@ -69,6 +69,17 @@ namespace Tests
         new List<Move>{});
     }
 
+    [Fact]
+    public void PawnsCanCapture_GeneratesMoves_Captures()
+    {
+      // Tests that two pawns that can capture each other generate capture moves.
+      VerifyMoves(
+        "8/8/8/3p4/4P3/8/8/8 w - - 0 1",
+        new List<Move>{((4,3),(3,4)), // capture
+                       ((4,3),(4,4))  // move forward
+                       });
+    }
+
 
     public static IEnumerable<object[]> BishopTestData => new List<object[]>
     {
