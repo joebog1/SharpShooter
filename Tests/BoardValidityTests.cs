@@ -10,10 +10,10 @@ namespace Tests
     public void EmptyBoard_ChecksValidity_IsInvalid()
     {
       // Arrange an empty board is invalid because kings are required to exist.
-      var engine = new ChessEngine("8/8/8/8/8/8/8/8 w - - 0 1");
+      var board = new Board("8/8/8/8/8/8/8/8 w - - 0 1");
 
       // Act by checking if the position we are in is valid.
-      bool isValid = engine.IsValidPosition();
+      bool isValid = board.IsValidPosition();
 
       // Assert that the position is invalid.
       Assert.False(isValid);
@@ -30,10 +30,10 @@ namespace Tests
     public void PawnsOnFirstRank_ChecksValidity_IsInvalid(string fen)
     {
       // Arrange an empty board is invalid because kings are required to exist.
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
 
       // Act by checking if the position we are in is valid.
-      bool isValid = engine.IsValidPosition();
+      bool isValid = board.IsValidPosition();
 
       // Assert that the position is invalid.
       Assert.False(isValid);
@@ -52,9 +52,9 @@ namespace Tests
     [InlineData("4pk3/8/8/8/8/8/8/3K3 w - - 0 1", false, "Pawns can't exist on the first rank")]
     public void KingProximity_ChecksValidity_ReturnsExpected(string fen, bool expected, string _)
     {
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
 
-      bool isValid = engine.IsValidPosition();
+      bool isValid = board.IsValidPosition();
 
       Assert.Equal(expected, isValid);
     }
@@ -132,9 +132,9 @@ namespace Tests
     [InlineData("8/8/2k5/8/8/8/8/4K3 w K - 0 1")]
     public void IllegalCastlingRights_IsValidPosition_IsInvalid(string fen)
     {
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
 
-      bool actual = engine.IsValidPosition();
+      bool actual = board.IsValidPosition();
 
       Assert.False(actual);
     }
@@ -144,9 +144,9 @@ namespace Tests
     [InlineData("r3k3/8/8/8/8/8/8/R3K3 w qQ - 0 1")]
     public void LegalCastlingRights_IsValidPosition_IsValid(string fen)
     {
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
 
-      bool actual = engine.IsValidPosition();
+      bool actual = board.IsValidPosition();
 
       Assert.True(actual);
     }
@@ -231,9 +231,9 @@ namespace Tests
     [InlineData("K7/8/5P2/8/8/8/8/7k b - - 20 11", false, "black is not in check")]
     public void KingIsInCheck_ChecksInCheck_ReturnsExpected(string fen, bool expected, string _)
     {
-      var engine = new ChessEngine(fen);
+      var board = new Board(fen);
 
-      bool isInCheck = engine.IsInCheck();
+      bool isInCheck = board.IsInCheck();
 
       Assert.Equal(expected, isInCheck);
     }
