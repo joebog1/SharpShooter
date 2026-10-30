@@ -119,6 +119,18 @@ namespace Tests
       VerifyMovesFor(fen, piece, square, expectedMoves);
     }
 
+    public static IEnumerable<object[]> KnightTestData => new List<object[]>
+    {
+      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N', 7, 0, new List<Move> { ((3, 5), (4, 7)), ((3, 5), (2, 7)), ((3, 5), (4, 3)), ((3, 5), (2, 3)) } },
+    };
+    [Theory]
+    [MemberData(nameof(KnightTestData))]
+    public void KnightMoves_GenerateOnlyLegalKnightMoves(string fen, char pieceChar, int squareX, int squareY, List<Move> expectedMoves)
+    {
+      var piece = PieceExtension.FromFenCharacter(pieceChar);
+      var square = new Square(squareX, squareY);
+      VerifyMovesFor(fen, piece, square, expectedMoves);
+    }
     //[Fact]
     //public void KnightsWithLikePieces_GeneratesMoves_CantTakeLikePieces()
     //{
