@@ -121,7 +121,18 @@ namespace Tests
 
     public static IEnumerable<object[]> KnightTestData => new List<object[]>
     {
-      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N', 7, 0, new List<Move> { ((3, 5), (4, 7)), ((3, 5), (2, 7)), ((3, 5), (4, 3)), ((3, 5), (2, 3)) } },
+      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N',
+                     3,
+                     5,
+                     new List<Move> { ((3, 5), (4, 7)),
+                                      ((3, 5), (2, 7)), 
+                                      ((3, 5), (4, 3)), 
+                                      ((3, 5), (2, 3)),
+                                      ((3, 5), (1, 4)),
+                                      ((3, 5), (1, 6)),
+                                      ((3, 5), (5, 6)),
+                                      ((3, 5), (5, 4)),
+                     } },
     };
     [Theory]
     [MemberData(nameof(KnightTestData))]

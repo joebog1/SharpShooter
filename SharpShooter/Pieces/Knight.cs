@@ -22,11 +22,23 @@ namespace SharpShooter.Pieces
     /// </summary>
     /// <param name="startingSquare"></param>
     /// <returns></returns>
-    public override List<Move> GenerateLegalMoves(Square startingSquare, Board boardBounds)
+    public override List<Move> GenerateLegalMoves(Square startingSquare, Board board)
     {
-      List<Move> pesudoLegalMoves = [];
+      var possibleOffsets = new (int, int)[] { (+1, +2), (+2, +1), (+2, -1), (+1, -2), (-1, -2), (-2, -1), (-2, +1), (-1, +2) };
 
-      return pesudoLegalMoves;
+      List<Move> legalMoves = [];
+
+      foreach (var offset in possibleOffsets)
+      {
+        AddIfValid(legalMoves, 
+                   new Move(startingSquare, 
+                            Square.Offset(startingSquare, 
+                                          offset.Item1,
+                                          offset.Item2)),
+                   board);
+      }
+
+      return legalMoves;
     }
   }
 }
