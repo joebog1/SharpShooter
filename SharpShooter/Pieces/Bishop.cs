@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpShooter.Pieces
+﻿namespace SharpShooter.Pieces
 {
   public class Bishop : SlidingPiece
   {

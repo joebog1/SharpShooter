@@ -1,9 +1,4 @@
-﻿using System.Data;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace SharpShooter
 {
@@ -23,8 +18,8 @@ namespace SharpShooter
 
     public List<Move> GenerateLegalMoves()
     {
-      var moves = new List<Move> {};
-      foreach(var (piece,sqaure) in myBoard.Pieces())
+      var moves = new List<Move> { };
+      foreach (var (piece, sqaure) in myBoard.Pieces())
       {
         if (piece.Colour() == myBoard.MyTurn)
         {

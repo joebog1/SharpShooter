@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 
 namespace SharpShooter.Pieces
 {
@@ -27,7 +24,7 @@ namespace SharpShooter.Pieces
       // :TODO: Promotions count as several valid possible moves. Include them.
       if (Colour() == Pieces.Colour.Black)
       {
-        Move down = new Move(startingSquare, Square.Offset(startingSquare,0,-1));
+        Move down = new Move(startingSquare, Square.Offset(startingSquare, 0, -1));
         AddIfValid(pesudoLegalMoves, down, boardBounds);
 
         Move downLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, -1));
@@ -67,7 +64,7 @@ namespace SharpShooter.Pieces
       if (candidateMove.BeforeSquare.File == candidateMove.AfterSquare.File)
       {
         // Then we need only to check if anything is in the way. Pawns can't capture forward
-        if(board.IsOnBoard(candidateMove.AfterSquare) &&
+        if (board.IsOnBoard(candidateMove.AfterSquare) &&
            pieceAtAfterPosition == null)
         {
           moves.Add(candidateMove);
@@ -76,7 +73,7 @@ namespace SharpShooter.Pieces
       }
       // Must be a diagonal move, check if a piece of opposite colour occupies the candidateMove
       // after square. 
-      if(pieceAtAfterPosition is not null && 
+      if (pieceAtAfterPosition is not null &&
          pieceAtAfterPosition!.Colour() != Colour())
       {
         // Then you can take it.
@@ -84,5 +81,5 @@ namespace SharpShooter.Pieces
       }
       return;
     }
-  } 
+  }
 }

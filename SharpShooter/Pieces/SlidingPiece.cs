@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
-namespace SharpShooter.Pieces
+﻿namespace SharpShooter.Pieces
 {
   /// <summary>
   /// Represents a piece which slides across the board (Rook,Bishop and Queen)

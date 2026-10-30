@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpShooter.Pieces
+﻿namespace SharpShooter.Pieces
 {
   public class Knight : Piece
   {
@@ -30,9 +26,9 @@ namespace SharpShooter.Pieces
 
       foreach (var offset in possibleOffsets)
       {
-        AddIfValid(legalMoves, 
-                   new Move(startingSquare, 
-                            Square.Offset(startingSquare, 
+        AddIfValid(legalMoves,
+                   new Move(startingSquare,
+                            Square.Offset(startingSquare,
                                           offset.Item1,
                                           offset.Item2)),
                    board);

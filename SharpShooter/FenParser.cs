@@ -1,9 +1,5 @@
 ﻿using SharpShooter.Pieces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 
 namespace SharpShooter
 {
@@ -39,8 +35,8 @@ namespace SharpShooter
 
       if (extraFenInformation[0][0] == 'w') whosTurn = Colour.White;
       else if (extraFenInformation[0][0] == 'b') whosTurn = Colour.Black;
-      else 
-      { 
+      else
+      {
         Debug.Assert(false, "it should either by whites turn or blacks turn!");
       }
 

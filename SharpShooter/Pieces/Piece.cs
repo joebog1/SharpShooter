@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace SharpShooter.Pieces
+﻿namespace SharpShooter.Pieces
 {
   public enum PieceType
   {
@@ -80,7 +74,7 @@ namespace SharpShooter.Pieces
 
     public Piece(Colour colour)
     {
-        myColour = colour;
+      myColour = colour;
     }
 
     public Colour Colour() => myColour;
@@ -108,7 +102,7 @@ namespace SharpShooter.Pieces
     /// <param name="moves"></param>
     /// <param name="candidateMove"></param>
     /// <param name="boardBounds"></param>
-    public virtual void AddIfValid(List<Move> moves,Move candidateMove, Board board)
+    public virtual void AddIfValid(List<Move> moves, Move candidateMove, Board board)
     {
       var pieceAtPosition = board.PieceAtPosition(candidateMove.AfterSquare);
       if (board.IsOnBoard(candidateMove.AfterSquare) &&

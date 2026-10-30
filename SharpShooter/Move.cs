@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpShooter
+﻿namespace SharpShooter
 {
   public readonly record struct Move(Square BeforeSquare, Square AfterSquare)
   {

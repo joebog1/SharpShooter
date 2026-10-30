@@ -1,8 +1,5 @@
 ﻿using SharpShooter;
 using SharpShooter.Pieces;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Tests
 {
@@ -82,7 +79,7 @@ namespace Tests
       // Tests that two pawns with each other in their way can't move.
       VerifyMoves(
         "8/8/8/8/4p3/4P3/8/8 b - - 0 1",
-        new List<Move>{});
+        new List<Move> { });
     }
 
     [Fact]
@@ -125,8 +122,8 @@ namespace Tests
                      3,
                      5,
                      new List<Move> { ((3, 5), (4, 7)),
-                                      ((3, 5), (2, 7)), 
-                                      ((3, 5), (4, 3)), 
+                                      ((3, 5), (2, 7)),
+                                      ((3, 5), (4, 3)),
                                       ((3, 5), (2, 3)),
                                       ((3, 5), (1, 4)),
                                       ((3, 5), (1, 6)),

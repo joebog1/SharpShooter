@@ -1,6 +1,5 @@
 ﻿using SharpShooter;
 using SharpShooter.Pieces;
-using System.Drawing;
 
 namespace Tests
 {

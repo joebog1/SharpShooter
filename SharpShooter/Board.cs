@@ -1,8 +1,4 @@
 ﻿using SharpShooter.Pieces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace SharpShooter
 {
@@ -14,7 +10,7 @@ namespace SharpShooter
 
     public Board(string fen) : this(FenParser.Parse(fen)) { }
     CastlingRights myCastlingRights;
-    
+
     // Can be null if the position is invalid. assume it isn't otherwise.
     public Colour? MyTurn { get; private set; }
 
