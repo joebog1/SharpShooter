@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace SharpShooter.Pieces
@@ -22,27 +23,24 @@ namespace SharpShooter.Pieces
 
       foreach (var (fileDelta, rankDelta) in Directions)
       {
-        var current = startingSquare;
-
+        Square candidateSquare = startingSquare;
         while (true)
         {
-          current = new Square(
-              current.File + fileDelta,
-              current.Rank + rankDelta);
+          candidateSquare = Square.Offset(candidateSquare, fileDelta, rankDelta);
 
-          if (!board.IsOnBoard(current))
+          if (!board.IsOnBoard(candidateSquare))
             break;
 
-          var occupant = board.PieceAtPosition(current);
+          var occupant = board.PieceAtPosition(candidateSquare);
 
           if (occupant is null)
           {
-            moves.Add((startingSquare, current));
+            moves.Add((startingSquare, candidateSquare));
             continue;
           }
 
           if (occupant.Colour() != Colour())
-            moves.Add((startingSquare, current)); // Capture the first opposing piece.
+            moves.Add((startingSquare, candidateSquare)); // Capture the first opposing piece.
 
           break; // Rest of the slide is blocked
         }

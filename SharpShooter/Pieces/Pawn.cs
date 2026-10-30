@@ -27,26 +27,26 @@ namespace SharpShooter.Pieces
       // :TODO: Promotions count as several valid possible moves. Include them.
       if (Colour() == Pieces.Colour.Black)
       {
-        Move down = new Move(startingSquare, (startingSquare.File, startingSquare.Rank - 1));
-        AddIfOnBoard(pesudoLegalMoves, down, boardBounds);
+        Move down = new Move(startingSquare, Square.Offset(startingSquare,0,-1));
+        AddIfValid(pesudoLegalMoves, down, boardBounds);
 
-        Move downLeft = new Move(startingSquare, (startingSquare.File - 1, startingSquare.Rank - 1));
-        AddIfOnBoard(pesudoLegalMoves, downLeft, boardBounds);
+        Move downLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, -1));
+        AddIfValid(pesudoLegalMoves, downLeft, boardBounds);
 
-        Move downRight = new Move(startingSquare, (startingSquare.File + 1, startingSquare.Rank - 1));
-        AddIfOnBoard(pesudoLegalMoves, downRight, boardBounds);
+        Move downRight = new Move(startingSquare, Square.Offset(startingSquare, +1, -1));
+        AddIfValid(pesudoLegalMoves, downRight, boardBounds);
       }
       else
       {
         Debug.Assert(Colour() == Pieces.Colour.White);
-        Move up = new Move(startingSquare, (startingSquare.File, startingSquare.Rank + 1));
-        AddIfOnBoard(pesudoLegalMoves, up, boardBounds);
+        Move up = new Move(startingSquare, Square.Offset(startingSquare, 0, 1));
+        AddIfValid(pesudoLegalMoves, up, boardBounds);
 
-        Move upLeft = new Move(startingSquare, (startingSquare.File - 1, startingSquare.Rank + 1));
-        AddIfOnBoard(pesudoLegalMoves, upLeft, boardBounds);
+        Move upLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, +1));
+        AddIfValid(pesudoLegalMoves, upLeft, boardBounds);
 
-        Move upRight = new Move(startingSquare, (startingSquare.File + 1, startingSquare.Rank + 1));
-        AddIfOnBoard(pesudoLegalMoves, upRight, boardBounds);
+        Move upRight = new Move(startingSquare, Square.Offset(startingSquare, +1, +1));
+        AddIfValid(pesudoLegalMoves, upRight, boardBounds);
       }
       return pesudoLegalMoves;
     }
@@ -57,7 +57,7 @@ namespace SharpShooter.Pieces
     /// <param name="moves"></param>
     /// <param name="candidateMove"></param>
     /// <param name="board"></param>
-    public override void AddIfOnBoard(List<Move> moves, Move candidateMove, Board board)
+    public override void AddIfValid(List<Move> moves, Move candidateMove, Board board)
     {
       // A pawn needs to know if it can take diagonally because it can't move diagonally otherwise.
       // :TODO: EN PASSANT!

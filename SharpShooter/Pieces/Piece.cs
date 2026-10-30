@@ -108,7 +108,7 @@ namespace SharpShooter.Pieces
     /// <param name="moves"></param>
     /// <param name="candidateMove"></param>
     /// <param name="boardBounds"></param>
-    public virtual void AddIfOnBoard(List<Move> moves,Move candidateMove, Board board)
+    public virtual void AddIfValid(List<Move> moves,Move candidateMove, Board board)
     {
       var pieceAtPosition = board.PieceAtPosition(candidateMove.AfterSquare);
       if (board.IsOnBoard(candidateMove.AfterSquare) &&
