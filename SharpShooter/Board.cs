@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpShooter.Pieces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -32,7 +33,7 @@ namespace SharpShooter
     {
       // This method assumes the board is valid (because then a king will exist).
       // Debug.Assert(IsValidPosition()); is what I would like to assert, but that is recursive!
-      var pieceToLookFor = new Piece(colour, Type.King);
+      var pieceToLookFor = new King(colour);
       foreach (var (peice, position) in myPieces)
       {
         // :MYTODO: Ensure this isn't a check by reference!
@@ -60,7 +61,7 @@ namespace SharpShooter
     {
       var moves = new List<Move> { };
 
-      if (piece.Type() == Type.King)
+      if (piece.Type() == PieceType.King)
       {
         // :TODO: collission detection?
         moves.Add((square, (square.File + 1, square.Rank))); // Up
@@ -72,7 +73,7 @@ namespace SharpShooter
         moves.Add((square, (square.File - 1, square.Rank + 1))); // Down-Right
         moves.Add((square, (square.File - 1, square.Rank - 1))); // Down-Left
       }
-      else if (piece.Type() == Type.Pawn)
+      else if (piece.Type() == PieceType.Pawn)
       {
         if (piece.Colour() == Colour.Black)
         {
@@ -124,7 +125,7 @@ namespace SharpShooter
           }
         }
       }
-      else if (piece.Type() == Type.Bishop)
+      else if (piece.Type() == PieceType.Bishop)
       {
         // Check all 4 bishop directions. Include captures.
         moves.AddRange(MovesAlongRay(square, -1, 1, piece.Colour()));
@@ -150,14 +151,15 @@ namespace SharpShooter
 
       // Search all pieces to see if there is an additional king that isn't either on the
       // white king's square or the black king's square.
-      var whiteKingPiece = new Piece(Colour.White, Type.King);
-      var blackKingPiece = new Piece(Colour.Black, Type.King);
-      foreach (var (piece, positon) in Pieces())
+      var whiteKingPiece = new King(Colour.White);
+      var blackKingPiece = new King(Colour.Black);
+      var pieces = Pieces();
+      foreach (var (piece, positon) in pieces)
       {
         if (piece == whiteKingPiece && positon != whiteKingPosition) return false;
         if (piece == blackKingPiece && positon != blackKingPosition) return false;
         // If a pawn is found on the 1st or 8th ranks, it is illegal!
-        if (piece.Type() == Type.Pawn)
+        if (piece.Type() == PieceType.Pawn)
         {
           if (positon.Rank == 0 || positon.Rank == 7) return false;
         }
@@ -172,23 +174,23 @@ namespace SharpShooter
       // right squares as well as a rook must be present on the correct square for the respected side of castling.
       if (myCastlingRights.HasFlag(CastlingRights.BlackKingside))
       {
-        if (PieceAtPosition((4, 7)) != new Piece(Colour.Black, Type.King) ||
-            PieceAtPosition((7, 7)) != new Piece(Colour.Black, Type.Rook)) return false;
+        if (PieceAtPosition((4, 7)) != new King(Colour.Black) ||
+            PieceAtPosition((7, 7)) != new Rook(Colour.Black)) return false;
       }
       if (myCastlingRights.HasFlag(CastlingRights.WhiteKingside))
       {
-        if (PieceAtPosition((4, 0)) != new Piece(Colour.White, Type.King) ||
-            PieceAtPosition((7, 0)) != new Piece(Colour.White, Type.Rook)) return false;
+        if (PieceAtPosition((4, 0)) != new King(Colour.White) ||
+            PieceAtPosition((7, 0)) != new Rook(Colour.White)) return false;
       }
       if (myCastlingRights.HasFlag(CastlingRights.BlackQueenside))
       {
-        if (PieceAtPosition((4, 7)) != new Piece(Colour.Black, Type.King) ||
-            PieceAtPosition((0, 7)) != new Piece(Colour.Black, Type.Rook)) return false;
+        if (PieceAtPosition((4, 7)) != new King(Colour.Black) ||
+            PieceAtPosition((0, 7)) != new Rook(Colour.Black)) return false;
       }
       if (myCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
       {
-        if (PieceAtPosition((4, 0)) != new Piece(Colour.White, Type.King) ||
-            PieceAtPosition((0, 0)) != new Piece(Colour.White, Type.Rook)) return false;
+        if (PieceAtPosition((4, 0)) != new King(Colour.White) ||
+            PieceAtPosition((0, 0)) != new Rook(Colour.White)) return false;
       }
 
       return true;
@@ -202,7 +204,7 @@ namespace SharpShooter
       // :TODO: This is going to explode when IsValidPosition calls IsInCheck to handle illegal
       // positions involving both kings in check. This funciton assumes a valid state as it only
       // checks the king who's turn it is.
-      Debug.Assert(IsValidPosition());
+      //Debug.Assert(IsValidPosition());
       // Early exit for garbage case.
       if (!IsValidPosition()) return false;
 
@@ -212,7 +214,7 @@ namespace SharpShooter
       Colour otherColour = MyTurn!.Value == Colour.White ? Colour.Black : Colour.White;
 
       // Queen checks
-      var queenToLookFor = new Piece(otherColour, Type.Queen);
+      var queenToLookFor = new Queen(otherColour);
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, queenToLookFor)) return true;
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, 1, queenToLookFor)) return true;
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 0, queenToLookFor)) return true;
@@ -222,7 +224,7 @@ namespace SharpShooter
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, queenToLookFor)) return true;
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 1, queenToLookFor)) return true;
       // Rook checks.
-      var rookToLookFor = new Piece(otherColour, Type.Rook);
+      var rookToLookFor = new Rook(otherColour);
 
       // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, rookToLookFor)) return true;
@@ -231,7 +233,7 @@ namespace SharpShooter
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, -1, rookToLookFor)) return true;
 
       // Bishop checks.
-      var bishopToLookFor = new Piece(otherColour, Type.Bishop);
+      var bishopToLookFor = new Bishop(otherColour);
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 1, bishopToLookFor)) return true;
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, -1, bishopToLookFor)) return true;
       if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, bishopToLookFor)) return true;
@@ -240,7 +242,7 @@ namespace SharpShooter
       // Knight checks
       // There are 8 possible cases ((+1,+2),(+2,+1),(+2,-1),(+1,-2),(-1,-2),(-2,-1),(-2,+1) and (-1,+2)).
       // We simply check if this square exists, if it does is there a knight of the opposite colour on it.
-      var knightToLookFor = new Piece(otherColour, Type.Knight);
+      var knightToLookFor = new Knight(otherColour);
       var possibleOffsets = new (int, int)[] { (+1, +2), (+2, +1), (+2, -1), (+1, -2), (-1, -2), (-2, -1), (-2, +1), (-1, +2) };
 
       foreach (var possibleOffset in possibleOffsets)
@@ -250,7 +252,7 @@ namespace SharpShooter
 
       // Pawn checks
       // There are only two places to check, but it depends on the colour of the king.
-      var pawnToLookFor = new Piece(otherColour, Type.Pawn);
+      var pawnToLookFor = new Pawn(otherColour);
       if (MyTurn!.Value == Colour.White)
       {
         // Check (+1,+1) and (-1,+1);
@@ -310,7 +312,6 @@ namespace SharpShooter
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
     private bool CheckForPieceInADirection(Square kingsSqaure, int deltaFile, int deltaRank, Piece peiceToLookFor)
     {
-      // :TODO: This logic seems needlessly complex. Consider reworks to fix this. #3
       // Colour of the king is actually the opposite colour of peiceToLookFor.
       Colour kingsColour = peiceToLookFor.Colour() == Colour.White ? Colour.Black : Colour.White;
       var moves = MovesAlongRay(kingsSqaure, deltaFile, deltaRank, kingsColour);

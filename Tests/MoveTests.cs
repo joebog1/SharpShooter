@@ -1,4 +1,5 @@
 ﻿using SharpShooter;
+using SharpShooter.Pieces;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -113,7 +114,7 @@ namespace Tests
     [MemberData(nameof(BishopTestData))]
     public void BishopWithPawnInTheWay_GenerateMovesForPieceAtPosition(string fen, char pieceChar, int squareX, int squareY, List<Move> expectedMoves)
     {
-      var piece = new Piece(pieceChar);
+      var piece = PieceExtension.FromFenCharacter(pieceChar);
       var square = new Square(squareX, squareY);
       VerifyMovesFor(fen, piece, square, expectedMoves);
     }
@@ -135,8 +136,8 @@ namespace Tests
     private static void VerifyMovesFor(string fen, Piece piece, Square square, List<Move> expectedMoves)
     {
       // Tests that a position generates all expected legal moves.
-      var engine = new ChessEngine(fen);
-      var actualMoves = engine.GenerateLegalMovesForPieceAtSqaure(piece, square);
+      var board = new Board(fen);
+      var actualMoves = board.GenerateLegalMovesForPieceAtSqaure(piece, square);
       Assert.Equal(expectedMoves.Count, actualMoves.Count);
       Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
     }

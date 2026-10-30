@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpShooter.Pieces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -62,7 +63,7 @@ namespace SharpShooter
           else
           {
             // A peice is here!
-            pieces.Add((new Piece(character), (file, rank)));
+            pieces.Add((Pieces.PieceExtension.FromFenCharacter(character), (file, rank)));
             file++;
           }
         }

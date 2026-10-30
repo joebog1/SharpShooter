@@ -1,5 +1,5 @@
 ﻿using SharpShooter;
-
+using SharpShooter.Pieces;
 using System.Drawing;
 
 namespace Tests
@@ -61,30 +61,29 @@ namespace Tests
 
     public static IEnumerable<object[]> PieceTestData => new[]
     {
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 0, Colour.White, SharpShooter.Type.King },
-      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 7, Colour.Black, SharpShooter.Type.King },
-      new object[] { "3Rk3/8/8/8/8/8/8/4K3 b - - 0 1", 3, 7, Colour.White, SharpShooter.Type.Rook },
-      new object[] { "k7/8/8/8/8/8/8/4K3 w - - 0 1", 0, 7, Colour.Black, SharpShooter.Type.King },
-      new object[] { "7k/8/8/8/8/8/8/4K3 w - - 0 1", 7, 7, Colour.Black, SharpShooter.Type.King },
-      new object[] { "7k/8/8/8/8/8/8/7K w - - 0 1", 7, 0, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/8/8/8/8/8/7K/8 w - - 0 1", 7, 1, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/8/8/8/8/7K/8/8 w - - 0 1", 7, 2, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/8/8/8/7K/8/8/8 w - - 0 1", 7, 3, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/8/8/7K/8/8/8/8 w - - 0 1", 7, 4, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/8/7K/8/8/8/8/8 w - - 0 1", 7, 5, Colour.White, SharpShooter.Type.King },
-      new object[] { "7k/7K/8/8/8/8/8/8 w - - 0 1", 7, 6, Colour.White, SharpShooter.Type.King },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 0, new King(Colour.White) },
+      new object[] { "4k3/8/8/8/8/8/8/4K3 w - - 0 1", 4, 7, new King(Colour.Black)},
+      new object[] { "3Rk3/8/8/8/8/8/8/4K3 b - - 0 1", 3, 7, new Rook(Colour.White)},
+      new object[] { "k7/8/8/8/8/8/8/4K3 w - - 0 1", 0, 7, new King(Colour.Black)},
+      new object[] { "7k/8/8/8/8/8/8/4K3 w - - 0 1", 7, 7, new King(Colour.Black)},
+      new object[] { "7k/8/8/8/8/8/8/7K w - - 0 1", 7, 0, new King(Colour.White)},
+      new object[] { "7k/8/8/8/8/8/7K/8 w - - 0 1", 7, 1, new King(Colour.White)},
+      new object[] { "7k/8/8/8/8/7K/8/8 w - - 0 1", 7, 2, new King(Colour.White)},
+      new object[] { "7k/8/8/8/7K/8/8/8 w - - 0 1", 7, 3, new King(Colour.White)},
+      new object[] { "7k/8/8/7K/8/8/8/8 w - - 0 1", 7, 4, new King(Colour.White)},
+      new object[] { "7k/8/7K/8/8/8/8/8 w - - 0 1", 7, 5, new King(Colour.White)},
+      new object[] { "7k/7K/8/8/8/8/8/8 w - - 0 1", 7, 6, new King(Colour.White)},
     };
 
     [Theory]
     [MemberData(nameof(PieceTestData))]
-    public void PieceAtPosition_ChecksPosition_IsExpectedPiece(string fen, int file, int rank, Colour expectedColour, SharpShooter.Type expectedType)
+    public void PieceAtPosition_ChecksPosition_IsExpectedPiece(string fen, int file, int rank, Piece expectedPiece)
     {
       // Arrange the board.
       var board = new Board(fen);
       // Get the piece at the expected position.
       var actualPiece = board.PieceAtPosition((File: file, Rank: rank));
       // Assert it is the expected piece.
-      var expectedPiece = new Piece(expectedColour, expectedType);
       Assert.Equal(expectedPiece, actualPiece);
     }
 
@@ -99,32 +98,32 @@ namespace Tests
         Assert.Equal(expected, board.PieceAtPosition(square));
 
       // Black back rank.
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Rook), (File: 0, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Knight), (File: 1, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Bishop), (File: 2, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Queen), (File: 3, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.King), (File: 4, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Bishop), (File: 5, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Knight), (File: 6, Rank: 7));
-      assertPiece(new Piece(Colour.Black, SharpShooter.Type.Rook), (File: 7, Rank: 7));
+      assertPiece(new Rook(Colour.Black), (File: 0, Rank: 7));
+      assertPiece(new Knight(Colour.Black), (File: 1, Rank: 7));
+      assertPiece(new Bishop(Colour.Black), (File: 2, Rank: 7));
+      assertPiece(new Queen(Colour.Black), (File: 3, Rank: 7));
+      assertPiece(new King(Colour.Black), (File: 4, Rank: 7));
+      assertPiece(new Bishop(Colour.Black), (File: 5, Rank: 7));
+      assertPiece(new Knight(Colour.Black), (File: 6, Rank: 7));
+      assertPiece(new Rook(Colour.Black), (File: 7, Rank: 7));
 
       // Black pawns.
       for (int f = 0; f < 8; f++)
-        assertPiece(new Piece(Colour.Black, SharpShooter.Type.Pawn), (File: f, Rank: 6));
+        assertPiece(new Pawn(Colour.Black), (File: f, Rank: 6));
 
       // White pawns.
       for (int f = 0; f < 8; f++)
-        assertPiece(new Piece(Colour.White, SharpShooter.Type.Pawn), (File: f, Rank: 1));
+        assertPiece(new Pawn(Colour.White), (File: f, Rank: 1));
 
       // White back rank.
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Rook), (File: 0, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Knight), (File: 1, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Bishop), (File: 2, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Queen), (File: 3, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.King), (File: 4, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Bishop), (File: 5, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Knight), (File: 6, Rank: 0));
-      assertPiece(new Piece(Colour.White, SharpShooter.Type.Rook), (File: 7, Rank: 0));
+      assertPiece(new Rook(Colour.White), (File: 0, Rank: 0));
+      assertPiece(new Rook(Colour.White), (File: 7, Rank: 0));
+      assertPiece(new Knight(Colour.White), (File: 1, Rank: 0));
+      assertPiece(new Knight(Colour.White), (File: 6, Rank: 0));
+      assertPiece(new Bishop(Colour.White), (File: 2, Rank: 0));
+      assertPiece(new Bishop(Colour.White), (File: 5, Rank: 0));
+      assertPiece(new Queen(Colour.White), (File: 3, Rank: 0));
+      assertPiece(new King(Colour.White), (File: 4, Rank: 0));
     }
 
     [Theory]
@@ -168,10 +167,10 @@ namespace Tests
     [InlineData("3R4/3K4/8/8/8/8/8/3k4 b - - 20 11", false, "black is not in check")]
 
     // Bishop diagnonal close tests.
-    [InlineData("4K3/5b3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
-    [InlineData("4k3/3B5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
+    [InlineData("4K3/5b2/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
+    [InlineData("4k3/3B4/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
     [InlineData("5b2/4K3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a bishop")]
-    [InlineData("3B5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
+    [InlineData("3B4/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a bishop")]
     // Bishop diagonal checks from afar.
     [InlineData("b7/8/8/8/2k5/8/8/7K w - - 0 1", true, "white is in check from a bishop")]
     [InlineData("7B/1K6/8/8/8/8/8/k7 b - - 0 1", true, "black is in check from a bishop")]
@@ -185,9 +184,9 @@ namespace Tests
 
     // Queen gets given all bishop and rook checks (expect checks about not being in check.
     [InlineData("4K3/5q3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a queen")]
-    [InlineData("4k3/3Q5/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("4k3/3Q4/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
     [InlineData("5q2/4K3/8/8/8/8/8/k7 w - - 0 1", true, "white is in check from a queen")]
-    [InlineData("3Q5/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
+    [InlineData("3Q4/4k3/8/8/8/8/8/K7 b - - 0 1", true, "black is in check from a queen")]
     // Queen diagonal checks from afar.
     [InlineData("q7/8/8/8/2k5/8/8/7K w - - 0 1", true, "white is in check from a queen")]
     [InlineData("7Q/1K6/8/8/8/8/8/k7 b - - 0 1", true, "black is in check from a queen")]

@@ -28,15 +28,10 @@ namespace SharpShooter
       {
         if (piece.Colour() == myBoard.MyTurn)
         {
-          moves.AddRange(GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
+          moves.AddRange(myBoard.GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
         }
       }
       return moves;
     }
-    public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square square)
-    {
-      return myBoard.GenerateLegalMovesForPieceAtSqaure(piece, square);
-    }
-
   }
 }
