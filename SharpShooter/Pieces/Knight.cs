@@ -22,7 +22,7 @@ namespace SharpShooter.Pieces
     /// </summary>
     /// <param name="startingSquare"></param>
     /// <returns></returns>
-    public override List<Move> GeneratePesudoLegalMoves(Square startingSquare)
+    public override List<Move> GenerateLegalMoves(Square startingSquare, Board boardBounds)
     {
       List<Move> pesudoLegalMoves = [];
 

@@ -29,6 +29,17 @@ namespace SharpShooter
       MyTurn = fen.WhosTurn;
     }
 
+    /// <summary>
+    /// Lets you know if a square is on the board or not.
+    /// </summary>
+    /// <param name="square"></param>
+    /// <returns></returns>
+    public bool IsOnBoard(Square square)
+    {
+      return square.File >= 0 && square.File < 8 &&
+             square.Rank >= 0 && square.Rank < 8;
+    }
+
     public Square? FindKing(Colour colour)
     {
       // This method assumes the board is valid (because then a king will exist).
@@ -59,83 +70,7 @@ namespace SharpShooter
 
     public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square square)
     {
-      var moves = new List<Move> { };
-
-      if (piece.Type() == PieceType.King)
-      {
-        // :TODO: collission detection?
-        moves.Add((square, (square.File + 1, square.Rank))); // Up
-        moves.Add((square, (square.File - 1, square.Rank))); // Down
-        moves.Add((square, (square.File, square.Rank - 1))); // Left
-        moves.Add((square, (square.File, square.Rank + 1))); // Right
-        moves.Add((square, (square.File + 1, square.Rank + 1))); // Up-Right
-        moves.Add((square, (square.File + 1, square.Rank - 1))); // Up-Left
-        moves.Add((square, (square.File - 1, square.Rank + 1))); // Down-Right
-        moves.Add((square, (square.File - 1, square.Rank - 1))); // Down-Left
-      }
-      else if (piece.Type() == PieceType.Pawn)
-      {
-        if (piece.Colour() == Colour.Black)
-        {
-          if (PieceAtPosition((square.File, square.Rank - 1)) == null)
-          {
-            moves.Add((square, (square.File, square.Rank - 1)));
-          }
-          // Check -1,-1 and 1,-1 for captures
-          var leftCapture = new Square(square.File - 1, square.Rank - 1);
-          if (leftCapture.File >= 0 && leftCapture.File < 8 && leftCapture.Rank >= 0 && leftCapture.Rank < 8)
-          {
-            if (PieceAtPosition(leftCapture)?.Colour() == Colour.White)
-            {
-              moves.Add((square, leftCapture));
-            }
-          }
-          var rightCapture = new Square(square.File + 1, square.Rank - 1);
-          if (rightCapture.File >= 0 && rightCapture.File < 8 && rightCapture.Rank >= 0 && rightCapture.Rank < 8)
-          {
-            if (PieceAtPosition(rightCapture)?.Colour() == Colour.White)
-            {
-              moves.Add((square, rightCapture));
-            }
-          }
-        }
-        else
-        {
-          Debug.Assert(piece.Colour() == Colour.White);
-          if (PieceAtPosition((square.File, square.Rank + 1)) == null)
-          {
-            moves.Add((square, (square.File, square.Rank + 1)));
-          }
-          // Check 1,1 and -1,1 for captures
-          var leftCapture = new Square(square.File - 1, square.Rank + 1);
-          if (leftCapture.File >= 0 && leftCapture.File < 8 && leftCapture.Rank >= 0 && leftCapture.Rank < 8)
-          {
-            if (PieceAtPosition(leftCapture)?.Colour() == Colour.Black)
-            {
-              moves.Add((square, leftCapture));
-            }
-          }
-          var rightCapture = new Square(square.File + 1, square.Rank + 1);
-          if (rightCapture.File >= 0 && rightCapture.File < 8 && rightCapture.Rank >= 0 && rightCapture.Rank < 8)
-          {
-            if (PieceAtPosition(rightCapture)?.Colour() == Colour.Black)
-            {
-              moves.Add((square, rightCapture));
-            }
-          }
-        }
-      }
-      else if (piece.Type() == PieceType.Bishop)
-      {
-        // Check all 4 bishop directions. Include captures.
-        moves.AddRange(MovesAlongRay(square, -1, 1, piece.Colour()));
-        moves.AddRange(MovesAlongRay(square, 1, -1, piece.Colour()));
-        moves.AddRange(MovesAlongRay(square, -1, -1, piece.Colour()));
-        moves.AddRange(MovesAlongRay(square, 1, 1, piece.Colour()));
-        // :TODO: add the other directions bishops use.
-      }
-
-      return moves;
+      return piece.GenerateLegalMoves(square, this);
     }
 
     public bool IsValidPosition()
@@ -272,8 +207,8 @@ namespace SharpShooter
     /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
     private List<Move> MovesAlongRay(Square InitalSqaure, int deltaFile, int deltaRank, Colour pieceColour)
     {
-      List<Move> moves = new List<Move>();
-      // i starts at one because i = 0 would reveal the king.
+      List<Move> candidateMoves = new List<Move>();
+      // i starts at one because i = 0 would reveal the piece we are starting at.
       for (int i = 1; i < 8; i++)
       {
         var candidateSquare = new Square(InitalSqaure.File + (i * deltaFile), InitalSqaure.Rank + (i * deltaRank));
@@ -289,21 +224,21 @@ namespace SharpShooter
           if (pieceAtPosition.Colour() == pieceColour)
           {
             // We cannot capture it and we can't keep looking past this piece.
-            return moves;
+            return candidateMoves;
           }
           else
           {
             // We can capture this piece but go no further.
-            moves.Add((InitalSqaure, candidateSquare));
-            return moves;
+            candidateMoves.Add((InitalSqaure, candidateSquare));
+            return candidateMoves;
           }
         }
         else
         {
-          moves.Add((InitalSqaure, candidateSquare));
+          candidateMoves.Add((InitalSqaure, candidateSquare));
         }
       }
-      return moves;
+      return candidateMoves;
     }
 
     /// Looks in a specific direction until a piece is in the way or the edge of the board is found.
@@ -314,10 +249,10 @@ namespace SharpShooter
     {
       // Colour of the king is actually the opposite colour of peiceToLookFor.
       Colour kingsColour = peiceToLookFor.Colour() == Colour.White ? Colour.Black : Colour.White;
-      var moves = MovesAlongRay(kingsSqaure, deltaFile, deltaRank, kingsColour);
-      if (moves.Count == 0) return false;
+      var candidateMoves = MovesAlongRay(kingsSqaure, deltaFile, deltaRank, kingsColour);
+      if (candidateMoves.Count == 0) return false;
       // The last square in that direction is either the edge of the board or a piece.
-      var lastSquare = moves.Last().AfterSquare;
+      var lastSquare = candidateMoves.Last().AfterSquare;
       var pieceAtEndOfRay = PieceAtPosition(lastSquare);
       if (pieceAtEndOfRay == null)
       {

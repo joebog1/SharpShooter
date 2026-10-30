@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpShooter.Pieces
 {
-  public class Queen : Piece
+  public class Queen : SlidingPiece
   {
     public Queen(Colour colour)
       : base(colour)
@@ -16,17 +16,14 @@ namespace SharpShooter.Pieces
       return Pieces.PieceType.Queen;
     }
 
-    /// <summary>
-    /// Generates a list of pesudo legal moves for a king. 
-    /// Guarenteees that every suggested move is on the board, nothing else.
-    /// </summary>
-    /// <param name="startingSquare"></param>
-    /// <returns></returns>
-    public override List<Move> GeneratePesudoLegalMoves(Square startingSquare)
-    {
-      List<Move> pesudoLegalMoves = [];
+    // :TODO: missing test coverage.
+    protected override IEnumerable<(int File, int Rank)> Directions =>
+    [
+        (-1, -1), (-1, +1),
+        (+1, -1), (+1, +1),
+        (0, -1), (0, +1),
+        (+1, 0), (-1, 0)
+    ];
 
-      return pesudoLegalMoves;
-    }
   }
 }
