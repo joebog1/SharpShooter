@@ -141,5 +141,43 @@ namespace Tests
           ((4, 3),(5,4)), // 4,3 is skipped because you can't move where you are.
         });
     }
+
+    [Fact]
+    public void KingIsAllowedToCastle_CanCastle()
+    {
+      // Tests that a white king can castle kingside.
+      MoveTestUtil.VerifyMovesFor(
+        "1k6/8/8/8/8/8/8/4K2R w K - 0 1",
+        new Queen(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(3,1)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
+          ((4, 0),(6,0)), // O-O
+        });
+    }
+    //[Fact]
+    //public void KingIsAllowedToCastle_CastleMovesTheRook()
+    //{
+    //  // Tests that a white king castling kingside moves both the King and the correct Rook to the right
+    //  // squares.
+    //  MoveTestUtil.VerifyMovesFor(
+    //    "1k6/8/8/8/8/8/8/4K2R w K - 0 1",
+    //    new Queen(Colour.White),
+    //    new Square(4, 0),
+    //    new List<Move>
+    //    {
+    //      ((4, 0),(3,0)),
+    //      ((4, 0),(3,1)),
+    //      ((4, 0),(5,0)),
+    //      ((4, 0),(5,1)),
+    //      ((4, 0),(4,1)),
+    //      ((4, 0),(6,0)), // O-O
+    //    });
+    //}
   }
 }
