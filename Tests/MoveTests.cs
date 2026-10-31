@@ -1,5 +1,7 @@
 ﻿using SharpShooter;
 using SharpShooter.Pieces;
+using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Tests
 {
@@ -144,6 +146,44 @@ namespace Tests
     //{
     //  // Tests that a knight can't jump onto a square of a like piece.
     //}
+
+    [Fact]
+    public void RookPinsKnight_KnightCantMove()
+    {
+      string fen = "8/3K4/3N4/8/8/8/3r4/4k3 w - - 0 1";
+      // Generate the legal moves for the knight on d6.
+      Board board = new Board(fen);
+      List<Move> legalMoves = board.GenerateLegalMovesForPieceAtSqaure(new Knight(Colour.White), (3, 5));
+      // Assert that no legal moves exist for the knight on d6 
+      Debug.Assert(legalMoves.Count == 0);
+    }
+
+    [Fact]
+    public void RookPinsPawn_PawnCanMove()
+    {
+      // In this test, the pawn can still move as it doesn't allow check.
+      string fen = "8/3K4/8/3P4/8/8/3r4/4k3 w - - 0 1";
+      // Generate the legal moves for the pawn on d5.
+      Board board = new Board(fen);
+      List<Move> legalMoves = board.GenerateLegalMovesForPieceAtSqaure(new Pawn(Colour.White), (3, 4));
+      // Assert the only legal move for that pawn is d5-d6. 
+      Debug.Assert(legalMoves.Count == 1);
+      Debug.Assert(legalMoves[0] == ((3, 4), (3, 5)));
+    }
+
+    [Fact]
+    public void RookPinsPawn_PawnCantCapture()
+    {
+      // In this test, the pawn can still move as it doesn't allow check, however it can't capture any
+      // pieces because of the pin.
+      string fen = "8/3K4/2n1n3/3P4/8/8/3r4/4k3 w - - 0 1";
+      // Generate the legal moves for the pawn on d5.
+      Board board = new Board(fen);
+      List<Move> legalMoves = board.GenerateLegalMovesForPieceAtSqaure(new Pawn(Colour.White), (3, 4));
+      // Assert the only legal move for that pawn is d5-d6. 
+      Debug.Assert(legalMoves.Count == 1);
+      Debug.Assert(legalMoves[0] == ((3, 4), (3, 5)));
+    }
 
     private static void VerifyMoves(string fen, List<Move> expectedMoves)
     {
