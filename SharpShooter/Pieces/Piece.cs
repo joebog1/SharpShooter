@@ -128,7 +128,7 @@
 
       moves.Add(candidateMove);
     }
-  
+
     public virtual bool PieceSpecificChecks(Move candidateMove, Board board)
     {
       // By default there are no peice specific checks, so this automatically passes.

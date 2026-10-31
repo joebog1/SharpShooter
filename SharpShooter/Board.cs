@@ -166,7 +166,7 @@ namespace SharpShooter
     // The game ends before that.
     public bool IsInCheck()
     {
-      if(myTurn is not Colour turn)
+      if (myTurn is not Colour turn)
       {
         Debug.Assert(false, "It is assumed that the board state would be valid enough for it to know whos's turn it is.");
         // :TODO: Consider throwing.
