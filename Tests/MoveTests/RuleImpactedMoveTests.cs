@@ -1,83 +1,15 @@
-﻿using SharpShooter;
+using SharpShooter;
 using SharpShooter.Pieces;
 
 namespace Tests
 {
-  public class MoveTests
+  public class RuleImpactedMoveTests
   {
-    public static IEnumerable<object[]> TwoKingsTestData => new List<object[]>
-    {
-      // White king.
-      new object[]
-      {
-        "8/8/5k2/8/8/3K4/8/8 w - - 0 1",
-        new List<Move>
-        {
-          ((3, 2), (3, 3)),  // Up
-          ((3, 2), (3, 1)),  // Down
-          ((3, 2), (4, 2)),  // Left
-          ((3, 2), (2, 2)),  // Right
-          ((3, 2), (4, 3)),  // Up-Right
-          ((3, 2), (4, 1)),  // Down-Right
-          ((3, 2), (2, 3)),  // Up-Left
-          ((3, 2), (2, 1)),  // Down-Left
-        }
-      },
-      // Black king.
-      new object[]
-      {
-        "8/8/5k2/8/8/3K4/8/8 b - - 0 1",
-        new List<Move>
-        {
-          ((5, 5), (5, 6)), // Up
-          ((5, 5), (5, 4)), // Down
-          ((5, 5), (4, 5)), // Left
-          ((5, 5), (6, 5)), // Right
-          ((5, 5), (6, 6)), // Up-Right
-          ((5, 5), (6, 4)), // Down-Right
-          ((5, 5), (6, 4)), // Up-Left
-          ((5, 5), (4, 4)), // Down-Left
-        }
-      }
-    };
-
-    [Theory]
-    [MemberData(nameof(TwoKingsTestData))]
-    public void TwoKingsMidboard_AllKingMoves_AreGenerated(string fen, List<Move> expectedMoves)
-    {
-      // Kings not at boarders, should have 8 possible moves for the player whose turn it is.
-      VerifyMoves(fen, expectedMoves);
-    }
-
-    [Fact]
-    public void WhitePawnAtE4_PushToE5_IsGenerated()
-    {
-      // Tests that a white pawn at e4 can move to e5, provided there is no obstructions.
-      VerifyMoves(
-        "8/8/8/8/4P3/8/8/8 w - - 0 1",
-        new List<Move>
-        {
-          ((4, 3), (4, 4)), // e4 -> e5
-        });
-    }
-
-    [Fact]
-    public void BlackPawnAtE4_PushToE3_IsGenerated()
-    {
-      // Tests that a black pawn at e4 can move to e3, provided there is no obstructions.
-      VerifyMoves(
-        "8/8/8/8/4p3/8/8/8 b - - 0 1",
-        new List<Move>
-        {
-          ((4, 3), (4, 2)), // e4 -> e3
-        });
-    }
-
     [Fact]
     public void PawnsInEachOthersWay_GeneratesMoves_NoMoves()
     {
       // Tests that two pawns with each other in their way can't move.
-      VerifyMoves(
+      MoveTestUtil.VerifyMoves(
         "8/8/8/8/4p3/4P3/8/8 b - - 0 1",
         new List<Move> { });
     }
@@ -86,13 +18,12 @@ namespace Tests
     public void PawnsCanCapture_GeneratesMoves_Captures()
     {
       // Tests that two pawns that can capture each other generate capture moves.
-      VerifyMoves(
+      MoveTestUtil.VerifyMoves(
         "8/8/8/3p4/4P3/8/8/8 w - - 0 1",
         new List<Move>{((4,3),(3,4)), // capture
                        ((4,3),(4,4))  // move forward
                        });
     }
-
 
     public static IEnumerable<object[]> BishopTestData => new List<object[]>
     {
@@ -113,42 +44,13 @@ namespace Tests
     {
       var piece = PieceExtension.FromFenCharacter(pieceChar);
       var square = new Square(squareX, squareY);
-      VerifyMovesFor(fen, piece, square, expectedMoves);
+      MoveTestUtil.VerifyMovesFor(fen, piece, square, expectedMoves);
     }
-
-    public static IEnumerable<object[]> KnightTestData => new List<object[]>
-    {
-      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N',
-                     3,
-                     5,
-                     new List<Move> { ((3, 5), (4, 7)),
-                                      ((3, 5), (2, 7)),
-                                      ((3, 5), (4, 3)),
-                                      ((3, 5), (2, 3)),
-                                      ((3, 5), (1, 4)),
-                                      ((3, 5), (1, 6)),
-                                      ((3, 5), (5, 6)),
-                                      ((3, 5), (5, 4)),
-                     } },
-    };
-    [Theory]
-    [MemberData(nameof(KnightTestData))]
-    public void KnightMoves_GenerateOnlyLegalKnightMoves(string fen, char pieceChar, int squareX, int squareY, List<Move> expectedMoves)
-    {
-      var piece = PieceExtension.FromFenCharacter(pieceChar);
-      var square = new Square(squareX, squareY);
-      VerifyMovesFor(fen, piece, square, expectedMoves);
-    }
-    //[Fact]
-    //public void KnightsWithLikePieces_GeneratesMoves_CantTakeLikePieces()
-    //{
-    //  // Tests that a knight can't jump onto a square of a like piece.
-    //}
 
     [Fact]
     public void RookPinsKnight_KnightCantMove()
     {
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/3K4/3N4/8/8/8/3r4/4k3 w - - 0 1",
         new Knight(Colour.White),
         new Square(3, 5),
@@ -159,7 +61,7 @@ namespace Tests
     public void RookPinsPawn_PawnCanMove()
     {
       // In this test, the pawn can still move as it doesn't allow check.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/3K4/8/3P4/8/8/3r4/4k3 w - - 0 1",
         new Pawn(Colour.White),
         new Square(3, 4),
@@ -173,7 +75,7 @@ namespace Tests
     public void RookPinsPawn_PawnCantMoveBecauseKingBlocks()
     {
       // In this test, the pawn can still move as it doesn't allow check.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/3K4/3P4/8/8/8/3r4/4k3 w - - 0 1",
         new Pawn(Colour.White),
         new Square(3, 5),
@@ -185,7 +87,7 @@ namespace Tests
     {
       // In this test, the pawn can still move as it doesn't allow check, however it can't capture any
       // pieces because of the pin.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/3K4/2n1n3/3P4/8/8/3r4/4k3 w - - 0 1",
         new Pawn(Colour.White),
         new Square(3, 4),
@@ -195,12 +97,11 @@ namespace Tests
         });
     }
 
-
     [Fact]
     public void RookPinsRook_RookCanMoveVertically()
     {
       // In this test, white's rook is pinned, but it can still move vertically to take black's rook.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/8/8/8/3K4/3R4/3r4/4k3 w - - 0 1",
         new Rook(Colour.White),
         new Square(3, 2),
@@ -214,7 +115,7 @@ namespace Tests
     public void BishopPinsRook_RookCantMove()
     {
       // In this test, white's rook is pinned by a bishop and therefore can't move.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/8/6K1/5R2/8/8/2b5/4k3 w - - 0 1",
         new Rook(Colour.White),
         new Square(5, 4),
@@ -228,7 +129,7 @@ namespace Tests
     {
       // In this test, white's queen is pinned by a bishop and therefore can only
       // move long the axis of the bishop pin.
-      VerifyMovesFor(
+      MoveTestUtil.VerifyMovesFor(
         "8/8/6K1/8/4Q3/8/8/1b4k1 w - - 0 1",
         new Queen(Colour.White),
         new Square(4, 3),
@@ -240,23 +141,5 @@ namespace Tests
           ((4, 3),(5,4)), // 4,3 is skipped because you can't move where you are.
         });
     }
-
-    private static void VerifyMoves(string fen, List<Move> expectedMoves)
-    {
-      // Tests that a position generates all expected legal moves.
-      var engine = new ChessEngine(fen);
-      var actualMoves = engine.GenerateLegalMoves();
-      Assert.Equal(expectedMoves.Count, actualMoves.Count);
-      Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
-    }
-    private static void VerifyMovesFor(string fen, Piece piece, Square square, List<Move> expectedMoves)
-    {
-      // Tests that a position generates all expected legal moves.
-      var board = new Board(fen);
-      var actualMoves = board.GenerateLegalMovesForPieceAtSqaure(piece, square);
-      Assert.Equal(expectedMoves.Count, actualMoves.Count);
-      Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
-    }
-
   }
 }
