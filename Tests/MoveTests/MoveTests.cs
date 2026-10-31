@@ -105,7 +105,7 @@ namespace Tests
       MoveTestUtil.VerifyMovesFor(
         "8/1k6/8/8/8/8/8/7K w - - 0 1",
         new King(Colour.White),
-        new Square(7,0),
+        new Square(7, 0),
         new List<Move>
         {
           ((7,0), (6,0)),
