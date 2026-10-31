@@ -224,8 +224,7 @@ namespace SharpShooter
       if (kingSquare is not Square square)
         return false;
 
-      var attackerColour =
-        kingColour == Colour.White ? Colour.Black : Colour.White;
+      var attackerColour = kingColour.OtherColour();
 
       return IsSquareAttacked(square, attackerColour);
     }

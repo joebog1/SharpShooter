@@ -12,6 +12,18 @@
 
   public static class PieceExtension
   {
+    // :TODO: This is feeling like a code landfill. Decide on a better home for these
+    // methods. At the very least, another file?
+    public static Colour OtherColour(this Colour colour)
+    {
+      return colour switch
+      {
+        Colour.White => Colour.Black,
+        Colour.Black => Colour.White,
+        _ => throw new ArgumentOutOfRangeException(nameof(colour), colour, null)
+      };
+    }
+
     // Converts FEN chess peice to type
     public static PieceType CharacterToType(char character)
     {

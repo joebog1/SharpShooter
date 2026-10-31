@@ -93,11 +93,11 @@ namespace SharpShooter.Pieces
         // Finally, we check if either the interim position or the final position has at least one attacker of
         // opposing colour in it.
         if (board.IsSquareAttacked(interimSquare,
-                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White))
+                               Colour().OtherColour()))
           return false;
 
         if (board.IsSquareAttacked(finalSquare,
-                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White)) ;
+                               Colour().OtherColour())) ;
         return false;
 
       }
@@ -130,11 +130,11 @@ namespace SharpShooter.Pieces
         // Finally, we check if either the interim position or the final position has at least one attacker of
         // opposing colour in it.
         if (board.IsSquareAttacked(interimSquare,
-                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White))
+                               Colour().OtherColour()))
           return false;
 
         if (board.IsSquareAttacked(finalSquare,
-                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White)) ;
+                               Colour().OtherColour())) ;
         return false;
       }
       // It's not castles, no additional peice specific checks are needed.
