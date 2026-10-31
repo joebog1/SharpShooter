@@ -64,6 +64,7 @@ namespace SharpShooter.Pieces
     {
       // First check if the move suggested is a castle.
       var kingMoveOffset = Move.Offset(candidateMove);
+      // :TODO: This can be simplifed.
       if (kingMoveOffset.deltaFile == 2)
       {
         // AddIfValid is already responsible for ensureing that the square the
@@ -76,10 +77,13 @@ namespace SharpShooter.Pieces
           return false;
 
         // Secondly, if there is anything in the way, you can't castle.
-        if (board.PieceAtPosition(Square.Offset(candidateMove.BeforeSquare, 1, 0)) != null)
+        var interimSquare = Square.Offset(candidateMove.BeforeSquare, 1, 0);
+        if (board.PieceAtPosition(interimSquare) != null)
           return false;
 
-        if (board.PieceAtPosition(Square.Offset(candidateMove.BeforeSquare, 2, 0)) != null)
+        // The square where the king will end up
+        var finalSquare = Square.Offset(candidateMove.BeforeSquare, 2, 0);
+        if (board.PieceAtPosition(finalSquare) != null)
           return false;
 
         // :NOTE: We chould check the edge, but we shouldn't need to, the board has allowed castling
@@ -88,8 +92,13 @@ namespace SharpShooter.Pieces
 
         // Finally, we check if either the interim position or the final position has at least one attacker of
         // opposing colour in it.
+        if (board.IsSquareAttacked(interimSquare,
+                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White))
+          return false;
 
-
+        if (board.IsSquareAttacked(finalSquare,
+                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White)) ;
+        return false;
 
       }
       else if (kingMoveOffset.deltaFile == -2)
@@ -103,14 +112,31 @@ namespace SharpShooter.Pieces
         if (board.IsKingInCheck(Colour()))
           return false;
 
+        // :NOTE: We chould check the edge, but we shouldn't need to, the board has allowed castling
+        // rights so the edge should always be a rook.
+        Debug.Assert(board.PieceAtPosition(Square.Offset(candidateMove.BeforeSquare, -4, 0))?.Type() == PieceType.Rook);
+
+
         // Secondly, if there is anything in the way, you can't castle.
-        if (board.PieceAtPosition(Square.Offset(candidateMove.BeforeSquare, -1, 0)) != null)
+        var interimSquare = Square.Offset(candidateMove.BeforeSquare, -1, 0);
+        if (board.PieceAtPosition(interimSquare) != null)
           return false;
 
-        if (board.PieceAtPosition(Square.Offset(candidateMove.BeforeSquare, -2, 0)) != null)
+        var finalSquare = Square.Offset(candidateMove.BeforeSquare, -2, 0);
+
+        if (board.PieceAtPosition(finalSquare) != null)
           return false;
+
+        // Finally, we check if either the interim position or the final position has at least one attacker of
+        // opposing colour in it.
+        if (board.IsSquareAttacked(interimSquare,
+                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White))
+          return false;
+
+        if (board.IsSquareAttacked(finalSquare,
+                               Colour() == Pieces.Colour.White ? Pieces.Colour.Black : Pieces.Colour.White)) ;
+        return false;
       }
-
       // It's not castles, no additional peice specific checks are needed.
       return true;
     }
