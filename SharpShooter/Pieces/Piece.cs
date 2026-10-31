@@ -81,13 +81,32 @@
     public abstract PieceType Type();
 
     /// <summary>
-    /// Generates a list of pesudo legal moves for the peice. 
+    /// Generates a list of legal moves for the peice. 
     /// Guarenteees that every suggested move is legal.
     /// </summary>
     /// <param name="startingSquare"></param>
     /// <returns></returns>
     public abstract List<Move> GenerateLegalMoves(Square startingSquare,
-                                                        Board boardBounds);
+                                                  Board board);
+
+    /// <summary>
+    /// Generates a list of squares this piece attacks given a starting square.
+    /// </summary>
+    /// <param name="startingSquare"></param>
+    /// <param name="boardBounds"></param>
+    /// <returns></returns>
+    public abstract List<Move> GenerateAttackingMoves(Square startingSquare,
+                                                       Board board);
+
+    // Helper function for subclasses to add moves only if the board condition
+    // is met with no other checks, used in GenerateAttackingMoves.
+    protected void AddIfOnBoard(List<Move> moves, Move suggestedMove, Board board)
+    {
+      if (board.IsOnBoard(suggestedMove.AfterSquare))
+      {
+        moves.Add(suggestedMove);
+      }
+    }
 
     /// <summary>
     /// Only adds to moves if the candidate move is on the board.

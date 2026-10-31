@@ -11,8 +11,17 @@
     {
     }
 
-    public override List<Move> GenerateLegalMoves(Square startingSquare,
-                                                  Board board)
+    /// <summary>
+    /// Generates the moves for a sliding peice on a starting square.
+    /// addFunctor allows the caller to decide if it'll add a candidate move or not.
+    /// </summary>
+    /// <param name="startingSquare"></param>
+    /// <param name="board"></param>
+    /// <param name="addFunctor"></param>
+    /// <returns></returns>
+    private List<Move> GenerateMoves(Square startingSquare,
+                                     Board board,
+                                     Action<List<Move>, Move, Board> addMove)
     {
       var moves = new List<Move>();
 
@@ -24,25 +33,38 @@
           candidateSquare = Square.Offset(candidateSquare, fileDelta, rankDelta);
 
           if (!board.IsOnBoard(candidateSquare))
+            // Stop searching in this direction.
             break;
 
           var occupant = board.PieceAtPosition(candidateSquare);
 
           if (occupant is null)
           {
-            AddIfValid(moves, (startingSquare, candidateSquare), board);
+            addMove(moves, (startingSquare, candidateSquare), board);
             continue;
           }
 
           if (occupant.Colour() != Colour())
             // Capture the first opposing piece.
-            AddIfValid(moves, (startingSquare, candidateSquare), board);
+            addMove(moves, (startingSquare, candidateSquare), board);
 
           break; // Rest of the slide is blocked
         }
       }
 
       return moves;
+    }
+
+    public override List<Move> GenerateLegalMoves(Square startingSquare,
+                                                  Board board)
+    {
+      return GenerateMoves(startingSquare, board, AddIfValid);
+    }
+
+    public override List<Move> GenerateAttackingMoves(Square startingSquare,
+                                                       Board board)
+    {
+      return GenerateMoves(startingSquare, board, AddIfOnBoard);
     }
 
   }

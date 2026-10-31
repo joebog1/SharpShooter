@@ -220,6 +220,26 @@ namespace Tests
     }
 
     [Fact]
+    public void KingIsAllowedToQueensideCastle_EvenIfBishopAimsAtGap()
+    {
+      // Tests the special case of a piece covering the b file doesn't prevent queenside castling.
+      MoveTestUtil.VerifyMovesFor(
+        "8/1k6/8/8/4b3/8/8/R3K2R w KQ - 0 1",
+        new King(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(3,1)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
+          ((4, 0),(6,0)), // O-O
+          ((4, 0),(2,0)), // O-O-O
+        });
+    }
+
+    [Fact]
     public void KingIsAllowedToCastle_PinnedKnightPreventsCastling()
     {
       // Tests that a white king can't castle kingside even if an opponent's piece that
@@ -256,6 +276,23 @@ namespace Tests
           ((4, 0),(5,1)),
           ((4, 0),(4,1)),
           ((4, 0),(2,0)), // O-O-O is allowed.
+        });
+    }
+
+    [Fact]
+    public void KingIsInCheck_KingCantCastle()
+    {
+      // Tests that a king in check can't castle.
+      MoveTestUtil.VerifyMovesFor(
+        "8/1k6/8/8/1b6/8/8/R3K2R w KQ - 0 1",
+        new King(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
         });
     }
 

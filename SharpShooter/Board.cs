@@ -14,7 +14,7 @@ namespace SharpShooter
 
     public bool CanCastleKingside(Colour colour)
     {
-      if(colour == Colour.White)
+      if (colour == Colour.White)
       {
         return myCastlingRights.HasFlag(CastlingRights.WhiteKingside);
       }
@@ -27,7 +27,7 @@ namespace SharpShooter
 
     public bool CanCastleQueenside(Colour colour)
     {
-      if(colour == Colour.White)
+      if (colour == Colour.White)
       {
         return myCastlingRights.HasFlag(CastlingRights.WhiteQueenside);
       }

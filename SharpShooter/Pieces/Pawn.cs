@@ -13,8 +13,7 @@ namespace SharpShooter.Pieces
       return Pieces.PieceType.Pawn;
     }
     /// <summary>
-    /// Generates a list of pesudo legal moves for a pawn. 
-    /// Guarenteees that every suggested move is on the board, nothing else.
+    /// Generates a list of legal moves for a pawn.
     /// </summary>
     /// <param name="startingSquare"></param>
     /// <returns></returns>
@@ -46,6 +45,35 @@ namespace SharpShooter.Pieces
         AddIfValid(pesudoLegalMoves, upRight, boardBounds);
       }
       return pesudoLegalMoves;
+    }
+
+    /// <summary>
+    /// Generates a list of attacked squares for a pawn at a position.
+    /// for a pawn, 'attacking' is only on the diagonal.
+    /// </summary>
+    /// <param name="startingSquare"></param>
+    /// <returns></returns>
+    public override List<Move> GenerateAttackingMoves(Square startingSquare, Board board)
+    {
+      List<Move> attackingMoves = [];
+      // :TODO: Promotions count as several valid possible moves. Include them.
+      if (Colour() == Pieces.Colour.Black)
+      {
+        Move downLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, -1));
+        AddIfOnBoard(attackingMoves, downLeft, board);
+
+        Move downRight = new Move(startingSquare, Square.Offset(startingSquare, +1, -1));
+        AddIfOnBoard(attackingMoves, downRight, board);
+      }
+      else
+      {
+        Move upLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, +1));
+        AddIfOnBoard(attackingMoves, upLeft, board);
+
+        Move upRight = new Move(startingSquare, Square.Offset(startingSquare, +1, +1));
+        AddIfOnBoard(attackingMoves, upRight, board);
+      }
+      return attackingMoves;
     }
 
     /// <summary>
