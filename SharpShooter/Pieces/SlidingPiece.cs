@@ -30,7 +30,7 @@
 
           if (occupant is null)
           {
-            AddIfValid(moves,(startingSquare, candidateSquare), board);
+            AddIfValid(moves, (startingSquare, candidateSquare), board);
             continue;
           }
 
