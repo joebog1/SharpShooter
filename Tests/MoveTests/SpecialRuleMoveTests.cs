@@ -161,6 +161,44 @@ namespace Tests
           ((4, 0),(2,0)), // O-O-O
         });
     }
+
+    [Fact]
+    public void StateRemembersNoCastling_CantCastle()
+    {
+      // Tests that a white king can't castle if the board knows
+      // castling isn't allowed.
+      MoveTestUtil.VerifyMovesFor(
+        "1k6/8/8/8/8/8/8/R3K2R w - - 0 1",
+        new King(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(3,1)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
+        });
+    }
+    [Fact]
+    public void KingIsAllowedToCastle_ObstructionPreventsCastle()
+    {
+      // Tests that a white king can castle kingside.
+      MoveTestUtil.VerifyMovesFor(
+        "1k6/8/8/8/8/8/8/R1N1KN1R w K - 0 1",
+        new King(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(3,1)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
+          // Either side castle is illegal becase a piece is in the way.
+        });
+    }
+
     //[Fact]
     //public void KingIsAllowedToCastle_CastleMovesTheRook()
     //{
