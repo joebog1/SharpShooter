@@ -10,7 +10,33 @@ namespace SharpShooter
     public List<(Piece Piece, Square Square)> Pieces() { return myPieces; }
 
     public Board(string fen) : this(FenParser.Parse(fen)) { }
-    CastlingRights myCastlingRights;
+    private CastlingRights myCastlingRights;
+
+    public bool CanCastleKingside(Colour colour)
+    {
+      if(colour == Colour.White)
+      {
+        return myCastlingRights.HasFlag(CastlingRights.WhiteKingside);
+      }
+      else
+      {
+        Debug.Assert(colour == Colour.Black);
+        return myCastlingRights.HasFlag(CastlingRights.BlackKingside);
+      }
+    }
+
+    public bool CanCastleQueenside(Colour colour)
+    {
+      if(colour == Colour.White)
+      {
+        return myCastlingRights.HasFlag(CastlingRights.WhiteQueenside);
+      }
+      else
+      {
+        Debug.Assert(colour == Colour.Black);
+        return myCastlingRights.HasFlag(CastlingRights.BlackQueenside);
+      }
+    }
 
     // Can be null if the position is invalid. assume it isn't otherwise.
     public Colour? myTurn { get; private set; }

@@ -29,6 +29,19 @@
       AddIfValid(legalMoves, new Move(startingSquare, Square.Offset(startingSquare, 1, -1)), board);
       AddIfValid(legalMoves, new Move(startingSquare, Square.Offset(startingSquare, -1, 1)), board);
       AddIfValid(legalMoves, new Move(startingSquare, Square.Offset(startingSquare, -1, -1)), board);
+
+      // Ask the board if castling is available to us. If it is, then provided nothing is in the
+      // way, allow for castling
+      if(board.CanCastleKingside(Colour()))
+      {
+        // It is the board's responsibility to recognise that this move actually moves more than one peice.
+        AddIfValid(legalMoves, new Move(startingSquare, Square.Offset(startingSquare, 2, 0)), board);
+      }
+      if(board.CanCastleQueenside(Colour()))
+      {
+        // It is the board's responsibility to recognise that this move actually moves more than one peice.
+        AddIfValid(legalMoves, new Move(startingSquare, Square.Offset(startingSquare, -2, 0)), board);
+      }
       return legalMoves;
     }
   }
