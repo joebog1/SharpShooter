@@ -105,7 +105,7 @@
     /// <param name="moves"></param>
     /// <param name="candidateMove"></param>
     /// <param name="boardBounds"></param>
-    public virtual void AddIfValid(List<Move> moves, Move candidateMove, Board board)
+    public void AddIfValid(List<Move> moves, Move candidateMove, Board board)
     {
       var pieceAtPosition = board.PieceAtPosition(candidateMove.AfterSquare);
       // Moves can't leave the board.
@@ -121,10 +121,19 @@
       // the wrong king in check (can't make a move that puts your own king in check.)
       if (board.WouldLeaveKingInCheck(candidateMove, Colour()))
         return;
-      
+
+      // Invoke a peice specific check to see if any addtional rules need to be met.
+      if (!PieceSpecificChecks(candidateMove, board))
+        return;
+
       moves.Add(candidateMove);
     }
-
+  
+    public virtual bool PieceSpecificChecks(Move candidateMove, Board board)
+    {
+      // By default there are no peice specific checks, so this automatically passes.
+      return true;
+    }
     public override bool Equals(object? obj) =>
       obj is Piece other &&
       other.Colour() == Colour() &&

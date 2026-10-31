@@ -50,15 +50,16 @@ namespace SharpShooter.Pieces
 
     /// <summary>
     /// Checks if candidate move is a legal pawn move given the board state.
+    /// It cares about the specific rules regarding pawn captures as well as en 
+    /// passent.
     /// </summary>
     /// <param name="moves"></param>
     /// <param name="candidateMove"></param>
     /// <param name="board"></param>
-    public override void AddIfValid(List<Move> moves, Move candidateMove, Board board)
+    public override bool PieceSpecificChecks(Move candidateMove, Board board)
     {
       // A pawn needs to know if it can take diagonally because it can't move diagonally otherwise.
       // :TODO: EN PASSANT!
-      // :TODO: check if moveleaves the board in an invalid state.
       var pieceAtAfterPosition = board.PieceAtPosition(candidateMove.AfterSquare);
       // First check if the move is strictly vertical.
       if (candidateMove.BeforeSquare.File == candidateMove.AfterSquare.File)
@@ -67,9 +68,11 @@ namespace SharpShooter.Pieces
         if (board.IsOnBoard(candidateMove.AfterSquare) &&
            pieceAtAfterPosition == null)
         {
-          moves.Add(candidateMove);
+          // This is valid.
+          return true;
         }
-        return;
+        // Something blocks the pawn, it can't move!.
+        return false;
       }
       // Must be a diagonal move, check if a piece of opposite colour occupies the candidateMove
       // after square. 
@@ -77,9 +80,10 @@ namespace SharpShooter.Pieces
          pieceAtAfterPosition!.Colour() != Colour())
       {
         // Then you can take it.
-        moves.Add(candidateMove);
+        return true;
       }
-      return;
+      // You can't take it, illegal move
+      return false;
     }
   }
 }
