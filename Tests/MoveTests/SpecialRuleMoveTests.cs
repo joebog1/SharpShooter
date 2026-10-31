@@ -3,7 +3,7 @@ using SharpShooter.Pieces;
 
 namespace Tests
 {
-  public class RuleImpactedMoveTests
+  public class SpecialRuleMoveTests
   {
     [Fact]
     public void PawnsInEachOthersWay_GeneratesMoves_NoMoves()
