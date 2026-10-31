@@ -148,7 +148,7 @@ namespace Tests
       // Tests that a white king can castle kingside.
       MoveTestUtil.VerifyMovesFor(
         "1k6/8/8/8/8/8/8/4K2R w K - 0 1",
-        new Queen(Colour.White),
+        new King(Colour.White),
         new Square(4, 0),
         new List<Move>
         {
