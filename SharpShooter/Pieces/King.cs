@@ -97,7 +97,7 @@ namespace SharpShooter.Pieces
           return false;
 
         if (board.IsSquareAttacked(finalSquare,
-                               Colour().OtherColour())) ;
+                               Colour().OtherColour()))
         return false;
 
       }
@@ -134,8 +134,8 @@ namespace SharpShooter.Pieces
           return false;
 
         if (board.IsSquareAttacked(finalSquare,
-                               Colour().OtherColour())) ;
-        return false;
+                               Colour().OtherColour()))
+          return false;
       }
       // It's not castles, no additional peice specific checks are needed.
       return true;
