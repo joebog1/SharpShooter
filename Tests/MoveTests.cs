@@ -172,6 +172,18 @@ namespace Tests
     }
 
     [Fact]
+    public void RookPinsPawn_PawnCantMoveBecauseKingBlocks()
+    {
+      // In this test, the pawn can still move as it doesn't allow check.
+      string fen = "8/3K4/3P4/8/8/8/3r4/4k3 w - - 0 1";
+      // Generate the legal moves for the pawn on d5.
+      Board board = new Board(fen);
+      List<Move> legalMoves = board.GenerateLegalMovesForPieceAtSqaure(new Pawn(Colour.White), (3, 5));
+      // Assert the only legal move for that pawn is d5-d6. 
+      Debug.Assert(legalMoves.Count == 0);
+    }
+
+    [Fact]
     public void RookPinsPawn_PawnCantCapture()
     {
       // In this test, the pawn can still move as it doesn't allow check, however it can't capture any
