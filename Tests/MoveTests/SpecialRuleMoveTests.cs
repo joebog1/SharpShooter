@@ -145,9 +145,9 @@ namespace Tests
     [Fact]
     public void KingIsAllowedToCastle_CanCastle()
     {
-      // Tests that a white king can castle kingside.
+      // Tests that a white king can castle either side.
       MoveTestUtil.VerifyMovesFor(
-        "1k6/8/8/8/8/8/8/4K2R w K - 0 1",
+        "1k6/8/8/8/8/8/8/R3K2R w KQ - 0 1",
         new King(Colour.White),
         new Square(4, 0),
         new List<Move>
@@ -158,6 +158,7 @@ namespace Tests
           ((4, 0),(5,1)),
           ((4, 0),(4,1)),
           ((4, 0),(6,0)), // O-O
+          ((4, 0),(2,0)), // O-O-O
         });
     }
     //[Fact]
