@@ -201,147 +201,34 @@ namespace SharpShooter
       return IsKingInCheck(turn);
     }
 
-    public bool IsKingInCheck(Colour whosTurn)
+    public bool IsSquareAttacked(Square target, Colour byColour)
     {
-      // :TODO: This is going to explode when IsValidPosition calls IsInCheck to handle illegal
-      // positions involving both kings in check. This funciton assumes a valid state as it only
-      // checks the king who's turn it is.
-      //Debug.Assert(IsValidPosition());
-      // Early exit for garbage case.
-      if (!IsValidPosition()) return false;
-
-      Square kingWhoCouldBeInCheck = FindKing(whosTurn)!.Value;
-
-      // Check if there are any rooks of the opposite colour on the same rank and file.
-      Colour otherColour = whosTurn == Colour.White ? Colour.Black : Colour.White;
-
-      // Queen checks
-      var queenToLookFor = new Queen(otherColour);
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, 1, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 0, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, -1, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 1, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, -1, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, queenToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 1, queenToLookFor)) return true;
-      // Rook checks.
-      var rookToLookFor = new Rook(otherColour);
-
-      // Naively go through every file along the same rank to see if a rook of the opposite colour is there.
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 0, rookToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, 1, rookToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 0, rookToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 0, -1, rookToLookFor)) return true;
-
-      // Bishop checks.
-      var bishopToLookFor = new Bishop(otherColour);
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, 1, bishopToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, 1, -1, bishopToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, -1, bishopToLookFor)) return true;
-      if (CheckForPieceInADirection(kingWhoCouldBeInCheck, -1, 1, bishopToLookFor)) return true;
-
-      // Knight checks
-      // There are 8 possible cases ((+1,+2),(+2,+1),(+2,-1),(+1,-2),(-1,-2),(-2,-1),(-2,+1) and (-1,+2)).
-      // We simply check if this square exists, if it does is there a knight of the opposite colour on it.
-      var knightToLookFor = new Knight(otherColour);
-      var possibleOffsets = new (int, int)[] { (+1, +2), (+2, +1), (+2, -1), (+1, -2), (-1, -2), (-2, -1), (-2, +1), (-1, +2) };
-
-      foreach (var possibleOffset in possibleOffsets)
+      foreach (var (piece, from) in myPieces)
       {
-        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, possibleOffset.Item1, possibleOffset.Item2, knightToLookFor)) return true;
-      }
+        if (piece.Colour() != byColour)
+          continue;
 
-      // Pawn checks
-      // There are only two places to check, but it depends on the colour of the king.
-      var pawnToLookFor = new Pawn(otherColour);
-      if (myTurn!.Value == Colour.White)
-      {
-        // Check (+1,+1) and (-1,+1);
-        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, 1, 1, pawnToLookFor)) return true;
-        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, -1, 1, pawnToLookFor)) return true;
-      }
-      else
-      {
-        // Black king, check (+1,-1) and (-1,-1);
-        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, 1, -1, pawnToLookFor)) return true;
-        if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, -1, -1, pawnToLookFor)) return true;
+        foreach (var attack in piece.GenerateAttackingMoves(from, this))
+        {
+          if (attack.AfterSquare == target)
+            return true;
+        }
       }
 
       return false;
     }
 
-    /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
-    private List<Move> MovesAlongRay(Square InitalSqaure, int deltaFile, int deltaRank, Colour pieceColour)
+    public bool IsKingInCheck(Colour kingColour)
     {
-      List<Move> candidateMoves = new List<Move>();
-      // i starts at one because i = 0 would reveal the piece we are starting at.
-      for (int i = 1; i < 8; i++)
-      {
-        var candidateSquare = new Square(InitalSqaure.File + (i * deltaFile), InitalSqaure.Rank + (i * deltaRank));
-        if (candidateSquare.Rank < 0 || candidateSquare.Rank >= 8 ||
-            candidateSquare.File < 0 || candidateSquare.File >= 8)
-        {
-          break;
-        }
-        Piece? pieceAtPosition = PieceAtPosition(candidateSquare);
-        if (pieceAtPosition != null)
-        {
-          // There is some other kind of peice in the way, can we capture it?
-          if (pieceAtPosition.Colour() == pieceColour)
-          {
-            // We cannot capture it and we can't keep looking past this piece.
-            return candidateMoves;
-          }
-          else
-          {
-            // We can capture this piece but go no further.
-            candidateMoves.Add((InitalSqaure, candidateSquare));
-            return candidateMoves;
-          }
-        }
-        else
-        {
-          candidateMoves.Add((InitalSqaure, candidateSquare));
-        }
-      }
-      return candidateMoves;
-    }
-
-    /// Looks in a specific direction until a piece is in the way or the edge of the board is found.
-    /// returns true if the expected Piece is found along that direction, false otherwise.
-    /// Expects either a Rook,Bishop or Queen peice to be provided.
-    /// It is the callers responsibility to provide reasonable deltas (don't give a diagional delta for a rook check etc.)
-    private bool CheckForPieceInADirection(Square kingsSqaure, int deltaFile, int deltaRank, Piece peiceToLookFor)
-    {
-      // Colour of the king is actually the opposite colour of peiceToLookFor.
-      Colour kingsColour = peiceToLookFor.Colour() == Colour.White ? Colour.Black : Colour.White;
-      var candidateMoves = MovesAlongRay(kingsSqaure, deltaFile, deltaRank, kingsColour);
-      if (candidateMoves.Count == 0) return false;
-      // The last square in that direction is either the edge of the board or a piece.
-      var lastSquare = candidateMoves.Last().AfterSquare;
-      var pieceAtEndOfRay = PieceAtPosition(lastSquare);
-      if (pieceAtEndOfRay == null)
-      {
-        return false; // The peice we were looking found could not be found because the edge of the board was found.
-      }
-      else
-      {
-        return pieceAtEndOfRay == peiceToLookFor;
-      }
-    }
-
-    /// Looks in a specific location for a peice. Expects either a pawn or a knight peice to be provided.
-    private bool CheckForPieceDiscrete(Square KingsSqaure, int deltaFile, int deltaRank, Piece PeiceToLookFor)
-    {
-      var positionToCheck = new Square(KingsSqaure.File + deltaFile, KingsSqaure.Rank + deltaRank);
-      if (positionToCheck.Rank < 0 || positionToCheck.Rank >= 8 ||
-          positionToCheck.File < 0 || positionToCheck.File >= 8)
-      {
+      var kingSquare = FindKing(kingColour);
+      if (kingSquare is not Square square)
         return false;
-      }
-      Piece? pieceAtPosition = PieceAtPosition(positionToCheck);
-      return (pieceAtPosition == PeiceToLookFor);
+
+      var attackerColour =
+        kingColour == Colour.White ? Colour.Black : Colour.White;
+
+      return IsSquareAttacked(square, attackerColour);
     }
   }
+
 }
