@@ -195,6 +195,21 @@ namespace Tests
         });
     }
 
+
+    [Fact]
+    public void RookPinsRook_RookCanMoveVertically()
+    {
+      // In this test, white's rook is pinned, but it can still move vertically to take black's rook.
+      VerifyMovesFor(
+        "8/8/8/8/3K4/3R4/3r4/4k3 w - - 0 1",
+        new Rook(Colour.White),
+        new Square(3, 2),
+        new List<Move>
+        {
+          ((3, 2), (3, 1)), // Rxd2 only move for the rook.
+        });
+    }
+
     private static void VerifyMoves(string fen, List<Move> expectedMoves)
     {
       // Tests that a position generates all expected legal moves.
