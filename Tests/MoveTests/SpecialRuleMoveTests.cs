@@ -1,7 +1,7 @@
 using SharpShooter;
 using SharpShooter.Pieces;
 
-namespace Tests
+namespace Tests.MoveTests
 {
   public class SpecialRuleMoveTests
   {
