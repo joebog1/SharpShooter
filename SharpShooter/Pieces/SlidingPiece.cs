@@ -30,12 +30,13 @@
 
           if (occupant is null)
           {
-            moves.Add((startingSquare, candidateSquare));
+            AddIfValid(moves,(startingSquare, candidateSquare), board);
             continue;
           }
 
           if (occupant.Colour() != Colour())
-            moves.Add((startingSquare, candidateSquare)); // Capture the first opposing piece.
+            // Capture the first opposing piece.
+            AddIfValid(moves, (startingSquare, candidateSquare), board);
 
           break; // Rest of the slide is blocked
         }
