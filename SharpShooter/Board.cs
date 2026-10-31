@@ -1,4 +1,5 @@
 ﻿using SharpShooter.Pieces;
+using System.Diagnostics;
 
 namespace SharpShooter
 {
@@ -12,7 +13,7 @@ namespace SharpShooter
     CastlingRights myCastlingRights;
 
     // Can be null if the position is invalid. assume it isn't otherwise.
-    public Colour? MyTurn { get; private set; }
+    public Colour? myTurn { get; private set; }
 
     public Board(Fen fen)
     {
@@ -22,7 +23,16 @@ namespace SharpShooter
         myPieces!.Add((piece, position));
       }
       myCastlingRights = fen.Castling;
-      MyTurn = fen.WhosTurn;
+      myTurn = fen.WhosTurn;
+    }
+
+    // :TODO: Copying the entire board everytime we suggest a move is suspicious.
+    // There's probably an optimisation that allows us to search without a bucnh of memory. #6
+    private Board(Board original)
+    {
+      myPieces = new List<(Piece Piece, Square Square)>(original.myPieces);
+      myCastlingRights = original.myCastlingRights;
+      myTurn = original.myTurn;
     }
 
     /// <summary>
@@ -69,10 +79,34 @@ namespace SharpShooter
       return piece.GenerateLegalMoves(square, this);
     }
 
+    public bool WouldLeaveKingInCheck(Move suggestedMove, Colour movingPieceColour)
+    {
+      var resultingBoard = new Board(this);
+      resultingBoard.ApplyMoveForCheck(suggestedMove);
+
+      return resultingBoard.IsKingInCheck(movingPieceColour);
+    }
+
+    // Mutates the board state to simulate a move, does not change who's turn it is.
+    private void ApplyMoveForCheck(Move move)
+    {
+      var movingPiece = PieceAtPosition(move.BeforeSquare)
+          ?? throw new InvalidOperationException(
+              $"No piece at {move.BeforeSquare}.");
+
+      myPieces.RemoveAll(piece =>
+          piece.Square == move.BeforeSquare ||
+          piece.Square == move.AfterSquare);
+
+      myPieces.Add((movingPiece, move.AfterSquare));
+    }
+
     public bool IsValidPosition()
     {
-      // A board is valid if it has one white king and one black king.
+      // :TODO: Make IsValidPositon ensure that the king who's turn it isn't is not in check.
+      // Involves modifiying IsInCheck a bit, because it can recurse if we call it here.
 
+      // A board is valid if it has one white king and one black king.
       Square? whiteKingPosition = FindKing(Colour.White);
       Square? blackKingPosition = FindKing(Colour.Black);
 
@@ -132,6 +166,17 @@ namespace SharpShooter
     // The game ends before that.
     public bool IsInCheck()
     {
+      if(myTurn is not Colour turn)
+      {
+        Debug.Assert(false, "It is assumed that the board state would be valid enough for it to know whos's turn it is.");
+        // :TODO: Consider throwing.
+        return false;
+      }
+      return IsKingInCheck(turn);
+    }
+
+    public bool IsKingInCheck(Colour whosTurn)
+    {
       // :TODO: This is going to explode when IsValidPosition calls IsInCheck to handle illegal
       // positions involving both kings in check. This funciton assumes a valid state as it only
       // checks the king who's turn it is.
@@ -139,10 +184,10 @@ namespace SharpShooter
       // Early exit for garbage case.
       if (!IsValidPosition()) return false;
 
-      Square kingWhoCouldBeInCheck = FindKing(MyTurn!.Value)!.Value;
+      Square kingWhoCouldBeInCheck = FindKing(whosTurn)!.Value;
 
       // Check if there are any rooks of the opposite colour on the same rank and file.
-      Colour otherColour = MyTurn!.Value == Colour.White ? Colour.Black : Colour.White;
+      Colour otherColour = whosTurn == Colour.White ? Colour.Black : Colour.White;
 
       // Queen checks
       var queenToLookFor = new Queen(otherColour);
@@ -184,7 +229,7 @@ namespace SharpShooter
       // Pawn checks
       // There are only two places to check, but it depends on the colour of the king.
       var pawnToLookFor = new Pawn(otherColour);
-      if (MyTurn!.Value == Colour.White)
+      if (myTurn!.Value == Colour.White)
       {
         // Check (+1,+1) and (-1,+1);
         if (CheckForPieceDiscrete(kingWhoCouldBeInCheck, 1, 1, pawnToLookFor)) return true;

@@ -93,6 +93,9 @@
     /// Only adds to moves if the candidate move is on the board.
     /// Can be overriden for cases where specific piece rules apply (such as pawn diagonal 
     /// movement requires opponents peice on the diagonal).
+    /// :MYTODO: Joseph Brunato 31th Oct 2026 Methods needs to not be virtual and instead rely on a 
+    /// virtual method that checks for piece-specific rules (pretty much pawns, might do kings for castling)
+    /// 
     /// :WARNING: Joseph Brunato 30th Oct 2026.
     /// The base function simply checks if the candidateMove is on the board and that there isn't a 
     /// piece of its own colour on the candidateMove.AfterSquare. 
@@ -105,12 +108,21 @@
     public virtual void AddIfValid(List<Move> moves, Move candidateMove, Board board)
     {
       var pieceAtPosition = board.PieceAtPosition(candidateMove.AfterSquare);
-      if (board.IsOnBoard(candidateMove.AfterSquare) &&
-        (pieceAtPosition == null ||
-         pieceAtPosition?.Colour() != Colour()))
-      {
-        moves.Add(candidateMove);
-      }
+      // Moves can't leave the board.
+      if (!board.IsOnBoard(candidateMove.AfterSquare))
+        return;
+
+      // Another piece of the same colour blocks this square.
+      if (pieceAtPosition != null &&
+         pieceAtPosition?.Colour() == Colour())
+        return;
+
+      // Finally, rely on the board to tell us if the resulting position would leave
+      // the wrong king in check (can't make a move that puts your own king in check.)
+      if (board.WouldLeaveKingInCheck(candidateMove, Colour()))
+        return;
+      
+      moves.Add(candidateMove);
     }
 
     public override bool Equals(object? obj) =>
