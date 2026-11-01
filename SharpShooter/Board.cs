@@ -127,6 +127,70 @@ namespace SharpShooter
       myPieces.Add((movingPiece, move.AfterSquare));
     }
 
+    /// <summary>
+    /// Return true if the square is on the right starting pawn file of the colour
+    /// provided. Used by Pawns to know if they can move twice or once.
+    /// </summary>
+    /// <param name="square"></param>
+    /// <param name="colour"></param>
+    /// <returns></returns>
+    public bool IsSquareOnPawnStartingFile(Square square, Colour colour)
+    {
+      if (colour == Colour.White)
+      {
+        return square.Rank == 1;
+      }
+      else
+      {
+        Debug.Assert(colour == Colour.Black);
+        return square.Rank == 6;
+      }
+    }
+
+    /// <summary>
+    /// Mutates the board state by applying the move. Changes turn order.
+    /// If the move you've provided is illegal, false is returned and the state isn't mutated.
+    /// </summary>
+    /// <param name="move"></param>
+    /// <returns></returns>
+    public bool ApplyMove(Move move)
+    {
+      var movingPiece = PieceAtPosition(move.BeforeSquare);
+      if (movingPiece == null)
+      {
+        // Can't move something that isn't there.
+        return false;
+      }
+
+      if (myTurn == null)
+      {
+        return false;
+      }
+
+      var legalMoves = GenerateLegalMovesForPieceAtSqaure(movingPiece,
+                                                          move.BeforeSquare);
+
+      // :MYTODO: hope this isn't checking references!
+      if (!legalMoves.Contains(move))
+      {
+        // The move suggested must be illegal!
+        return false;
+      }
+
+      // Finally, mutate the board, applying the move.
+      // :TODO: Castling?
+      // :TODO: en passant?
+      myPieces.RemoveAll(piece =>
+        piece.Square == move.BeforeSquare ||
+        piece.Square == move.AfterSquare);
+
+      myPieces.Add((movingPiece, move.AfterSquare));
+
+      myTurn = PieceExtension.OtherColour(myTurn.Value);
+
+      return true;
+    }
+
     public bool IsValidPosition()
     {
       // :TODO: Make IsValidPositon ensure that the king who's turn it isn't is not in check.

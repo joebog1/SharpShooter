@@ -98,7 +98,7 @@ namespace SharpShooter.Pieces
 
         if (board.IsSquareAttacked(finalSquare,
                                Colour().OtherColour()))
-        return false;
+          return false;
 
       }
       else if (kingMoveOffset.deltaFile == -2)

@@ -17,34 +17,46 @@ namespace SharpShooter.Pieces
     /// </summary>
     /// <param name="startingSquare"></param>
     /// <returns></returns>
-    public override List<Move> GenerateLegalMoves(Square startingSquare, Board boardBounds)
+    public override List<Move> GenerateLegalMoves(Square startingSquare, Board board)
     {
-      List<Move> pesudoLegalMoves = [];
+      List<Move> moves = [];
       // :TODO: Promotions count as several valid possible moves. Include them.
       if (Colour() == Pieces.Colour.Black)
       {
         Move down = new Move(startingSquare, Square.Offset(startingSquare, 0, -1));
-        AddIfValid(pesudoLegalMoves, down, boardBounds);
+        AddIfValid(moves, down, board);
 
         Move downLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, -1));
-        AddIfValid(pesudoLegalMoves, downLeft, boardBounds);
+        AddIfValid(moves, downLeft, board);
 
         Move downRight = new Move(startingSquare, Square.Offset(startingSquare, +1, -1));
-        AddIfValid(pesudoLegalMoves, downRight, boardBounds);
+        AddIfValid(moves, downRight, board);
+
+        if (board.IsSquareOnPawnStartingFile(startingSquare, Colour()))
+        {
+          Move downJump = new Move(startingSquare, Square.Offset(startingSquare, 0, -2));
+          AddIfValid(moves, downJump, board);
+        }
       }
       else
       {
         Debug.Assert(Colour() == Pieces.Colour.White);
         Move up = new Move(startingSquare, Square.Offset(startingSquare, 0, 1));
-        AddIfValid(pesudoLegalMoves, up, boardBounds);
+        AddIfValid(moves, up, board);
 
         Move upLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, +1));
-        AddIfValid(pesudoLegalMoves, upLeft, boardBounds);
+        AddIfValid(moves, upLeft, board);
 
         Move upRight = new Move(startingSquare, Square.Offset(startingSquare, +1, +1));
-        AddIfValid(pesudoLegalMoves, upRight, boardBounds);
+        AddIfValid(moves, upRight, board);
+
+        if (board.IsSquareOnPawnStartingFile(startingSquare, Colour()))
+        {
+          Move upJump = new Move(startingSquare, Square.Offset(startingSquare, 0, 2));
+          AddIfValid(moves, upJump, board);
+        }
       }
-      return pesudoLegalMoves;
+      return moves;
     }
 
     /// <summary>

@@ -1,8 +1,5 @@
 ﻿using SharpShooter;
 using SharpShooter.Pieces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.MoveTests
 {
