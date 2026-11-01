@@ -337,6 +337,23 @@ namespace Tests.MoveTests
           ((4, 0),(4,1)),
         });
     }
+    [Fact]
+    public void KingWithPieceOnB1_QueensideCastlingIsPrevented()
+    {
+      // Tests that a white king can't castle queenside if a piece is on the b1 square.
+      MoveTestUtil.VerifyMovesFor(
+        "8/2k5/8/8/8/8/8/RB2K3 w Q - 0 1",
+        new King(Colour.White),
+        new Square(4, 0),
+        new List<Move>
+        {
+          ((4, 0),(3,0)),
+          ((4, 0),(3,1)),
+          ((4, 0),(5,0)),
+          ((4, 0),(5,1)),
+          ((4, 0),(4,1)),
+        });
+    }
 
     [Fact]
     public void PawnAtStartingSquare_CanJumpTwoSpaces()
