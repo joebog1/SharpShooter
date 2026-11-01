@@ -100,6 +100,19 @@ namespace SharpShooter
       return null;
     }
 
+    public List<Move> GenerateLegalMoves()
+    {
+      var moves = new List<Move> { };
+      foreach (var (piece, sqaure) in Pieces())
+      {
+        if (piece.Colour() == myTurn)
+        {
+          moves.AddRange(GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
+        }
+      }
+      return moves;
+    }
+
     public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square square)
     {
       return piece.GenerateLegalMoves(square, this);

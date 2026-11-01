@@ -15,18 +15,5 @@ namespace SharpShooter
       Fen parsedFen = FenParser.Parse(fen);
       myBoard = new Board(parsedFen);
     }
-
-    public List<Move> GenerateLegalMoves()
-    {
-      var moves = new List<Move> { };
-      foreach (var (piece, sqaure) in myBoard.Pieces())
-      {
-        if (piece.Colour() == myBoard.myTurn)
-        {
-          moves.AddRange(myBoard.GenerateLegalMovesForPieceAtSqaure(piece, sqaure));
-        }
-      }
-      return moves;
-    }
   }
 }
