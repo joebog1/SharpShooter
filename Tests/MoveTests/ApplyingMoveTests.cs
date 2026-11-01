@@ -16,8 +16,7 @@ namespace Tests.MoveTests
       Assert.Equal(Colour.White, board.myTurn);
 
       // Apply e2-e4.
-      var success = board.ApplyMove(new Move((4, 1), (4, 3)));
-      Assert.True(success);
+      MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move((4, 1), (4, 3)));
 
       // Pawn should be at e4 and it should be black's turn.
       var expectedPieceAtE4 = new Pawn(Colour.White);

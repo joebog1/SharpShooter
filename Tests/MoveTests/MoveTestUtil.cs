@@ -8,8 +8,8 @@ namespace Tests.MoveTests
     internal static void VerifyMoves(string fen, List<Move> expectedMoves)
     {
       // Tests that a position generates all expected legal moves.
-      var engine = new ChessEngine(fen);
-      var actualMoves = engine.GenerateLegalMoves();
+      var board = new Board(fen);
+      var actualMoves = board.GenerateLegalMoves();
       Assert.Equal(expectedMoves.Count, actualMoves.Count);
       Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
     }
@@ -21,6 +21,12 @@ namespace Tests.MoveTests
       var actualMoves = board.GenerateLegalMovesForPieceAtSqaure(piece, square);
       Assert.Equal(expectedMoves.Count, actualMoves.Count);
       Assert.All(expectedMoves, expected => Assert.Contains(expected, actualMoves));
+    }
+
+    internal static void ApplyMoveAndVerifySuccess(Board board, Move move)
+    {
+      var success = board.ApplyMove(move);
+      Assert.True(success);
     }
   }
 }
