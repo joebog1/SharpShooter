@@ -172,6 +172,7 @@ namespace SharpShooter
     /// <returns></returns>
     public bool ApplyMove(Move move)
     {
+
       var movingPiece = PieceAtPosition(move.BeforeSquare);
       if (movingPiece == null)
       {
@@ -187,7 +188,6 @@ namespace SharpShooter
       var legalMoves = GenerateLegalMovesForPieceAtSqaure(movingPiece,
                                                           move.BeforeSquare);
 
-      // :MYTODO: hope this isn't checking references!
       if (!legalMoves.Contains(move))
       {
         // The move suggested must be illegal!
@@ -197,11 +197,47 @@ namespace SharpShooter
       // Finally, mutate the board, applying the move.
       // :TODO: Castling?
       // :TODO: en passant?
+      var deltaFile = Move.Offset(move).deltaFile;
+      if (movingPiece.Type() == PieceType.King &&
+         Math.Abs(deltaFile) == 2)
+      {
+        // Castling moves two pieces!
+        // First move the king to the expected square
+        myPieces.RemoveAll(piece =>
+          piece.Square == move.BeforeSquare ||
+          piece.Square == move.AfterSquare);
+
+        myPieces.Add((movingPiece, move.AfterSquare));
+        // Then move the Rook to the correct square based on it's direction.
+
+        // Since we are castling, the king must be on the same rank as the rook!
+        int rankToWorkOn = move.BeforeSquare.Rank;
+        if(deltaFile == -2)
+        {
+          // Rook belongs on d1/d8. Remove the a1/a8 rook
+          myPieces.RemoveAll(piece => piece.Square == (0, rankToWorkOn));
+          // Add the rook back on d1/d8
+          myPieces.Add((new Rook(movingPiece.Colour()), (3, rankToWorkOn)));
+        }
+        else
+        {
+          Debug.Assert(deltaFile == 2);
+          // Rook belongs on f1/f8. Remove the h1/h8 Roook
+          myPieces.RemoveAll(piece => piece.Square == (7, rankToWorkOn));
+
+          // Add the rook back on f1/f8
+          myPieces.Add((new Rook(movingPiece.Colour()), (5, rankToWorkOn)));
+        }
+      }
+
+      // Standard move. :NOTE: This includes the king's move portion in the event of castling.
       myPieces.RemoveAll(piece =>
         piece.Square == move.BeforeSquare ||
         piece.Square == move.AfterSquare);
 
       myPieces.Add((movingPiece, move.AfterSquare));
+
+      
 
       myTurn = PieceExtension.OtherColour(myTurn.Value);
 
@@ -282,6 +318,16 @@ namespace SharpShooter
       return IsKingInCheck(turn);
     }
 
+    /// <summary>
+    /// Checks if the game is over and returns the game result.
+    /// </summary>
+    /// <returns></returns>
+    public GameResult ResultOfCurrentPosition()
+    {
+      // :TODO: Expand on this.
+      return GameResult.WhiteWins;
+    }
+
     public bool IsSquareAttacked(Square target, Colour byColour)
     {
       foreach (var (piece, from) in myPieces)
@@ -303,6 +349,7 @@ namespace SharpShooter
     {
       var kingSquare = FindKing(kingColour);
       if (kingSquare is not Square square)
+        // :TODO: Doesn't this fail a precondition of this function? that the king exists?
         return false;
 
       var attackerColour = kingColour.OtherColour();
