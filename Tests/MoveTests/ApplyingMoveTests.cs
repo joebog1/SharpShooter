@@ -113,7 +113,7 @@ namespace Tests.MoveTests
       // 11.. Nd7
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("b8", "d7"));
       // Sanity check, Black is no longer in check.
-      Assert.True(board.IsKingInCheck(Colour.Black));
+      Assert.False(board.IsKingInCheck(Colour.Black));
       // 12. O-O-O
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("e1", "c1"));
       // Sanity check, a Rook must be on d1 now.
