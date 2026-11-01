@@ -140,7 +140,7 @@ namespace Tests.MoveTests
       // 17. Rd8#
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("d1", "d8"));
       // Ensure the board understands that it is implicitly mate.
-      Assert.True(board.IsGameOver() == GameResult.WhiteWins);
+      Assert.True(board.ResultOfCurrentPosition() == GameResult.WhiteWins);
 
     }
 
