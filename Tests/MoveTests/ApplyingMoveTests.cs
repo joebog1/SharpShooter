@@ -99,7 +99,7 @@ namespace Tests.MoveTests
       // 8.. c6
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("c7", "c6"));
       // 9. Bg5
-      MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("b1", "g5"));
+      MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("c1", "g5"));
       // 9.. b5?
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("b7", "b5"));
       // 10. Nxb5!
