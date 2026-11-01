@@ -99,7 +99,6 @@ namespace SharpShooter.Pieces
         if (board.IsSquareAttacked(finalSquare,
                                Colour().OtherColour()))
           return false;
-
       }
       else if (kingMoveOffset.deltaFile == -2)
       {
@@ -136,7 +135,24 @@ namespace SharpShooter.Pieces
         if (board.IsSquareAttacked(finalSquare,
                                Colour().OtherColour()))
           return false;
+
+        // We must check if there is a peice on b1/8. We do not care if a piece is attacking
+        // it because it doesn't prevent castling, we only care if there is physically a piece,
+        // any piece, on that square.
+        Square? squareToCheck;
+        if (Colour() == Pieces.Colour.White)
+        {
+          squareToCheck = "b1";
+        }
+        else
+        {
+          Debug.Assert(Colour() == Pieces.Colour.Black);
+          squareToCheck = "b8";
+        }
+        if (board.PieceAtPosition(squareToCheck.Value) != null)
+          return false;
       }
+
       // It's not castles, no additional peice specific checks are needed.
       return true;
     }
