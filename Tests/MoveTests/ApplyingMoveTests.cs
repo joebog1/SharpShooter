@@ -48,7 +48,7 @@ namespace Tests.MoveTests
 
       foreach (var (potentialBlackPawn, square) in board.Pieces())
       {
-        if(potentialBlackPawn.Type() == PieceType.Pawn && 
+        if (potentialBlackPawn.Type() == PieceType.Pawn &&
             potentialBlackPawn.Colour() == Colour.Black)
         {
           numberOfBlackPawns++;
