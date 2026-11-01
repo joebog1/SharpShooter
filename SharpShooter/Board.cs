@@ -107,6 +107,7 @@ namespace SharpShooter
 
     public bool WouldLeaveKingInCheck(Move suggestedMove, Colour movingPieceColour)
     {
+      // :TODO: Must we duplicate an entire board state to do this?
       var resultingBoard = new Board(this);
       resultingBoard.ApplyMoveForCheck(suggestedMove);
 
@@ -114,6 +115,9 @@ namespace SharpShooter
     }
 
     // Mutates the board state to simulate a move, does not change who's turn it is.
+    // :TODO: Could make this method return a new board object instead of mutate.
+    // This makes it slightly less dangerous. However this isn't being used much so I'll ignore
+    // it for now.
     private void ApplyMoveForCheck(Move move)
     {
       var movingPiece = PieceAtPosition(move.BeforeSquare)
