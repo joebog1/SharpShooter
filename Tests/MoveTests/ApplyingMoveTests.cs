@@ -126,7 +126,7 @@ namespace Tests.MoveTests
       // 13.. Rxd7
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("d8", "d7"));
       // 14. Rd1
-      MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("g1", "d1"));
+      MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("h1", "d1"));
       // 14.. Qe6
       MoveTestUtil.ApplyMoveAndVerifySuccess(board, new Move("e7", "e6"));
       // 15. Bxd7
