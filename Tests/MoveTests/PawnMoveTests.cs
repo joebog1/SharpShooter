@@ -1,5 +1,4 @@
 using SharpShooter;
-using SharpShooter.Pieces;
 
 namespace Tests.MoveTests
 {

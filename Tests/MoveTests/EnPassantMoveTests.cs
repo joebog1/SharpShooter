@@ -1,5 +1,4 @@
 using SharpShooter;
-using SharpShooter.Pieces;
 
 namespace Tests.MoveTests
 {
@@ -35,6 +34,7 @@ namespace Tests.MoveTests
       Assert.Equal(expectedMove, moves[0]);
 
     }
+
     [Fact]
     public void MultiplePawns_MultipleCanTakeEnPassant()
     {

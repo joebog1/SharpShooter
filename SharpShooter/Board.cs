@@ -120,7 +120,7 @@ namespace SharpShooter
     public List<Move> GenerateLegalMovesFor(Square square)
     {
       var pieceAtPosition = PieceAtPosition(square);
-      if(pieceAtPosition == null)
+      if (pieceAtPosition == null)
       {
         return [];
       }
@@ -226,7 +226,7 @@ namespace SharpShooter
 
         // Since we are castling, the king must be on the same rank as the rook!
         int rankToWorkOn = move.BeforeSquare.Rank;
-        if(deltaFile == -2)
+        if (deltaFile == -2)
         {
           // Rook belongs on d1/d8. Remove the a1/a8 rook
           myPieces.RemoveAll(piece => piece.Square == (0, rankToWorkOn));
@@ -251,15 +251,15 @@ namespace SharpShooter
 
       myPieces.Add((movingPiece, move.AfterSquare));
 
-      if(movingPiece.Type() != PieceType.Pawn)
+      if (movingPiece.Type() != PieceType.Pawn)
       {
         myEnPassantSquare = null;
       }
-      else if(Math.Abs(move.Offset().deltaRank) == 2)
+      else if (Math.Abs(move.Offset().deltaRank) == 2)
       {
         // Pawn jumped! add en passant square. This should cover both black and white pawns.
-        myEnPassantSquare = (move.BeforeSquare.File, 
-                             move.AfterSquare.Rank - move.Offset().deltaRank/2);
+        myEnPassantSquare = (move.BeforeSquare.File,
+                             move.AfterSquare.Rank - move.Offset().deltaRank / 2);
       }
 
       myTurn = PieceExtension.OtherColour(myTurn.Value);
