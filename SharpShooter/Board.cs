@@ -251,11 +251,13 @@ namespace SharpShooter
 
       myPieces.Add((movingPiece, move.AfterSquare));
 
-      if (movingPiece.Type() != PieceType.Pawn)
+      if (movingPiece.Type() != PieceType.Pawn ||
+         (movingPiece.Type() == PieceType.Pawn && Math.Abs(move.Offset().deltaRank) != 2))
       {
+        // Non pawn jump move, en passant is now null.
         myEnPassantSquare = null;
       }
-      else if (Math.Abs(move.Offset().deltaRank) == 2)
+      else
       {
         // Pawn jumped! add en passant square. This should cover both black and white pawns.
         myEnPassantSquare = (move.BeforeSquare.File,
