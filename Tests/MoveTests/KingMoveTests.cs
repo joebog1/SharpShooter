@@ -3,7 +3,7 @@ using SharpShooter.Pieces;
 
 namespace Tests.MoveTests
 {
-  public class MoveTests
+  public class KingMoveTests
   {
     public static IEnumerable<object[]> TwoKingsTestData => new List<object[]>
     {
@@ -50,55 +50,6 @@ namespace Tests.MoveTests
     }
 
     [Fact]
-    public void WhitePawnAtE4_PushToE5_IsGenerated()
-    {
-      // Tests that a white pawn at e4 can move to e5, provided there is no obstructions.
-      MoveTestUtil.VerifyMoves(
-        "8/8/8/8/4P3/8/8/8 w - - 0 1",
-        new List<Move>
-        {
-          ((4, 3), (4, 4)), // e4 -> e5
-        });
-    }
-
-    [Fact]
-    public void BlackPawnAtE4_PushToE3_IsGenerated()
-    {
-      // Tests that a black pawn at e4 can move to e3, provided there is no obstructions.
-      MoveTestUtil.VerifyMoves(
-        "8/8/8/8/4p3/8/8/8 b - - 0 1",
-        new List<Move>
-        {
-          ((4, 3), (4, 2)), // e4 -> e3
-        });
-    }
-
-    public static IEnumerable<object[]> KnightTestData => new List<object[]>
-    {
-      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N',
-                     3,
-                     5,
-                     new List<Move> { ((3, 5), (4, 7)),
-                                      ((3, 5), (2, 7)),
-                                      ((3, 5), (4, 3)),
-                                      ((3, 5), (2, 3)),
-                                      ((3, 5), (1, 4)),
-                                      ((3, 5), (1, 6)),
-                                      ((3, 5), (5, 6)),
-                                      ((3, 5), (5, 4)),
-                     } },
-    };
-
-    [Theory]
-    [MemberData(nameof(KnightTestData))]
-    public void KnightMoves_GenerateOnlyLegalKnightMoves(string fen, char pieceChar, int squareX, int squareY, List<Move> expectedMoves)
-    {
-      var piece = PieceExtension.FromFenCharacter(pieceChar);
-      var square = new Square(squareX, squareY);
-      MoveTestUtil.VerifyMovesFor(fen, piece, square, expectedMoves);
-    }
-
-    [Fact]
     public void KingOnEdge_GeneratesMoves_DoesntEscapeBoard()
     {
       // Tests that a king on the edge doesn't suggest leaving the board as a move.
@@ -113,5 +64,6 @@ namespace Tests.MoveTests
           ((7,0), (7,1)),
         });
     }
+
   }
 }
