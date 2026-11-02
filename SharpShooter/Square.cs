@@ -3,6 +3,7 @@ namespace SharpShooter
   public readonly record struct Square(int File, int Rank)
   {
     // Returns a new Square object that is offset by the rank and file provided.
+    // No guarentees if the offset square is on the board or not.
     public static Square Offset(Square existingSquare, int file, int rank)
     {
       return new Square(existingSquare.File + file, existingSquare.Rank + rank);
