@@ -12,6 +12,9 @@ namespace SharpShooter
     public Board(string fen) : this(FenParser.Parse(fen)) { }
     private CastlingRights myCastlingRights;
 
+    public Square? myEnPassantSquare { get; }
+
+
     public bool CanCastleKingside(Colour colour)
     {
       if (colour == Colour.White)
@@ -111,6 +114,16 @@ namespace SharpShooter
         }
       }
       return moves;
+    }
+
+    public List<Move> GenerateLegalMovesFor(Square square)
+    {
+      var pieceAtPosition = PieceAtPosition(square);
+      if(pieceAtPosition == null)
+      {
+        return [];
+      }
+      return GenerateLegalMovesForPieceAtSqaure(pieceAtPosition, square);
     }
 
     public List<Move> GenerateLegalMovesForPieceAtSqaure(Piece piece, Square square)
