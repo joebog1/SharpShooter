@@ -51,10 +51,10 @@ namespace Tests.MoveTests
       Assert.Contains(("g5", "f6"), G5Moves);
     }
 
-    // :TODO: applying a en passant capture move must remove the pawn on the 3/5th rank!
     [Fact]
     public void EnPassant_TakesThePawnOffTheBoard()
     {
+      // Tests that applying a en passant capture move must remove the pawn on the 3/5th rank!
       var board = new Board("1k6/8/8/4PpP1/8/8/8/2K5 w - f6 0 1");
 
       // Apply exf6
@@ -62,6 +62,18 @@ namespace Tests.MoveTests
 
       // Ensure the f5 pawn is gone!
       Assert.Null(board.PieceAtPosition("f5"));
+    }
+
+    [Fact]
+    public void EnPassantFen_MovingPawn_NullifiesEnPassant()
+    {
+      var board = new Board("1k6/8/8/4PpP1/8/8/8/2K5 w - f6 0 1");
+
+      // Apply e5-e6
+      board.ApplyMove(("e5", "e6"));
+
+      // Ensure that en passant is null!
+      Assert.Null(board.myEnPassantSquare);
     }
 
   }
