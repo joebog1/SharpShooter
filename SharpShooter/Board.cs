@@ -251,10 +251,22 @@ namespace SharpShooter
 
       myPieces.Add((movingPiece, move.AfterSquare));
 
+      bool isEnPassantMove = movingPiece.Type() == PieceType.Pawn &&
+                             move.AfterSquare == myEnPassantSquare;
+
+      if (isEnPassantMove)
+      {
+        // Remove the pawn that should be taken by en passant.
+        int rankOfEnPassantedPawn = (myTurn.Value == Colour.White) ? move.AfterSquare.Rank - 1 : move.AfterSquare.Rank + 1;
+        myPieces.RemoveAll(piece =>
+          piece.Square.File == move.AfterSquare.File &&
+          piece.Square.Rank == rankOfEnPassantedPawn);
+      }
+
       if (movingPiece.Type() != PieceType.Pawn ||
          (movingPiece.Type() == PieceType.Pawn && Math.Abs(move.Offset().deltaRank) != 2))
       {
-        // Non pawn jump move, en passant is now null.
+        // Non pawn-jump move, en passant is now null.
         myEnPassantSquare = null;
       }
       else
