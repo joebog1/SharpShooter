@@ -62,6 +62,8 @@ namespace Tests.MoveTests
 
       // Ensure the f5 pawn is gone!
       Assert.Null(board.PieceAtPosition("f5"));
+      // myEnPassantSquare should be null now.
+      Assert.Null(board.myEnPassantSquare);
     }
 
     [Fact]
