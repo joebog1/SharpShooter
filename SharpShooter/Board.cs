@@ -53,6 +53,7 @@ namespace SharpShooter
       }
       myCastlingRights = fen.Castling;
       myTurn = fen.WhosTurn;
+      myEnPassantSquare = fen.EnPassantSquare;
     }
 
     // :TODO: Copying the entire board everytime we suggest a move is suspicious.
