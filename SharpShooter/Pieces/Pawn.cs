@@ -115,7 +115,14 @@ namespace SharpShooter.Pieces
         return false;
       }
       // Must be a diagonal move, check if a piece of opposite colour occupies the candidateMove
-      // after square. 
+      // after square. :NOTE: If the candidateMove after square is the en passant square,
+      // then there doesn't need to be a null piece after position.
+      if (candidateMove.AfterSquare == board.myEnPassantSquare)
+      {
+        // Because the previous move must have been a pawn jump, the en passant square must be empty.
+        Debug.Assert(pieceAtAfterPosition == null);
+        return true;
+      }
       if (pieceAtAfterPosition is not null &&
          pieceAtAfterPosition!.Colour() != Colour())
       {
