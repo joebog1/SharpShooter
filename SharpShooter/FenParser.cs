@@ -15,7 +15,8 @@ namespace SharpShooter
   public sealed record Fen(
     IReadOnlyList<(Piece Piece, Square Square)> Pieces,
     Colour WhosTurn,
-    CastlingRights Castling
+    CastlingRights Castling,
+    Square? EnPassantSquare
 );
 
   public static class FenParser
@@ -38,6 +39,14 @@ namespace SharpShooter
       else
       {
         Debug.Assert(false, "it should either by whites turn or blacks turn!");
+      }
+
+      // Check the en passant square fen.
+      Square? enPassantSquare = null;
+      if (extraFenInformation[2] != "-")
+      {
+        // We have not null en passant square!
+        enPassantSquare = extraFenInformation[2];
       }
 
       // :NOTE: consider mimicing 'real' chess coordinates by using 1-8 for rank and a-g for file.
@@ -69,7 +78,10 @@ namespace SharpShooter
       // Rank should always be 0 after checking every row.
       Debug.Assert(rank == 0);
 
-      return new Fen(pieces, whosTurn, CastlingRightsFromExtraFenSnippet(extraFenInformation[1]));
+      return new Fen(pieces,
+                     whosTurn,
+                     CastlingRightsFromExtraFenSnippet(extraFenInformation[1]),
+                     enPassantSquare);
     }
 
     // Returns who has castling rights by reading the CastlingString
