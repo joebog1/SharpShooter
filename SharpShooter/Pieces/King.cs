@@ -63,7 +63,7 @@ namespace SharpShooter.Pieces
     public override bool PieceSpecificChecks(Move candidateMove, Board board)
     {
       // First check if the move suggested is a castle.
-      var kingMoveOffset = Move.Offset(candidateMove);
+      var kingMoveOffset = candidateMove.Offset();
       // :TODO: This can be simplifed.
       if (kingMoveOffset.deltaFile == 2)
       {

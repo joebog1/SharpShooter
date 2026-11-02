@@ -211,7 +211,7 @@ namespace SharpShooter
       // Finally, mutate the board, applying the move.
       // :TODO: Castling?
       // :TODO: en passant?
-      var deltaFile = Move.Offset(move).deltaFile;
+      var deltaFile = move.Offset().deltaFile;
       if (movingPiece.Type() == PieceType.King &&
          Math.Abs(deltaFile) == 2)
       {
