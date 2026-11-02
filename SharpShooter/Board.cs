@@ -12,7 +12,7 @@ namespace SharpShooter
     public Board(string fen) : this(FenParser.Parse(fen)) { }
     private CastlingRights myCastlingRights;
 
-    public Square? myEnPassantSquare { get; }
+    public Square? myEnPassantSquare;
 
 
     public bool CanCastleKingside(Colour colour)
@@ -251,7 +251,16 @@ namespace SharpShooter
 
       myPieces.Add((movingPiece, move.AfterSquare));
 
-      
+      if(movingPiece.Type() != PieceType.Pawn)
+      {
+        myEnPassantSquare = null;
+      }
+      else if(Math.Abs(move.Offset().deltaRank) == 2)
+      {
+        // Pawn jumped! add en passant square. This should cover both black and white pawns.
+        myEnPassantSquare = (move.BeforeSquare.File, 
+                             move.AfterSquare.Rank - move.Offset().deltaRank/2);
+      }
 
       myTurn = PieceExtension.OtherColour(myTurn.Value);
 
