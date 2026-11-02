@@ -266,6 +266,7 @@ namespace SharpShooter
       Colour otherColour = PieceExtension.OtherColour(myTurn.Value);
 
       if (movingPiece.Type() != PieceType.Pawn ||
+          // Checking if if it's not a pawn jump
          (movingPiece.Type() == PieceType.Pawn && Math.Abs(move.Offset().deltaRank) != 2))
       {
         // Non pawn-jump move, en passant is now null.
@@ -273,11 +274,8 @@ namespace SharpShooter
       }
       else
       {
-        // Pawn jumped! add en passant square. This should cover both black and white pawns.
         // In order to abide by section 16.1.3.4 of the PGN standard when producing FEN, we must only record an
         // enpassant square if an oppoents pawn can actually make use of it on their turn.
-        bool isEnPassantAvailable = false;
-
         var leftSquare = Square.Offset(move.AfterSquare, -1, 0);
         var rightSquare = Square.Offset(move.AfterSquare, 1, 0);
         var leftPiece = PieceAtPosition(leftSquare);

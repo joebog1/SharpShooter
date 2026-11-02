@@ -1,2 +1,3 @@
 Position: The entire state of the board at a given position, includes implicit infomration like castling rights, is in check etc.
 Square: A location on the board somewhere, written file by row (0,3) is e4. This was done to mimic the algebraic notation where the file is mentioned before the rank.
+Pawn jump: specifically the move that moves a pawn from the 2nd/7th rank to the 4th/5th rank, think e2-e4.
