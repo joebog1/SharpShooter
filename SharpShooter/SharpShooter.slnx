@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="SharpShooter.csproj" />
+  <Project Path="../UCI/SharpShooter.UCI.csproj" />
 </Solution>
