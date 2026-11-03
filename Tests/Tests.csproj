@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpShooter\SharpShooter.csproj" />
+    <ProjectReference Include="..\UCI\SharpShooter.UCI.csproj" />
   </ItemGroup>
 
 </Project>

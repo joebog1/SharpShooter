@@ -1,4 +1,5 @@
 ﻿using SharpShooter;
+using SharpShooter.UCI;
 
 namespace Tests
 {
@@ -7,9 +8,8 @@ namespace Tests
     [Fact]
     public void Engine_AsksIsReady_returnsReadyOk()
     {
-      var engine = new ChessEngine("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
-
+      // Send the isready command.
+      Assert.Equal("readyok",UciCommandParser.ParseUciCommand("isready"));
     }
   }
 }
