@@ -20,17 +20,51 @@ namespace SharpShooter.Pieces
     public override List<Move> GenerateLegalMoves(Square startingSquare, Board board)
     {
       List<Move> moves = [];
-      // :TODO: Promotions count as several valid possible moves. Include them.
+
+      int promotionRank = 0;
+      if (Colour() == Pieces.Colour.White)
+      {
+        promotionRank = 7;
+      }
+
+      Action<Move> AddAndIncludePromotions = (move) =>
+      {
+        if (move.AfterSquare.Rank != promotionRank)
+        {
+          AddIfValid(moves, move, board);
+        }
+        else
+        {
+          // Promotions!
+          Move Knight = new Move(startingSquare,
+                                   move.AfterSquare,
+                                   PieceType.Knight);
+          AddIfValid(moves, Knight, board);
+          Move Bishop = new Move(startingSquare,
+                                   move.AfterSquare,
+                                   PieceType.Bishop);
+          AddIfValid(moves, Bishop, board);
+          Move Rook = new Move(startingSquare,
+                                   move.AfterSquare,
+                                   PieceType.Rook);
+          AddIfValid(moves, Rook, board);
+          Move Queen = new Move(startingSquare,
+                                   move.AfterSquare,
+                                   PieceType.Queen);
+          AddIfValid(moves, Queen, board);
+        }
+      };
+
       if (Colour() == Pieces.Colour.Black)
       {
         Move down = new Move(startingSquare, Square.Offset(startingSquare, 0, -1));
-        AddIfValid(moves, down, board);
+        AddAndIncludePromotions(down);
 
         Move downLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, -1));
-        AddIfValid(moves, downLeft, board);
+        AddAndIncludePromotions(downLeft);
 
         Move downRight = new Move(startingSquare, Square.Offset(startingSquare, +1, -1));
-        AddIfValid(moves, downRight, board);
+        AddAndIncludePromotions(downRight);
 
         if (board.IsSquareOnPawnStartingFile(startingSquare, Colour()))
         {
@@ -42,13 +76,13 @@ namespace SharpShooter.Pieces
       {
         Debug.Assert(Colour() == Pieces.Colour.White);
         Move up = new Move(startingSquare, Square.Offset(startingSquare, 0, 1));
-        AddIfValid(moves, up, board);
+        AddAndIncludePromotions(up);
 
         Move upLeft = new Move(startingSquare, Square.Offset(startingSquare, -1, +1));
-        AddIfValid(moves, upLeft, board);
+        AddAndIncludePromotions(upLeft);
 
         Move upRight = new Move(startingSquare, Square.Offset(startingSquare, +1, +1));
-        AddIfValid(moves, upRight, board);
+        AddAndIncludePromotions(upRight);
 
         if (board.IsSquareOnPawnStartingFile(startingSquare, Colour()))
         {
@@ -99,7 +133,6 @@ namespace SharpShooter.Pieces
     public override bool PieceSpecificChecks(Move candidateMove, Board board)
     {
       // A pawn needs to know if it can take diagonally because it can't move diagonally otherwise.
-      // :TODO: EN PASSANT!
       var pieceAtAfterPosition = board.PieceAtPosition(candidateMove.AfterSquare);
       // First check if the move is strictly vertical.
       if (candidateMove.BeforeSquare.File == candidateMove.AfterSquare.File)
@@ -114,7 +147,8 @@ namespace SharpShooter.Pieces
         // Something blocks the pawn, it can't move!.
         return false;
       }
-      // Must be a diagonal move, check if a piece of opposite colour occupies the candidateMove
+
+      // Could be a diagonal move, check if a piece of opposite colour occupies the candidateMove
       // after square. :NOTE: If the candidateMove after square is the en passant square,
       // then there doesn't need to be a null piece after position.
       if (candidateMove.AfterSquare == board.myEnPassantSquare)
@@ -129,6 +163,26 @@ namespace SharpShooter.Pieces
         // Then you can take it.
         return true;
       }
+
+      // If the move lands on promotion rank of the pawn for that colour, then the move must contain a non-null,
+      // non king and non-pawn promotion as part of the move.
+      int promotionRank = 0;
+      if (Colour() == Pieces.Colour.White)
+      {
+        promotionRank = 7;
+      }
+      if (candidateMove.AfterSquare.Rank == promotionRank &&
+        (candidateMove.Promotion == null ||
+        candidateMove.Promotion == PieceType.King ||
+        candidateMove.Promotion == PieceType.Pawn
+        ))
+      {
+        // :TODO: This lacks test coverage because we assume the board is trusted enough not to suggest
+        // nonsense moves.
+        Debug.Assert(false);
+        return false;
+      }
+
       // You can't take it, illegal move
       return false;
     }

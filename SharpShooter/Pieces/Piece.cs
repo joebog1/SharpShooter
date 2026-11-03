@@ -148,7 +148,7 @@
          pieceAtPosition?.Colour() == Colour())
         return;
 
-      // Finally, rely on the board to tell us if the resulting position would leave
+      // Rely on the board to tell us if the resulting position would leave
       // the wrong king in check (can't make a move that puts your own king in check.)
       if (board.WouldLeaveKingInCheck(candidateMove, Colour()))
         return;
