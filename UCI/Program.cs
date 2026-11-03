@@ -5,7 +5,7 @@ internal static class Program
   private static void Main(string[] args)
   {
     using StreamReader reader = new StreamReader(Console.OpenStandardInput());
-
+    // :TODO: integration tests should try and use this.
     string? line;
     while ((line = reader.ReadLine()) != null)
     {
