@@ -166,6 +166,8 @@ namespace SharpShooter.Pieces
 
       // If the move lands on promotion rank of the pawn for that colour, then the move must contain a non-null,
       // non king and non-pawn promotion as part of the move.
+      // :TODO: This violates proper responsibility assignment, the board knows if the pawn is promoting,
+      // not the pawn!
       int promotionRank = 0;
       if (Colour() == Pieces.Colour.White)
       {

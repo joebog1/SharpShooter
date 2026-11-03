@@ -290,6 +290,27 @@ namespace SharpShooter
         }
       }
 
+      // Finally, check if the move was a promotion move, if so, promote it.
+      int promotionRank = 0;
+      if (movingPiece.Colour() == Colour.White)
+      {
+        promotionRank = 7;
+      }
+      if (movingPiece.Type() == PieceType.Pawn && move.AfterSquare.Rank == promotionRank)
+      {
+        // Promote the pawn.
+        Debug.Assert(move.Promotion != null);
+        var promotedPiece = PieceExtension.FromPieceType(move.Promotion.Value, movingPiece.Colour());
+        
+        // :TODO: This approach is a little inefficent as we move the pawn to the promotion square,
+        // then swap it out as two operations.
+        myPieces.RemoveAll(piece =>
+          piece.Square == move.BeforeSquare ||
+          piece.Square == move.AfterSquare);
+
+        myPieces.Add((promotedPiece, move.AfterSquare));
+      }
+
       myTurn = otherColour;
 
       return true;

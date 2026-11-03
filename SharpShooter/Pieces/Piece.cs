@@ -1,4 +1,6 @@
-﻿namespace SharpShooter.Pieces
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace SharpShooter.Pieces
 {
   public enum PieceType
   {
@@ -50,6 +52,10 @@
       var colour = CharacterToColour(character);
       var type = CharacterToType(character);
 
+      return FromPieceType(type, colour);
+    }
+      public static Piece FromPieceType(PieceType type, Colour colour)
+    {
       return type switch
       {
         PieceType.King => new King(colour),
