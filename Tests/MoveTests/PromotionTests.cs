@@ -33,7 +33,7 @@ namespace Tests.MoveTests
     [Fact]
     public void PawnAlmostPromoting_IncludesCapturesPromotions()
     {
-      // Tests that a pawn with only 1 square to go (no captures) generates all promotion moves.
+      // Tests that a pawn can capture and promote.
       var board = new Board("1k1r1r2/4P3/8/8/8/8/8/2K5 w - - 0 1");
 
       // Generate the moves for the pawn and it should generate all promotions (Knight,Bishop,Rook,Queen).
@@ -70,6 +70,32 @@ namespace Tests.MoveTests
       Assert.DoesNotContain(new Move("e7", "f8", PieceType.Pawn), moves);
       // Not promoting is illegal!
       Assert.DoesNotContain(new Move("e7", "f8", null), moves);
+    }
+
+    [Fact]
+    public void ApplyingPawnPromotion_PromotesToRightPieceAndColour()
+    {
+      // Tests that applying all pawn promotion
+      var board = new Board("1k6/4P3/8/8/8/8/8/2K5 w - - 0 1");
+
+      // Generate the moves for the pawn and it should generate all promotions (Knight,Bishop,Rook,Queen).
+      var moves = board.GenerateLegalMovesFor("e7");
+
+      foreach(var move in moves)
+      {
+        // Generate board with promotion applied for it.
+        var boardCopy = new Board("1k6/4P3/8/8/8/8/8/2K5 w - - 0 1");
+        var expectedPromotionPiece = move.Promotion;
+
+        boardCopy.ApplyMove(move);
+
+        // e8 should be the expected promotionPiece and it should be white.
+        var actualPiece = boardCopy.PieceAtPosition("e8");
+
+        Assert.NotNull(actualPiece);
+        Assert.Equal(expectedPromotionPiece, actualPiece.Type());
+        Assert.Equal(Colour.White, actualPiece.Colour());
+      }
     }
   }
 }
