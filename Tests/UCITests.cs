@@ -12,6 +12,7 @@ namespace Tests
       Assert.Equal("readyok",UciCommandParser.ParseUciCommand("isready"));
     }
 
+    [Fact]
     public void Parser_AsksForId_GivesId()
     {
       // Send the id command.
