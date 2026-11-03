@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12201.205 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpShooter", "SharpShooter\SharpShooter.csproj", "{32704665-A1BA-491E-9932-0AFE016C2907}"
 EndProject
@@ -53,8 +53,13 @@ Global
 		{F506C20D-3D0B-4C9F-B6A5-B3E66F18D2A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F506C20D-3D0B-4C9F-B6A5-B3E66F18D2A1}.Release|x64.ActiveCfg = Release|Any CPU
 		{F506C20D-3D0B-4C9F-B6A5-B3E66F18D2A1}.Release|x64.Build.0 = Release|Any CPU
+		{F506C20D-3D0B-4C9F-B6A5-B3E66F18D2A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{F506C20D-3D0B-4C9F-B6A5-B3E66F18D2A1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C258E321-2AE1-49B7-8EDB-F1FF392CA7E3}
 	EndGlobalSection
 EndGlobal
