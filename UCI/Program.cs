@@ -4,6 +4,7 @@ internal static class Program
 {
   private static void Main(string[] args)
   {
+    UciCommandParser parser = new UciCommandParser();
     using StreamReader reader = new StreamReader(Console.OpenStandardInput());
     // :TODO: integration tests should try and use this.
     string? line;
@@ -15,7 +16,7 @@ internal static class Program
         continue;
       }
 
-      UciCommandParser.ParseUciCommand(line);
+      parser.ParseUciCommand(line);
     }
   }
 

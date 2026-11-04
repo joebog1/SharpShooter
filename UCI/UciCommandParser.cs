@@ -2,7 +2,10 @@ namespace SharpShooter.UCI;
 
 public class UciCommandParser
 {
-  public static string ParseUciCommand(string command)
+
+  ChessEngine? myChessEngine;
+    
+  public string ParseUciCommand(string command)
   {
     // Split tokens to easily handle commands and arguments
     string[] tokens = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -22,7 +25,21 @@ public class UciCommandParser
         Environment.Exit(0);
         break;
 
-        // :TODO: Handle position, go, setoption, etc. below...
+      case "position":
+        // :TODO: it seems the position command can be used to send a fen AND additional moves.
+        // We should probably handle that.
+        string fen = string.Join(" ", tokens.Skip(1));
+        if(myChessEngine == null)
+        {
+          myChessEngine = new ChessEngine(fen);
+        }
+        else
+        {
+          myChessEngine.SetPositionFromFen(fen);
+        }
+        break;
+        // 
+        // :TODO: Handle, go, setoption, etc. below...
     }
     // :TODO: handle this?
     return "";
