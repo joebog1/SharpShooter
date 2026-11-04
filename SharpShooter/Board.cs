@@ -394,10 +394,36 @@ namespace SharpShooter
     /// Checks if the game is over and returns the game result.
     /// </summary>
     /// <returns></returns>
-    public GameResult ResultOfCurrentPosition()
+    public GameResult Result()
     {
-      // :TODO: Expand on this.
-      return GameResult.WhiteWins;
+      // This method presupposes we know who's turn it is and a valid position is
+      // on the board.
+      Debug.Assert(myTurn != null);
+      Debug.Assert(IsValidPosition());
+
+      // Check if the player who's turn it is has any legal moves.
+      var moves = GenerateLegalMoves();
+      if (moves.Count == 0)
+      {
+        // They are either in stalemate or checkmate.
+        if(IsInCheck())
+        {
+          // They are in checkmate, the other opponent wins.
+          if(PieceExtension.OtherColour(myTurn!.Value) == Colour.White)
+          {
+            return GameResult.WhiteWins;
+          }
+          else
+          {
+            return GameResult.BlackWins;
+          }
+        }
+        // They are in stalemate, it's a draw.
+        return GameResult.Draw;
+      }
+
+      // There is play to go on.
+      return GameResult.Undecided;
     }
 
     public bool IsSquareAttacked(Square target, Colour byColour)
