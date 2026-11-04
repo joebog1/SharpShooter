@@ -2,6 +2,14 @@ namespace SharpShooter.UCI;
 
 public class UciCommandParser
 {
+    /// :TODO:
+    /// 
+    /// How to break up this class:
+    /// * Parser: Only reads the tokens and feeds the correct arguments to the UciSession
+    /// * Session: Told by the console host what to do, manages internal state like the ChessEngine.
+    /// * ConsoleHost: takes over what Program is doing now (starting the session and telling the parser to get to work.)
+    /// * Program.cs, essentially main.cpp, starts the ConsoleHost.
+    /// 
 
   ChessEngine? myChessEngine;
     
