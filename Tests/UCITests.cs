@@ -16,7 +16,7 @@ namespace Tests
     public void Parser_AsksForId_GivesId()
     {
       // Send the id command.
-      Assert.Equal("id name SharpShooter\nid author Joseph Bruanto\nuciok", UciCommandParser.ParseUciCommand("id"));
+      Assert.Equal("id name SharpShooter\nid author Joseph Bruanto\nuciok", UciCommandParser.ParseUciCommand("uci"));
     }
   }
 }
