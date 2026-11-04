@@ -5,22 +5,22 @@ namespace Tests
 {
   public class UCITests
   {
-    [Fact]
-    public void Parser_AsksIsReady_returnsReadyOk()
+    public static TheoryData<string, UCICommand> ParserCases => new()
     {
-      UciCommandParser parser = new UciCommandParser();
+      { "isready", new UCICommand(UCICommandType.IsReady) },
+      { "uci",     new UCICommand(UCICommandType.UCI) },
+      { "quit",    new UCICommand(UCICommandType.Quit) }
+    };
 
-      // Send the isready command.
-      Assert.Equal("readyok", parser.ParseUciCommand("isready"));
-    }
-
-    [Fact]
-    public void Parser_AsksForUci_GivesId()
+    [Theory]
+    [MemberData(nameof(ParserCases))]
+    public void Parser_GivenInput_ReturnsExpectedCommand(
+      string input,
+      UCICommand expectedCommand)
     {
-      UciCommandParser parser = new UciCommandParser();
+      var parser = new UciCommandParser();
 
-      // Send the uci command.
-      Assert.Equal("id name SharpShooter\nid author Joseph Bruanto\nuciok", parser.ParseUciCommand("uci"));
+      Assert.Equal(expectedCommand, parser.ParseUciCommand(input));
     }
 
     [Fact]
@@ -28,8 +28,15 @@ namespace Tests
     {
       UciCommandParser parser = new UciCommandParser();
 
+      string inputFen = "8/8/8/8/8/6k1/5q2/7K w - - 0 5";
+
       // Set the position to the starting position with the fen for it.
-      parser.ParseUciCommand("position rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+      var command = parser.ParseUciCommand($"position {inputFen}");
+
+      // Ask the engine if it's board has the pieces I expect in the places I expect.
+      var expectedCommand = new UCICommand(UCICommandType.Position, inputFen);
+      Assert.Equal(expectedCommand, command);
+      
     }
   }
 }
