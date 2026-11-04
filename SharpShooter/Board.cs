@@ -447,8 +447,10 @@ namespace SharpShooter
     {
       var kingSquare = FindKing(kingColour);
       if (kingSquare is not Square square)
+      {
         Debug.Assert(false, "King should exist in order for a check to work.");
         return false;
+      }
 
       var attackerColour = kingColour.OtherColour();
 
