@@ -448,6 +448,10 @@ namespace SharpShooter
       var kingSquare = FindKing(kingColour);
       if (kingSquare is not Square square)
       {
+        // :TODO: This assert breaks move tests that are abstract and don't have
+        // kings. Since moving is inheritantly tied to if the king will be placed in check
+        // or not, it's proper we add kings to every failing peice test, somewhere where they
+        // won't break the sprit of the test.
         Debug.Assert(false, "King should exist in order for a check to work.");
         return false;
       }

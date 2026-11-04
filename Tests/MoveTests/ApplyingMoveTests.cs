@@ -60,6 +60,7 @@ namespace Tests.MoveTests
     }
 
     [Fact]
+    // :TODO: This test finds a bug that castling rights isn't properly waived after a king move!.
     public void PlayTheOperaGame_EveryMoveIsValid()
     {
       // Play through the entierty of the opera game. Every move should be valid.
