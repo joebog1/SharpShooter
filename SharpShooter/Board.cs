@@ -447,7 +447,7 @@ namespace SharpShooter
     {
       var kingSquare = FindKing(kingColour);
       if (kingSquare is not Square square)
-        // :TODO: Doesn't this fail a precondition of this function? that the king exists?
+        Debug.Assert(false, "King should exist in order for a check to work.");
         return false;
 
       var attackerColour = kingColour.OtherColour();
