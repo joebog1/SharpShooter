@@ -218,5 +218,22 @@ namespace Tests.MoveTests
         });
     }
 
+    [Fact]
+    public void KingMoves_CastlingRightsAreLost()
+    {
+      // Tests that moving the king loses all castling rights
+      var board = new Board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
+
+      // Apply Ke2
+      board.ApplyMove(("e1", "e2"));
+
+      // Assert that White's castling rights are gone and black still has castling rights.
+      Assert.False(board.CanCastleKingside(Colour.White));
+      Assert.False(board.CanCastleQueenside(Colour.White));
+
+      Assert.True(board.CanCastleQueenside(Colour.Black));
+      Assert.True(board.CanCastleQueenside(Colour.Black));
+    }
+
   }
 }

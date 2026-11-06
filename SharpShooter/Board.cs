@@ -311,6 +311,22 @@ namespace SharpShooter
         myPieces.Add((promotedPiece, move.AfterSquare));
       }
 
+      if(movingPiece.Type() == PieceType.King)
+      {
+        // The move involved the king, that colour loses all castling rights.
+        if(movingPiece.Colour() == Colour.White)
+        {
+          myCastlingRights &= ~CastlingRights.WhiteKingside;
+          myCastlingRights &= ~CastlingRights.WhiteQueenside;
+        }
+        else
+        {
+          Debug.Assert(movingPiece.Colour() == Colour.Black);
+          myCastlingRights &= ~CastlingRights.BlackKingside;
+          myCastlingRights &= ~CastlingRights.BlackQueenside;
+        }
+      }
+
       myTurn = otherColour;
 
       return true;
