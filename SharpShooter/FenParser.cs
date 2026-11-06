@@ -6,7 +6,6 @@ namespace SharpShooter
   [Flags]
   public enum CastlingRights
   {
-    None = 0,
     WhiteKingside = 1,
     WhiteQueenside = 2,
     BlackKingside = 4,
@@ -87,7 +86,7 @@ namespace SharpShooter
     // Returns who has castling rights by reading the CastlingString
     private static CastlingRights CastlingRightsFromExtraFenSnippet(string CastlingString)
     {
-      CastlingRights castlingRights = CastlingRights.None;
+      CastlingRights castlingRights = 0;
       if (CastlingString.Contains('k')) castlingRights |= CastlingRights.BlackKingside;
       if (CastlingString.Contains('K')) castlingRights |= CastlingRights.WhiteKingside;
       if (CastlingString.Contains('q')) castlingRights |= CastlingRights.BlackQueenside;
