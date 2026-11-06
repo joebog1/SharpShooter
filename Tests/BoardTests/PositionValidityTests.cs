@@ -1,4 +1,5 @@
 using SharpShooter;
+using SharpShooter.Pieces;
 
 namespace Tests.BoardTests
 {
@@ -80,6 +81,40 @@ namespace Tests.BoardTests
 
       Assert.True(actual);
     }
+
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", true, true, true, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQk - 0 1", true, true, true, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQq - 0 1", true, true, false, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1", true, true, false, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kkq - 0 1", true, false, true, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kk - 0 1", true, false, true, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K - 0 1", true, false, false, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Qkq - 0 1", false, true, true, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Qk - 0 1", false, true, true, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Qq - 0 1", false, true, false, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Q - 0 1", false, true, false, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w q - 0 1", false, false, false, true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w k - 0 1", false, false, true, false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1", false, false, false, false)]
+    public void Result_Fen_BoardKnowsWhoCanCastle(string fen,
+                                                  bool whiteKing,
+                                                  bool whiteQueen,
+                                                  bool blackKing,
+                                                  bool blackQueen
+                                                  )
+    {
+      var board = new Board(fen);
+
+      // Assert that the castling rights are what the fen says.
+      Assert.Equal(whiteKing, board.CanCastleKingside(Colour.White));
+      Assert.Equal(whiteQueen, board.CanCastleQueenside(Colour.White));
+
+      Assert.Equal(blackKing, board.CanCastleKingside(Colour.Black));
+      Assert.Equal(blackQueen, board.CanCastleQueenside(Colour.Black));
+    }
+
 
   }
 }
