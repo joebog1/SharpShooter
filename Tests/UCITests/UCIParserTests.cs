@@ -1,9 +1,9 @@
 ﻿using SharpShooter;
 using SharpShooter.UCI;
 
-namespace Tests
+namespace Tests.UCITests
 {
-  public class UCITests
+  public class UCIParserTests
   {
     public static TheoryData<string, UCICommand> ParserCases => new()
     {
@@ -24,7 +24,7 @@ namespace Tests
     }
 
     [Fact]
-    public void Parser_SetsPosition_PositionIsSet()
+    public void Parser_SetsPosition_PositionCommandIsReturned()
     {
       UciCommandParser parser = new UciCommandParser();
 
@@ -36,7 +36,20 @@ namespace Tests
       // Ask the engine if it's board has the pieces I expect in the places I expect.
       var expectedCommand = new UCICommand(UCICommandType.Position, inputFen);
       Assert.Equal(expectedCommand, command);
-      
+    }
+
+    [Fact]
+    public void Parser_SetsPosition_StartPosGivesStartingPos()
+    {
+      // Tests that the "position startpos" special command converts into the starting fen properly
+      UciCommandParser parser = new UciCommandParser();
+
+      // Set the position to the starting position with the fen for it.
+      var command = parser.ParseUciCommand($"position startpos");
+
+      // Ask the engine if it's board has the pieces I expect in the places I expect.
+      var expectedCommand = new UCICommand(UCICommandType.Position, UciCommandParser.StartingPosition());
+      Assert.Equal(expectedCommand, command);
     }
   }
 }
