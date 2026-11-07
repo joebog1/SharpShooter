@@ -12,15 +12,15 @@ namespace SharpShooter.UCI
     Quit,    // Client is asking us to quit.
     Position,// Client is asking us to set the position of the board to the fen provided.
   }
-
+  // :TODO: Make UCICommand a record struct?
   public class UCICommand
   {
-    UCICommandType myCommandType;
+    public UCICommandType myCommandType;
 
     // The command arguments differ based on what command type is being asked.
     // Several types, such as UCI and IsReady have no arguments.
     // Position command types include fen of the position to set the board to.
-    object? myCommandArguments;
+    public object? myCommandArguments;
 
     public UCICommand(UCICommandType commandType, object? commandArguments = null)
     {

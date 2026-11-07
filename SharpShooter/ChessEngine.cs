@@ -7,7 +7,7 @@ namespace SharpShooter
   {
     public ChessEngine(string fen) { SetPositionFromFen(fen); }
 
-    private Board myBoard;
+    public Board myBoard;
 
     [MemberNotNull(nameof(myBoard))]
     public void SetPositionFromFen(string fen)

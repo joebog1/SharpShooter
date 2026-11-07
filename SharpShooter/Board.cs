@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace SharpShooter
 {
-  public class Board
+  public class Board : IEquatable<Board>
   {
     List<(Piece Piece, Square Square)> myPieces;
 
@@ -55,6 +55,44 @@ namespace SharpShooter
       myTurn = fen.WhosTurn;
       myEnPassantSquare = fen.EnPassantSquare;
     }
+
+    public bool Equals(Board? other)
+    {
+      if (ReferenceEquals(this, other)) return true;
+      if (other is null ||
+          myTurn != other.myTurn ||
+          myEnPassantSquare != other.myEnPassantSquare ||
+          myCastlingRights != other.myCastlingRights ||
+          myPieces.Count != other.myPieces.Count)
+      {
+        return false;
+      }
+
+      // Piece order is not meaningful in a board position.
+      return myPieces.All(piece => other.myPieces.Contains(piece));
+    }
+
+    public override bool Equals(object? obj) => obj is Board other && Equals(other);
+
+    public override int GetHashCode()
+    {
+      var hash = new HashCode();
+      hash.Add(myTurn);
+      hash.Add(myEnPassantSquare);
+      hash.Add(myCastlingRights);
+      foreach (var (piece, square) in myPieces.OrderBy(piece => piece.Square))
+      {
+        hash.Add(piece);
+        hash.Add(square);
+      }
+      return hash.ToHashCode();
+    }
+
+    public static bool operator ==(Board? left, Board? right) =>
+      Equals(left, right);
+
+    public static bool operator !=(Board? left, Board? right) =>
+      !Equals(left, right);
 
     // :TODO: Copying the entire board everytime we suggest a move is suspicious.
     // There's probably an optimisation that allows us to search without a bucnh of memory. #6
