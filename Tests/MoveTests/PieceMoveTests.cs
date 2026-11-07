@@ -7,7 +7,7 @@ namespace Tests.MoveTests
   {
     public static IEnumerable<object[]> KnightTestData => new List<object[]>
     {
-      new object[] { "8/8/3N4/8/8/8/8/8 b - - 0 1", 'N',
+      new object[] { "8/8/3N4/8/8/8/8/2K1k3 b - - 0 1", 'N',
                      3,
                      5,
                      new List<Move> { ((3, 5), (4, 7)),
@@ -32,10 +32,10 @@ namespace Tests.MoveTests
 
     public static IEnumerable<object[]> BishopTestData => new List<object[]>
     {
-      new object[] { "8/8/8/8/8/5p2/8/7B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)), ((7, 0), (5, 2)) } }, // Capture the pawn
-      new object[] { "8/8/8/8/8/5P2/8/7B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)) } },
-      new object[] { "8/8/8/8/8/5p2/8/7b w - - 0 1", 'b', 7, 0, new List<Move> { ((7, 0), (6, 1)) } },
-      new object[] { "8/6p1/8/8/8/8/8/B7 w - - 0 1", 'B', 0, 0, new List<Move> { ((0, 0), (1, 1)),
+      new object[] { "8/8/8/8/8/5p2/8/2K1k2B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)), ((7, 0), (5, 2)) } }, // Capture the pawn
+      new object[] { "8/8/8/8/8/5P2/8/2K1k2B w - - 0 1", 'B', 7, 0, new List<Move> { ((7, 0), (6, 1)) } },
+      new object[] { "8/8/8/8/8/5p2/8/2K1k2b w - - 0 1", 'b', 7, 0, new List<Move> { ((7, 0), (6, 1)) } },
+      new object[] { "8/6p1/8/8/8/8/8/B1K1k3 w - - 0 1", 'B', 0, 0, new List<Move> { ((0, 0), (1, 1)),
                                                                                  ((0, 0), (2, 2)),
                                                                                  ((0, 0), (3, 3)),
                                                                                  ((0, 0), (4, 4)),

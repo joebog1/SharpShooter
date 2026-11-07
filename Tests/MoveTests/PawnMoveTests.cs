@@ -4,13 +4,34 @@ namespace Tests.MoveTests
 {
   public class PawnMoveTests
   {
+    public static List<Move> BlackKingMoves()
+    {
+      return new List<Move>
+      {
+        ("a8","a7"),
+        ("a8","b7"),
+        ("a8","b8"),
+      };
+    }
+    public static List<Move> WhiteKingMoves()
+    {
+      return new List<Move>
+      {
+        ("a1","a2"),
+        ("a1","b2"),
+        ("a1","b1"),
+      };
+    }
+
     [Fact]
     public void PawnsInEachOthersWay_GeneratesMoves_NoMoves()
     {
       // Tests that two pawns with each other in their way can't move.
       MoveTestUtil.VerifyMoves(
-        "8/8/8/8/4p3/4P3/8/8 b - - 0 1",
-        new List<Move> { });
+        "k7/8/8/8/4p3/4P3/8/K7 b - - 0 1",
+        new List<Move>(BlackKingMoves())
+        {
+        });
     }
 
     [Fact]
@@ -18,10 +39,12 @@ namespace Tests.MoveTests
     {
       // Tests that two pawns that can capture each other generate capture moves.
       MoveTestUtil.VerifyMoves(
-        "8/8/8/3p4/4P3/8/8/8 w - - 0 1",
-        new List<Move>{((4,3),(3,4)), // capture
-                       ((4,3),(4,4))  // move forward
-                       });
+        "k7/8/8/3p4/4P3/8/8/K7 w - - 0 1",
+        new List<Move>(WhiteKingMoves())
+        {
+          ((4,3),(3,4)), // capture
+          ((4,3),(4,4))  // move forward
+        });
     }
 
     [Fact]
@@ -29,8 +52,8 @@ namespace Tests.MoveTests
     {
       // Tests that a white pawn at e4 can move to e5, provided there is no obstructions.
       MoveTestUtil.VerifyMoves(
-        "8/8/8/8/4P3/8/8/8 w - - 0 1",
-        new List<Move>
+        "k7/8/8/8/4P3/8/8/K7 w - - 0 1",
+        new List<Move>(WhiteKingMoves())
         {
           ((4, 3), (4, 4)), // e4 -> e5
         });
@@ -41,8 +64,8 @@ namespace Tests.MoveTests
     {
       // Tests that a black pawn at e4 can move to e3, provided there is no obstructions.
       MoveTestUtil.VerifyMoves(
-        "8/8/8/8/4p3/8/8/8 b - - 0 1",
-        new List<Move>
+        "k7/8/8/8/4p3/8/8/K7 b - - 0 1",
+        new List<Move>(BlackKingMoves())
         {
           ((4, 3), (4, 2)), // e4 -> e3
         });
@@ -57,9 +80,11 @@ namespace Tests.MoveTests
       // Cover ensuring there's only one legal move if not on the right rank.
       // White pawn moves
       MoveTestUtil.VerifyMoves(
-        "8/pppppppp/8/8/8/8/PPPPPPPP/8 w - - 0 1",
-        new List<Move>
+        "k7/pppppppp/8/8/8/8/PPPPPPPP/K7 w - - 0 1",
+        new List<Move>()
         {
+          // The king
+          ("a1","b1"),
           // A pawn
           ((0,1),(0,2)),
           ((0,1),(0,3)),
@@ -95,9 +120,11 @@ namespace Tests.MoveTests
         );
       // Black pawn moves
       MoveTestUtil.VerifyMoves(
-        "8/pppppppp/8/8/8/8/PPPPPPPP/8 b - - 0 1",
-        new List<Move>
+        "k7/pppppppp/8/8/8/8/PPPPPPPP/K7 b - - 0 1",
+        new List<Move>()
         {
+          // The king
+          ("a8","b8"),
           // A pawn
           ((0,6),(0,5)),
           ((0,6),(0,4)),
