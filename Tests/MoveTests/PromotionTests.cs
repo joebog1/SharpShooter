@@ -1,8 +1,5 @@
 ﻿using SharpShooter;
 using SharpShooter.Pieces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.MoveTests
 {
@@ -81,7 +78,7 @@ namespace Tests.MoveTests
       // Generate the moves for the pawn and it should generate all promotions (Knight,Bishop,Rook,Queen).
       var moves = board.GenerateLegalMovesFor("e7");
 
-      foreach(var move in moves)
+      foreach (var move in moves)
       {
         // Generate board with promotion applied for it.
         var boardCopy = new Board("1k6/4P3/8/8/8/8/8/2K5 w - - 0 1");

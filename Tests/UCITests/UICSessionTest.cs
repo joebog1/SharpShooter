@@ -1,8 +1,5 @@
-﻿using SharpShooter.UCI;
-using SharpShooter;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SharpShooter;
+using SharpShooter.UCI;
 
 namespace Tests.UCITests
 {

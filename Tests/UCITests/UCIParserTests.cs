@@ -1,5 +1,4 @@
-﻿using SharpShooter;
-using SharpShooter.UCI;
+﻿using SharpShooter.UCI;
 
 namespace Tests.UCITests
 {

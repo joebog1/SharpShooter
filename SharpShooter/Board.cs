@@ -304,7 +304,7 @@ namespace SharpShooter
       Colour otherColour = PieceExtension.OtherColour(myTurn.Value);
 
       if (movingPiece.Type() != PieceType.Pawn ||
-          // Checking if if it's not a pawn jump
+         // Checking if if it's not a pawn jump
          (movingPiece.Type() == PieceType.Pawn && Math.Abs(move.Offset().deltaRank) != 2))
       {
         // Non pawn-jump move, en passant is now null.
@@ -339,7 +339,7 @@ namespace SharpShooter
         // Promote the pawn.
         Debug.Assert(move.Promotion != null);
         var promotedPiece = PieceExtension.FromPieceType(move.Promotion.Value, movingPiece.Colour());
-        
+
         // :TODO: This approach is a little inefficent as we move the pawn to the promotion square,
         // then swap it out as two operations.
         myPieces.RemoveAll(piece =>
@@ -349,10 +349,10 @@ namespace SharpShooter
         myPieces.Add((promotedPiece, move.AfterSquare));
       }
 
-      if(movingPiece.Type() == PieceType.King)
+      if (movingPiece.Type() == PieceType.King)
       {
         // The move involved the king, that colour loses all castling rights.
-        if(movingPiece.Colour() == Colour.White)
+        if (movingPiece.Colour() == Colour.White)
         {
           myCastlingRights &= ~CastlingRights.WhiteKingside;
           myCastlingRights &= ~CastlingRights.WhiteQueenside;
@@ -365,22 +365,22 @@ namespace SharpShooter
         }
       }
 
-      if(movingPiece.Type() == PieceType.Rook)
+      if (movingPiece.Type() == PieceType.Rook)
       {
         // The move involved the Rrook, that colour loses castling rights on that side.
-        if(move.BeforeSquare == "a1" && movingPiece.Colour() == Colour.White)
+        if (move.BeforeSquare == "a1" && movingPiece.Colour() == Colour.White)
         {
           myCastlingRights &= ~CastlingRights.WhiteQueenside;
         }
-        if(move.BeforeSquare == "h1" && movingPiece.Colour() == Colour.White)
+        if (move.BeforeSquare == "h1" && movingPiece.Colour() == Colour.White)
         {
           myCastlingRights &= ~CastlingRights.WhiteKingside;
         }
-        if(move.BeforeSquare == "a8" && movingPiece.Colour() == Colour.Black)
+        if (move.BeforeSquare == "a8" && movingPiece.Colour() == Colour.Black)
         {
           myCastlingRights &= ~CastlingRights.BlackQueenside;
         }
-        if(move.BeforeSquare == "h8" && movingPiece.Colour() == Colour.Black)
+        if (move.BeforeSquare == "h8" && movingPiece.Colour() == Colour.Black)
         {
           myCastlingRights &= ~CastlingRights.BlackKingside;
         }
@@ -481,10 +481,10 @@ namespace SharpShooter
       if (moves.Count == 0)
       {
         // They are either in stalemate or checkmate.
-        if(IsInCheck())
+        if (IsInCheck())
         {
           // They are in checkmate, the other opponent wins.
-          if(PieceExtension.OtherColour(myTurn!.Value) == Colour.White)
+          if (PieceExtension.OtherColour(myTurn!.Value) == Colour.White)
           {
             return GameResult.WhiteWins;
           }

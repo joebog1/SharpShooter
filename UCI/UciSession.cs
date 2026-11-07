@@ -1,3 +1,4 @@
+using SharpShooter.Engine;
 using System.Diagnostics;
 
 namespace SharpShooter.UCI;
@@ -10,14 +11,14 @@ public class UciSession
 
   public void Execute(UCICommand command)
   {
-    switch(command.myCommandType)
+    switch (command.myCommandType)
     {
       case UCICommandType.Position:
-      {
+        {
           Debug.Assert(command.myCommandArguments != null);
           myChessEngine.SetPositionFromFen(command.myCommandArguments.ToString());
-        break;
-      }
+          break;
+        }
 
     }
 

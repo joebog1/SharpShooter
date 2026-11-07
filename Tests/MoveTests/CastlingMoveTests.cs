@@ -250,12 +250,12 @@ namespace Tests.MoveTests
         "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R b KQkq - 0 4",
         "a8",
         "b8",
-        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackKingside )]
+        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackKingside)]
     [InlineData(
         "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R b KQkq - 0 4",
         "h8",
         "f8",
-        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackQueenside )]
+        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackQueenside)]
     public void RookMoves_CastlingRightsOnThatSideAreLost(
         string fen,
         string from,
@@ -269,19 +269,19 @@ namespace Tests.MoveTests
       board.ApplyMove((from, to));
 
       // Assert that White lost his kingside castling right.
-      if(expectedCastlingRights.HasFlag(CastlingRights.WhiteKingside))
+      if (expectedCastlingRights.HasFlag(CastlingRights.WhiteKingside))
       {
         Assert.True(board.CanCastleKingside(Colour.White));
       }
-      if(expectedCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
+      if (expectedCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
       {
         Assert.True(board.CanCastleQueenside(Colour.White));
       }
-      if(expectedCastlingRights.HasFlag(CastlingRights.BlackKingside))
+      if (expectedCastlingRights.HasFlag(CastlingRights.BlackKingside))
       {
         Assert.True(board.CanCastleKingside(Colour.Black));
       }
-      if(expectedCastlingRights.HasFlag(CastlingRights.BlackQueenside))
+      if (expectedCastlingRights.HasFlag(CastlingRights.BlackQueenside))
       {
         Assert.True(board.CanCastleQueenside(Colour.Black));
       }
