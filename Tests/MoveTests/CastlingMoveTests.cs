@@ -235,5 +235,57 @@ namespace Tests.MoveTests
       Assert.True(board.CanCastleQueenside(Colour.Black));
     }
 
+    [Theory]
+    [InlineData(
+        "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R w KQkq - 0 4",
+        "h1",
+        "g1",
+        CastlingRights.WhiteQueenside | CastlingRights.BlackKingside | CastlingRights.BlackQueenside)]
+    [InlineData(
+        "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R w KQkq - 0 4",
+        "a1",
+        "b1",
+        CastlingRights.WhiteKingside | CastlingRights.BlackKingside | CastlingRights.BlackQueenside)]
+    [InlineData(
+        "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R b KQkq - 0 4",
+        "a8",
+        "b8",
+        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackKingside )]
+    [InlineData(
+        "r3k2r/ppp2ppp/8/8/8/8/PPPP1PPP/R3K2R b KQkq - 0 4",
+        "h8",
+        "f8",
+        CastlingRights.WhiteKingside | CastlingRights.WhiteQueenside | CastlingRights.BlackQueenside )]
+    public void RookMoves_CastlingRightsOnThatSideAreLost(
+        string fen,
+        string from,
+        string to,
+        CastlingRights expectedCastlingRights)
+    {
+      // Tests that moving the Rook loses just the castling right on that side.
+      var board = new Board(fen);
+
+      // Apply Rg1
+      board.ApplyMove((from, to));
+
+      // Assert that White lost his kingside castling right.
+      if(expectedCastlingRights.HasFlag(CastlingRights.WhiteKingside))
+      {
+        Assert.True(board.CanCastleKingside(Colour.White));
+      }
+      if(expectedCastlingRights.HasFlag(CastlingRights.WhiteQueenside))
+      {
+        Assert.True(board.CanCastleQueenside(Colour.White));
+      }
+      if(expectedCastlingRights.HasFlag(CastlingRights.BlackKingside))
+      {
+        Assert.True(board.CanCastleKingside(Colour.Black));
+      }
+      if(expectedCastlingRights.HasFlag(CastlingRights.BlackQueenside))
+      {
+        Assert.True(board.CanCastleQueenside(Colour.Black));
+      }
+    }
+
   }
 }

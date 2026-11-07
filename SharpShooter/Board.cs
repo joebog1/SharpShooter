@@ -327,6 +327,27 @@ namespace SharpShooter
         }
       }
 
+      if(movingPiece.Type() == PieceType.Rook)
+      {
+        // The move involved the Rrook, that colour loses castling rights on that side.
+        if(move.BeforeSquare == "a1" && movingPiece.Colour() == Colour.White)
+        {
+          myCastlingRights &= ~CastlingRights.WhiteQueenside;
+        }
+        if(move.BeforeSquare == "h1" && movingPiece.Colour() == Colour.White)
+        {
+          myCastlingRights &= ~CastlingRights.WhiteKingside;
+        }
+        if(move.BeforeSquare == "a8" && movingPiece.Colour() == Colour.Black)
+        {
+          myCastlingRights &= ~CastlingRights.BlackQueenside;
+        }
+        if(move.BeforeSquare == "h8" && movingPiece.Colour() == Colour.Black)
+        {
+          myCastlingRights &= ~CastlingRights.BlackKingside;
+        }
+      }
+
       myTurn = otherColour;
 
       return true;
