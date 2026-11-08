@@ -95,12 +95,13 @@ namespace SharpShooter
       !Equals(left, right);
 
     // :TODO: Copying the entire board everytime we suggest a move is suspicious.
-    // There's probably an optimisation that allows us to search without a bucnh of memory. #6
-    private Board(Board original)
+    // There's probably an optimisation that allows us to search without a bunch of memory. #6
+    public Board(Board original)
     {
       myPieces = new List<(Piece Piece, Square Square)>(original.myPieces);
       myCastlingRights = original.myCastlingRights;
       myTurn = original.myTurn;
+      myEnPassantSquare = original.myEnPassantSquare;
     }
 
     /// <summary>

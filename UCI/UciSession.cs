@@ -1,4 +1,3 @@
-using SharpShooter.Engine;
 using System.Diagnostics;
 
 namespace SharpShooter.UCI;
@@ -19,9 +18,6 @@ public class UciSession
           myChessEngine.SetPositionFromFen(command.myCommandArguments.ToString());
           break;
         }
-
     }
-
   }
-
 }
