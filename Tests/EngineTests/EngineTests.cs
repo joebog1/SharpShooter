@@ -4,6 +4,11 @@ namespace Tests.EngineTests
 {
   public class EngineTests
   {
+
+    // :NOTE: These tests are specific to testing the engine when an objective result is found.
+    // i.e tactics puzzles that result in massive material gain that is obviously advantageous or
+    // cases where a forced mate is found. Postions that are more vague and require position
+    // evaluation are handled in the PositionalKnwoledgeBenchmark project.
     [Fact]
     public void ChessEngine_HasScolarsMate_SuggestsScholarsMate()
     {
@@ -18,5 +23,10 @@ namespace Tests.EngineTests
       Assert.Single(bestMoves);
       Assert.Equal(checkMate, bestMoves[0]);
     }
+
+    // :TODO: Cover tactical and positional tests.
+
+    // :TODO: A simple test where we cover every response to 1.e4 that does not prevent 2.d4.
+    // The best move is always to play d4. I consider this to be objectively best so it can be a test.
   }
 }
